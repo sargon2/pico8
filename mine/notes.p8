@@ -51,6 +51,14 @@ __lua__
 -- solution: leave it up to the
 --  player whether they feel weak
 --  or not.
+--
+-- problem: if the gp is friendly
+--  and powerful, that makes the
+--  player feel ineffective.
+-- solution: make the gp neutral
+--  or an enemy. for an enemy
+--  instead of the gp it could
+--  be a polluting factory.
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
