@@ -1,6 +1,24 @@
 pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
+-- todo
+-- the selection box is a bit awkward.
+-- make it further away, but still
+-- not pass through the nearest
+-- panel.
+-- also if you go down, then right, it shouldn't
+-- jump so far...
+-- turn off key repeat by reimplementing
+-- btnp
+-- add total electricity generated
+-- add energy storage
+-- add day/night cycle
+-- add panel inventory
+-- add money to buy panels
+-- add store to buy panels from
+-- add trees
+-- add houses?
+
 char = {
  x=0,
  y=0,
@@ -68,7 +86,11 @@ function draw_panels()
     end
     -- short legs override long
     if not overlays[x][y] then
-     overlays[x][y]=1
+     if panel_at(x,y+1) then
+      overlays[x][y]=2
+     else
+      overlays[x][y]=1
+     end
     end
    end
    if panel_at(x+1,y-1) then
