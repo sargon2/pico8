@@ -15,19 +15,21 @@ __lua__
 -- to make it more efficient to
 -- check lots of collisions?
 
-actor1 = {
- x=rnd(112)+8,
- y=rnd(112)+8,
- xv=rnd(4)-2,
- yv=rnd(4)-2
-}
+function _init()
+ actors = {}
+ for i=1,10 do
+  add(actors,make_actor())
+ end
+end
 
-actor2 = {
- x=rnd(112)+8,
- y=rnd(112)+8,
- xv=rnd(4)-2,
- yv=rnd(4)-2
-}
+function make_actor()
+ return {
+		x=rnd(112)+8,
+		y=rnd(112)+8,
+	 xv=rnd(4)-2,
+	 yv=rnd(4)-2
+	}
+end
 
 function update_actor(actor)
  actor.x += actor.xv
@@ -58,55 +60,74 @@ function update_actor(actor)
  actor.yv /= 1.01
 end
 
-is_colliding = false
-function collide()
- -- calc normal vector
- local dx=actor2.x - actor1.x
- local dy=actor2.y - actor1.y
+function calc_distance(a,b)
+ local dx=actors[b].x - actors[a].x
+ local dy=actors[b].y - actors[a].y
  local distance=sqrt(dx*dx + dy*dy)
+ return dx,dy,distance
+end
+
+function update_until_clear(a,b)
+ local dx,dy,distance=calc_distance(a,b)
+ while distance < 8 do
+ 	update_actor(actors[a])
+ 	update_actor(actors[b])
+ 	dx,dy,distance=calc_distance(a,b)
+ end
+end
+
+function collide(a,b)
+ -- calc normal vector
+ local dx,dy,distance=calc_distance(a,b)
  if distance < 8 then
-  if is_colliding then
-   -- we already calculated this collision
-   return
-  end
   sfx(0)
-  is_colliding = true
   -- normalize it
   local nx=dx/distance
   local ny=dy/distance
   -- decompose into normal and tangential components
-  local v1n =  actor1.xv * nx + actor1.yv * ny
-  local v1t = -actor1.xv * ny + actor1.yv * nx
-  local v2n =  actor2.xv * nx + actor2.yv * ny
-  local v2t = -actor2.xv * ny + actor2.yv * nx
+  local v1n =  actors[a].xv * nx + actors[a].yv * ny
+  local v1t = -actors[a].xv * ny + actors[a].yv * nx
+  local v2n =  actors[b].xv * nx + actors[b].yv * ny
+  local v2t = -actors[b].xv * ny + actors[b].yv * nx
   -- swap normal components since elastic
-  actor1.xv = v2n * nx - v1t * ny
-  actor1.yv = v2n * ny + v1t * nx
-  actor2.xv = v1n * nx - v2t * ny
-  actor2.yv = v1n * ny + v2t * nx
- else
- 	is_colliding = false
+  actors[a].xv = v2n * nx - v1t * ny
+  actors[a].yv = v2n * ny + v1t * nx
+  actors[b].xv = v1n * nx - v2t * ny
+  actors[b].yv = v1n * ny + v2t * nx
+  update_until_clear(a,b)
  end
 end
 
 function _draw()
  cls(5)
- update_actor(actor1)
- update_actor(actor2)
- collide()
- spr(1,actor1.x,actor1.y)
- spr(2,actor2.x,actor2.y)
- if btn(⬅️) then
- 	actor1.xv -= 0.1
+ for x=1,#actors do
+  for y=1,x do
+   if x != y then
+	   collide(x, y)
+	  end
+  end
  end
- if btn(➡️) then
- 	actor1.xv += 0.1
+ for a in all(actors) do
+  update_actor(a)
  end
- if btn(⬆️) then
- 	actor1.yv -= 0.1
+ for a=1,#actors do
+  if a == 1 then
+ 		spr(1,actors[a].x,actors[a].y)
+ 	else
+  	spr(2, actors[a].x, actors[a].y)
+  end
  end
- if btn(⬇️) then
- 	actor1.yv += 0.1
+ if btn(⬅️) and actors[1].x>1 then
+ 	actors[1].xv -= 0.1
+ end
+ if btn(➡️) and actors[1].x<120 then
+ 	actors[1].xv += 0.1
+ end
+ if btn(⬆️) and actors[1].y>1 then
+ 	actors[1].yv -= 0.1
+ end
+ if btn(⬇️) and actors[1].y<120 then
+ 	actors[1].yv += 0.1
  end
 end
 __gfx__
