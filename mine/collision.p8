@@ -16,17 +16,17 @@ __lua__
 -- check lots of collisions?
 
 actor1 = {
- x=32,
- y=32,
- xv=-2.6,
- yv=0.4
+ x=rnd(112)+8,
+ y=rnd(112)+8,
+ xv=rnd(4)-2,
+ yv=rnd(4)-2
 }
 
 actor2 = {
- x=64,
- y=84,
- xv=1.6,
- yv=-0.6
+ x=rnd(112)+8,
+ y=rnd(112)+8,
+ xv=rnd(4)-2,
+ yv=rnd(4)-2
 }
 
 function update_actor(actor)
@@ -51,20 +51,18 @@ function update_actor(actor)
 end
 
 is_colliding = false
-
 function collide()
- if abs(actor1.x-actor2.x) < 8 and
-    abs(actor1.y-actor2.y) < 8 then
+ -- calc normal vector
+ local dx=actor2.x - actor1.x
+ local dy=actor2.y - actor1.y
+ local distance=sqrt(dx*dx + dy*dy)
+ if distance < 8 then
   if is_colliding then
    -- we already calculated this collision
    return
   end
   sfx(0)
   is_colliding = true
-  -- calc normal vector
-  local dx=actor2.x - actor1.x
-  local dy=actor2.y - actor1.y
-  local distance=sqrt(dx*dx + dy*dy)
   -- normalize it
   local nx=dx/distance
   local ny=dy/distance
