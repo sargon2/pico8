@@ -54,6 +54,8 @@ function update_actor(actor)
  if actor.yv > 4 then
   actor.yv = 4
  end
+ actor.xv /= 1.01
+ actor.yv /= 1.01
 end
 
 is_colliding = false
