@@ -35,6 +35,12 @@ char = {
     is_removing = false,
 }
 
+sprites = {
+    selection_box = 32,
+    place_panel = 33,
+    pick_up = 34,
+}
+
 -- These are a 2d array of booleans to make random access easier.
 -- [x] = {[y]=true}
 panel_locations={
@@ -57,8 +63,27 @@ function draw_char(char,x,y)
     spr(f,x,y,1,1,char.flip_x)
 end
 
-function draw_selected(char)
-    draw_spr(32,char.sel_x,char.sel_y)
+function draw_selection(char)
+    draw_spr(sprites["selection_box"],char.sel_x,char.sel_y)
+
+    -- truth table for which icon to draw:
+    -- is_removing is_placing panel_at - result
+    -- T T T - error
+    -- T T F - error
+
+    -- T F T - remove
+    -- T F F - remove
+    -- F F T - remove
+
+    -- F T T - place
+    -- F T F - place
+    -- F F F - place
+
+    if char.is_placing or (not char.is_removing and not panel_at(char.sel_x, char.sel_y)) then
+        draw_spr(sprites["place_panel"],char.sel_x,char.sel_y-1)
+    else
+        draw_spr(sprites["pick_up"],char.sel_x,char.sel_y-1)
+    end
 end
 
 function _init()
@@ -78,7 +103,7 @@ function _draw()
     draw_rocks()
     draw_panels()
     draw_char(char, 64, 64)
-    draw_selected(char)
+    draw_selection(char)
 end
 
 function draw_spr(s,x,y)
