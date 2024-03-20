@@ -45,16 +45,9 @@ sprites = {
 
 -- These are a 2d array of booleans to make random access easier.
 -- [x] = {[y]=true}
-panel_locations={
-    [10]={[10]=true,[11]=true,[15]=true,[20]=true},
-    [11]={[10]=true,[11]=true,[16]=true,[19]=true},
-    [20]={[10]=true,[11]=true},
-}
+panel_locations={}
 
-rock_locations = {
-    [2]={[2]=true, [3]=true},
-    [3]={[3]=true}
-}
+rock_locations = {}
 
 last_t=0
 
@@ -71,6 +64,24 @@ function draw_selection(char)
 end
 
 function _init()
+    srand(12345) -- it isn't a procedural game, we want to be able to tune the experience, so we need rands to be consistent
+    distribute_rocks()
+end
+
+function set_with_create(tbl, x, y)
+    -- will set the value to true
+    if not tbl[x] then
+        tbl[x] = {}
+    end
+    tbl[x][y] = true
+end
+
+function distribute_rocks()
+    for i=0,1000 do
+        x = flr(rnd(100))
+        y = flr(rnd(100))
+        set_with_create(rock_locations, x, y)
+    end
 end
 
 function draw_rocks()
