@@ -30,7 +30,9 @@ char = {
     sel_y_p=0,
     sel_x=0,
     sel_y=0,
-    is_moving = false
+    is_moving = false,
+    is_placing = false,
+    is_removing = false,
 }
 
 panel_locations={
@@ -240,15 +242,25 @@ function _update60()
 
     -- Handle panel removal/placement
 
-    if btnp(❎) then
-        -- todo no key repeat
+    if btn(❎) then
         if not panel_locations[char.sel_x] then
             panel_locations[char.sel_x] = {}
         end
-        if panel_locations[char.sel_x][char.sel_y] then
-            panel_locations[char.sel_x][char.sel_y] = nil
-        else
-            panel_locations[char.sel_x][char.sel_y] = true
+        if not char.is_placing and not char.is_removing then
+            -- first press frame, determine if we're placing or removing
+            if panel_locations[char.sel_x][char.sel_y] then
+                char.is_removing = true
+            else
+                char.is_placing = true
+            end
         end
+        if char.is_placing then
+            panel_locations[char.sel_x][char.sel_y] = true
+        elseif char.is_removing then
+            panel_locations[char.sel_x][char.sel_y] = nil
+        end
+    else
+        char.is_placing = false
+        char.is_removing = false
     end
 end
