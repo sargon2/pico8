@@ -33,12 +33,14 @@ char = {
     is_moving = false,
     is_placing = false,
     is_removing = false,
+    sel_sprite = "no_action",
 }
 
 sprites = {
     selection_box = 32,
     place_panel = 33,
     pick_up = 34,
+    no_action = 35,
 }
 
 -- These are a 2d array of booleans to make random access easier.
@@ -65,25 +67,7 @@ end
 
 function draw_selection(char)
     draw_spr(sprites["selection_box"],char.sel_x,char.sel_y)
-
-    -- truth table for which icon to draw:
-    -- is_removing is_placing panel_at - result
-    -- T T T - error
-    -- T T F - error
-
-    -- T F T - remove
-    -- T F F - remove
-    -- F F T - remove
-
-    -- F T T - place
-    -- F T F - place
-    -- F F F - place
-
-    if char.is_placing or (not char.is_removing and not panel_at(char.sel_x, char.sel_y)) then
-        draw_spr(sprites["place_panel"],char.sel_x,char.sel_y-1)
-    else
-        draw_spr(sprites["pick_up"],char.sel_x,char.sel_y-1)
-    end
+    draw_spr(sprites[char.sel_sprite],char.sel_x,char.sel_y-1)
 end
 
 function _init()
@@ -298,9 +282,38 @@ function _update60()
         char.frame = 0.99 -- TODO ?? why is this .99?
     end
 
-    -- Handle panel removal/placement
+    -- choose a selection sprite
 
-    if btn(❎) and not rock_at(char.sel_x, char.sel_y) then
+    -- truth table for which icon to draw:
+    -- is_removing is_placing panel_at - result
+    -- T T T - error
+    -- T T F - error
+
+    -- T F T - remove
+    -- T F F - remove
+    -- F F T - remove
+
+    -- F T T - place
+    -- F T F - place
+    -- F F F - place
+
+    char.sel_sprite = "pick_up"
+    if char.is_placing then
+        char.sel_sprite = "place_panel"
+    end
+    if not char.is_removing and not panel_at(char.sel_x, char.sel_y) then
+        char.sel_sprite = "place_panel"
+    end
+
+    if rock_at(char.sel_x, char.sel_y) then
+        char.sel_sprite = "no_action"
+    else
+        handle_panel_removal_and_placement()
+    end
+end
+
+function handle_panel_removal_and_placement()
+    if btn(❎) then
         if not panel_locations[char.sel_x] then
             panel_locations[char.sel_x] = {}
         end
