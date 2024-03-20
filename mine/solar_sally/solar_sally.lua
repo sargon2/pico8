@@ -35,10 +35,17 @@ char = {
     is_removing = false,
 }
 
+-- These are a 2d array of booleans to make random access easier.
+-- [x] = {[y]=true}
 panel_locations={
     [10]={[10]=true,[11]=true,[15]=true,[20]=true},
     [11]={[10]=true,[11]=true,[16]=true,[19]=true},
     [20]={[10]=true,[11]=true},
+}
+
+rock_locations = {
+    [2]={[2]=true, [3]=true},
+    [3]={[3]=true}
 }
 
 last_t=0
@@ -57,9 +64,18 @@ end
 function _init()
 end
 
+function draw_rocks()
+    for x,ys in pairs(rock_locations) do
+        for y,t in pairs(ys) do
+            draw_spr(48,x,y)
+        end
+    end
+end
+
 function _draw()
     cls()
     map(0,0,64-(char.x*8),64-(char.y*8))
+    draw_rocks()
     draw_panels()
     draw_char(char, 64, 64)
     draw_selected(char)
@@ -74,7 +90,24 @@ function draw_spr(s,x,y)
 end
 
 function panel_at(x,y)
-    xp = panel_locations[x]
+    return thing_at(x,y,panel_locations)
+end
+
+function rock_at(x,y)
+    return thing_at(x,y,rock_locations)
+end
+
+function thing_at(x,y,tbl)
+    if tbl == nil then
+        if panel_at(x,y) then
+            return true
+        end
+        if rock_at(x,y) then
+            return true
+        end
+        return false
+    end
+    xp = tbl[x]
     return xp and xp[y]
 end
 
@@ -221,13 +254,13 @@ function _update60()
     char.sel_x = flr(char.sel_x_p)
     char.sel_y = flr(char.sel_y_p)
     -- The player can't walk through panels
-    if not panel_at(
+    if not thing_at(
         flr(char.x+char_x+.6),
         flr(char.y+1)
     ) then
         char.x += char_x
     end
-    if not panel_at(
+    if not thing_at(
         flr(char.x+.6),
         flr(char.y+char_y+1)
     ) then
@@ -242,7 +275,7 @@ function _update60()
 
     -- Handle panel removal/placement
 
-    if btn(❎) then
+    if btn(❎) and not rock_at(char.sel_x, char.sel_y) then
         if not panel_locations[char.sel_x] then
             panel_locations[char.sel_x] = {}
         end
