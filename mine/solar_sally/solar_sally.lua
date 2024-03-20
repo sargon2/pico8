@@ -1,3 +1,4 @@
+
 -- todo
 -- the selection box is a bit awkward.
 -- make it further away, but still
@@ -24,8 +25,12 @@ char = {
     anim_speed=8,
     anim_frames={1,2},
     flip_x=false,
-    sel_x=0, -- selected square
+    -- selected square
+    sel_x_p=0, -- "precise" (sub-integer)
+    sel_y_p=0,
+    sel_x=0,
     sel_y=0,
+    is_moving = false
 }
 
 panel_locations={
@@ -113,38 +118,48 @@ function draw_panels()
     end
 end
 
+function bound(val, min, max)
+    if val < min then
+        return min
+    elseif val > max then
+        return max
+    end
+    return val
+end
+
 function _update60()
+
+    -- Handle physics advancement timing
     ft=t()
     elapsed=ft-last_t
     last_t=ft
-    sel_x=0
-    sel_y=0
     max_skip_fps=15
     max_elapsed=1/max_skip_fps
     if elapsed>max_elapsed then
-        -- make sure we don't skip
-        -- physics too far if the
-        -- game hiccups
+        -- make sure we don't skip physics too far if the game hiccups
         elapsed=max_elapsed
     end
+
+    -- Check for player movement
     local x=0
     local y=0
+    local is_moving = false
     if btn(⬅️) then
         char.flip_x=true
         char.anim_frames={1,2}
         x=-1
-        sel_x=-.5
+        is_moving = true
     end
     if btn(➡️) then
         char.anim_frames={1,2}
         char.flip_x=false
         x=1
-        sel_x=1
+        is_moving = true
     end
     if btn(⬆️) then
         char.anim_frames={3,4}
         y=-1
-        sel_y=-.5
+        is_moving = true
         if btn(⬅️) or btn(➡️) then
             char.anim_frames={9,10}
         end
@@ -152,40 +167,82 @@ function _update60()
     if btn(⬇️) then
         char.anim_frames={7,8}
         y=1
-        sel_y=1
+        is_moving = true
         if btn(⬅️) or btn(➡️) then
             char.anim_frames={5,6}
         end
     end
-    if x!=0 or y!=0 then
-        -- normalize the movement vector
-        local len=sqrt(x^2+y^2)
-        x/=len
-        y/=len
-        x*=char.speed*elapsed
-        y*=char.speed*elapsed
-        if not panel_at(
-            flr(char.x+x+.6),
-            flr(char.y+1)
-        ) then
-            char.x += x
-        end
-        if not panel_at(
-            flr(char.x+.6),
-            flr(char.y+y+1)
-        ) then
-            char.y += y
-        end
+
+    -- Calculate if it's the first movement frame or not
+    is_first_movement_frame = false
+    if is_moving and not char.is_moving then
+        is_first_movement_frame = true
     end
-    if x!=0 or y!=0 then
+    char.is_moving = is_moving
+
+    -- Process player movement
+
+    -- TODO for movement:
+    -- - The selection box isn't centered on the player
+
+    max_sel_range=2
+    sel_speed = 12
+
+    -- Is it the first movement frame?
+    if is_first_movement_frame then
+        -- If it's the first movement frame, we want to kickstart the movement, but not too far so we don't jump twice.
+        -- This is so a single-frame tap will always move the selection box, for responsiveness.
+        x=x/2
+        y=y/2
+    else
+        -- Then for subsequent frames, we normalize the movement speed to the frame rate.
+        x, y = normalize(x, y, sel_speed*elapsed) -- TODO vector type instead of tuple?
+    end
+    char.sel_x_p += x
+    char.sel_y_p += y
+
+    -- If we're at the max selection range, move the character
+    char_x = 0
+    char_y = 0
+    if char.sel_x_p > char.x + max_sel_range then
+        char_x = 1
+        char.sel_x_p = char.x + max_sel_range
+    elseif char.sel_x_p < char.x - max_sel_range then
+        char_x = -1
+        char.sel_x_p = char.x - max_sel_range
+    end
+    if char.sel_y_p > char.y + max_sel_range then
+        char_y = 1
+        char.sel_y_p = char.y + max_sel_range
+    elseif char.sel_y_p < char.y - max_sel_range then
+        char_y = -1
+        char.sel_y_p = char.y - max_sel_range
+    end
+    char_x, char_y = normalize(char_x, char_y, char.speed*elapsed)
+    char.sel_x = flr(char.sel_x_p)
+    char.sel_y = flr(char.sel_y_p)
+    -- The player can't walk through panels
+    if not panel_at(
+        flr(char.x+char_x+.6),
+        flr(char.y+1)
+    ) then
+        char.x += char_x
+    end
+    if not panel_at(
+        flr(char.x+.6),
+        flr(char.y+char_y+1)
+    ) then
+        char.y += char_y
+    end
+    -- Animate walking
+    if char_x!=0 or char_y!=0 then
         char.frame += char.anim_speed*elapsed
     else
-        char.frame = 0.99
+        char.frame = 0.99 -- TODO ?? why is this .99?
     end
-    if sel_x!=0 or sel_y!=0 then
-        char.sel_x=flr(sel_x+char.x+.5) -- todo
-        char.sel_y=flr(sel_y+char.y+.5)
-    end
+
+    -- Handle panel removal/placement
+
     if btnp(❎) then
         -- todo no key repeat
         if not panel_locations[char.sel_x] then

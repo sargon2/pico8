@@ -2,6 +2,8 @@ pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
 
+#include vector_utils.lua
+
 -- for collision detection,
 -- there are some choices.
 --
