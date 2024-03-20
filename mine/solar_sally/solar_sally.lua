@@ -182,9 +182,6 @@ function _update60()
 
     -- Process player movement
 
-    -- TODO for movement:
-    -- - The selection box isn't centered on the player
-
     max_sel_range=2
     sel_speed = 12
 
@@ -204,19 +201,19 @@ function _update60()
     -- If we're at the max selection range, move the character
     char_x = 0
     char_y = 0
-    if char.sel_x_p > char.x + max_sel_range then
+    if char.sel_x_p > char.x + max_sel_range + .5 then
         char_x = 1
-        char.sel_x_p = char.x + max_sel_range
-    elseif char.sel_x_p < char.x - max_sel_range then
+        char.sel_x_p = char.x + max_sel_range + .5
+    elseif char.sel_x_p < char.x - max_sel_range + .5 then
         char_x = -1
-        char.sel_x_p = char.x - max_sel_range
+        char.sel_x_p = char.x - max_sel_range + .5
     end
-    if char.sel_y_p > char.y + max_sel_range then
+    if char.sel_y_p > char.y + max_sel_range + .5 then
         char_y = 1
-        char.sel_y_p = char.y + max_sel_range
-    elseif char.sel_y_p < char.y - max_sel_range then
+        char.sel_y_p = char.y + max_sel_range + .5
+    elseif char.sel_y_p < char.y - max_sel_range + .5 then
         char_y = -1
-        char.sel_y_p = char.y - max_sel_range
+        char.sel_y_p = char.y - max_sel_range + .5
     end
     char_x, char_y = normalize(char_x, char_y, char.speed*elapsed)
     char.sel_x = flr(char.sel_x_p)
