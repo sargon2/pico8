@@ -51,10 +51,7 @@ sprites = {
 -- [x] = {[y]=true}
 panel_locations={}
 rock_locations = {}
-wire_locations = {
-    [2] = {[2]=true, [3]=true},
-    [3] = {[2]=true, [3]=true},
-}
+wire_locations = {}
 
 last_t=0
 
@@ -100,10 +97,10 @@ function draw_rocks()
 end
 
 function draw_wire_tile(x, y)
-    local left = wire_at(x,y-1)
-    local right = wire_at(x,y+1)
-    local up = wire_at(x-1,y)
-    local down = wire_at(x+1,y)
+    local left = wire_at(x-1,y)
+    local right = wire_at(x+1,y)
+    local up = wire_at(x,y-1)
+    local down = wire_at(x,y+1)
 
     -- straight has a couple of special cases (0 or 1 connections)
     if not up and not down then
@@ -117,15 +114,15 @@ function draw_wire_tile(x, y)
         return
     end
 
-    -- the other cases are all straightforward
+    -- the other cases are all straightforward.  The order here matters for wire overlap.
+    if up then
+        draw_spr(sprites["wire_up"], x, y)
+    end
     if left then
         draw_spr(sprites["wire_left"], x, y)
     end
     if right then
         draw_spr(sprites["wire_right"], x, y)
-    end
-    if up then
-        draw_spr(sprites["wire_up"], x, y)
     end
     if down then
         draw_spr(sprites["wire_down"], x, y)
