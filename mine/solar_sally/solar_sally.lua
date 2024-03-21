@@ -41,13 +41,20 @@ sprites = {
     place_panel = 33,
     pick_up = 34,
     no_action = 35,
+    wire_left = 49,
+    wire_right = 50,
+    wire_up = 51,
+    wire_down = 52,
 }
 
 -- These are a 2d array of booleans to make random access easier.
 -- [x] = {[y]=true}
 panel_locations={}
-
 rock_locations = {}
+wire_locations = {
+    [2] = {[2]=true, [3]=true},
+    [3] = {[2]=true, [3]=true},
+}
 
 last_t=0
 
@@ -92,21 +99,72 @@ function draw_rocks()
     end
 end
 
+function draw_wire_tile(x, y)
+    local left = wire_at(x,y-1)
+    local right = wire_at(x,y+1)
+    local up = wire_at(x-1,y)
+    local down = wire_at(x+1,y)
+
+    -- straight has a couple of special cases (0 or 1 connections)
+    if not up and not down then
+        draw_spr(sprites["wire_left"], x, y)
+        draw_spr(sprites["wire_right"], x, y)
+        return
+    end
+    if not left and not right then
+        draw_spr(sprites["wire_up"], x, y)
+        draw_spr(sprites["wire_down"], x, y)
+        return
+    end
+
+    -- the other cases are all straightforward
+    if left then
+        draw_spr(sprites["wire_left"], x, y)
+    end
+    if right then
+        draw_spr(sprites["wire_right"], x, y)
+    end
+    if up then
+        draw_spr(sprites["wire_up"], x, y)
+    end
+    if down then
+        draw_spr(sprites["wire_down"], x, y)
+    end
+end
+
+function draw_wire()
+    for x,ys in pairs(wire_locations) do
+        for y,t in pairs(ys) do
+            draw_wire_tile(x,y)
+        end
+    end
+end
+
 function _draw()
     cls()
     map(0,0,64-(char.x*8),64-(char.y*8))
     draw_rocks()
     draw_panels()
+    draw_wire()
     draw_char(char, 64, 64)
     draw_selection(char)
 end
 
 function draw_spr(s,x,y)
+    local changed_transparency = false
+    if fget(s, 0) then
+        -- flag 0 means "use purple as transparent"
+        palt(0b0010000000000000) -- purple
+        changed_transparency = true
+    end
     spr(
         s,
         (8+x-char.x)*8,
         (8+y-char.y)*8
     )
+    if changed_transparency then
+        palt()
+    end
 end
 
 function panel_at(x,y)
@@ -117,8 +175,12 @@ function rock_at(x,y)
     return thing_at(x,y,rock_locations)
 end
 
+function wire_at(x,y)
+    return thing_at(x,y,wire_locations)
+end
+
 function thing_at(x,y,tbl)
-    if tbl == nil then
+    if tbl == nil then -- TODO extract this into obstruction_at
         if panel_at(x,y) then
             return true
         end
