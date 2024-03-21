@@ -34,6 +34,7 @@ char = {
     is_placing = false,
     is_removing = false,
     sel_sprite = "no_action",
+    place_mode = "place_panel",
 }
 
 sprites = {
@@ -41,6 +42,7 @@ sprites = {
     place_panel = 33,
     pick_up = 34,
     no_action = 35,
+    place_wire = 36,
     wire_left = 49,
     wire_right = 50,
     wire_up = 51,
@@ -352,6 +354,14 @@ function _update60()
         char.frame = 0.99 -- TODO ?? why is this .99?
     end
 
+    if btnp(🅾️) then
+        if char.place_mode == "place_panel" then
+            char.place_mode = "place_wire"
+        else
+            char.place_mode = "place_panel"
+        end
+    end
+
     -- choose a selection sprite
 
     -- truth table for which icon to draw:
@@ -369,36 +379,40 @@ function _update60()
 
     char.sel_sprite = "pick_up"
     if char.is_placing then
-        char.sel_sprite = "place_panel"
+        char.sel_sprite = char.place_mode
     end
     if not char.is_removing and not panel_at(char.sel_x, char.sel_y) then
-        char.sel_sprite = "place_panel"
+        char.sel_sprite = char.place_mode
     end
 
     if rock_at(char.sel_x, char.sel_y) then
         char.sel_sprite = "no_action"
     else
-        handle_panel_removal_and_placement()
+        handle_item_removal_and_placement()
     end
 end
 
-function handle_panel_removal_and_placement()
+function handle_item_removal_and_placement()
+    local tbl = panel_locations
+    if char.place_mode == "place_wire" then
+        tbl = wire_locations
+    end
     if btn(❎) then
-        if not panel_locations[char.sel_x] then
-            panel_locations[char.sel_x] = {}
+        if not tbl[char.sel_x] then
+            tbl[char.sel_x] = {}
         end
         if not char.is_placing and not char.is_removing then
             -- first press frame, determine if we're placing or removing
-            if panel_locations[char.sel_x][char.sel_y] then
+            if tbl[char.sel_x][char.sel_y] then
                 char.is_removing = true
             else
                 char.is_placing = true
             end
         end
         if char.is_placing then
-            panel_locations[char.sel_x][char.sel_y] = true
+            tbl[char.sel_x][char.sel_y] = true
         elseif char.is_removing then
-            panel_locations[char.sel_x][char.sel_y] = nil
+            tbl[char.sel_x][char.sel_y] = nil
         end
     else
         char.is_placing = false
