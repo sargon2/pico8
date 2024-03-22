@@ -91,10 +91,10 @@ function draw_rocks()
 end
 
 function draw_wire_tile(x, y)
-    local left = wire_at(x-1,y)
-    local right = wire_at(x+1,y)
-    local up = wire_at(x,y-1)
-    local down = wire_at(x,y+1)
+    local left = thing_at(x-1,y, "wire")
+    local right = thing_at(x+1,y, "wire")
+    local up = thing_at(x,y-1, "wire")
+    local down = thing_at(x,y+1, "wire")
 
     -- straight has a couple of special cases (0 or 1 connections)
     if not up and not down then
@@ -158,35 +158,39 @@ function draw_spr(s,x,y)
     end
 end
 
--- TODO can we implement all these "at" functions using some kind of lookup table?
--- like e.g. "placeables = panel, wire" etc. -- use string flags instead of function names for type
-function panel_at(x,y)
-    return thing_at(x,y,panel_locations)
+function iter_thing_types(key)
+    thing_types = {
+        wire = {wire_locations},
+        panel = {panel_locations},
+        rock = {rock_locations},
+        placeable = {"panel", "wire"},
+        walking_obstruction = {"panel", "rock"},
+        anything = {"panel", "wire", "rock"},
+    }
+
+    local stack = {key}
+    return function()
+        while #stack > 0 do
+            local next = deli(stack)
+            if type(next) == "string" then
+                for i = 1, #thing_types[next] do
+                    add(stack, thing_types[next][i]) -- Push items to be processed onto the stack
+                end
+            else
+                return next -- Yield value
+            end
+        end
+    end
 end
 
-function rock_at(x,y)
-    return thing_at(x,y,rock_locations)
-end
-
-function wire_at(x,y)
-    return thing_at(x,y,wire_locations)
-end
-
-function placeable_at(x, y)
-    return panel_at(x, y) or wire_at(x, y)
-end
-
-function walking_obstruction_at(x, y)
-    return panel_at(x, y) or rock_at(x, y)
-end
-
-function anything_at(x, y)
-    return panel_at(x, y) or rock_at(x, y) or wire_at(x, y)
-end
-
-function thing_at(x,y,tbl)
-    xp = tbl[x]
-    return xp and xp[y]
+function thing_at(x, y, thing_type)
+    for tbl in iter_thing_types(thing_type) do
+        xp = tbl[x]
+        if xp and xp[y] then
+            return true
+        end
+    end
+    return false
 end
 
 function draw_panels()
@@ -195,20 +199,20 @@ function draw_panels()
         for y,t in pairs(ys) do
             -- draw overlays
             -- careful about leg length
-            if panel_at(x+1,y+1) then
+            if thing_at(x+1, y+1, "panel") then
                 if not overlays[x] then
                     overlays[x] = {}
                 end
                 -- short legs override long
                 if not overlays[x][y] then
-                    if panel_at(x,y+1) then
+                    if thing_at(x, y+1, "panel") then
                         overlays[x][y]=2
                     else
                         overlays[x][y]=1
                     end
                 end
             end
-            if panel_at(x+1,y-1) then
+            if thing_at(x+1, y-1, "panel") then
                 if not overlays[x] then
                     overlays[x] = {}
                 end
@@ -341,15 +345,17 @@ function handle_player_movement(elapsed)
     char.sel_x = flr(char.sel_x_p)
     char.sel_y = flr(char.sel_y_p)
     -- The player can't walk through panels
-    if not walking_obstruction_at(
+    if not thing_at(
         flr(char.x+char_x+.6),
-        flr(char.y+1)
+        flr(char.y+1),
+        "walking_obstruction"
     ) then
         char.x += char_x
     end
-    if not walking_obstruction_at(
+    if not thing_at(
         flr(char.x+.6),
-        flr(char.y+char_y+1)
+        flr(char.y+char_y+1),
+        "walking_obstruction"
     ) then
         char.y += char_y
     end
@@ -393,11 +399,11 @@ function handle_selection_and_placement()
     if char.is_placing then
         char.sel_sprite = char.place_mode
     end
-    if not char.is_removing and not placeable_at(char.sel_x, char.sel_y) then
+    if not char.is_removing and not thing_at(char.sel_x, char.sel_y, "placeable") then
         char.sel_sprite = char.place_mode
     end
 
-    if rock_at(char.sel_x, char.sel_y) then
+    if thing_at(char.sel_x, char.sel_y, "rock") then
         char.sel_sprite = "no_action"
     else
         handle_item_removal_and_placement()
@@ -412,11 +418,11 @@ function handle_item_removal_and_placement()
         end
         if not char.is_placing and not char.is_removing then
             -- first press frame, determine if we're placing or removing and which table we're modifying
-            if panel_at(char.sel_x, char.sel_y) then
+            if thing_at(char.sel_x, char.sel_y, "panel") then
                 char.is_removing = true
                 char.place_mode = "place_panel"
                 tbl = panel_locations
-            elseif wire_at(char.sel_x, char.sel_y) then
+            elseif thing_at(char.sel_x, char.sel_y, "wire") then
                 char.is_removing = true
                 char.place_mode = "place_wire"
                 tbl = wire_locations
@@ -428,11 +434,11 @@ function handle_item_removal_and_placement()
             tbl[char.sel_x] = {}
         end
         if char.is_placing then
-            if not anything_at(char.sel_x, char.sel_y) then
+            if not thing_at(char.sel_x, char.sel_y, "anything") then
                 tbl[char.sel_x][char.sel_y] = true
             end
         elseif char.is_removing then
-            if not rock_at(char.sel_x, char.sel_y) then
+            if not thing_at(char.sel_x, char.sel_y, "rock") then
                 tbl[char.sel_x][char.sel_y] = nil
             end
         end
