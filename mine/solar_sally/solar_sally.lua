@@ -30,11 +30,14 @@ char = {
 }
 
 sprites = {
+    transformer_left = 18,
+    transformer_right = 19,
     selection_box = 32,
     place_panel = 33,
     pick_up = 34,
     no_action = 35,
     place_wire = 36,
+    rock = 48,
     wire_left = 49,
     wire_right = 50,
     wire_up = 51,
@@ -46,6 +49,12 @@ sprites = {
 panel_locations = {}
 rock_locations = {}
 wire_locations = {}
+transformer_left_locations = {
+    [2] = {[2]=true}
+}
+transformer_right_locations = {
+    [3] = {[2]=true}
+}
 
 last_t=0
 
@@ -82,12 +91,21 @@ function distribute_rocks()
     end
 end
 
-function draw_rocks()
-    for x,ys in pairs(rock_locations) do
+function draw_simple(tbl, spritenum)
+    for x,ys in pairs(tbl) do
         for y,t in pairs(ys) do
-            draw_spr(48,x,y)
+            draw_spr(spritenum,x,y)
         end
     end
+end
+
+function draw_rocks()
+    draw_simple(rock_locations, sprites["rock"])
+end
+
+function draw_transformers()
+    draw_simple(transformer_left_locations, sprites["transformer_left"])
+    draw_simple(transformer_right_locations, sprites["transformer_right"])
 end
 
 function draw_wire_tile(x, y)
@@ -137,6 +155,7 @@ function _draw()
     draw_rocks()
     draw_panels()
     draw_wire()
+    draw_transformers()
     draw_char(char, 64, 64)
     draw_selection(char)
 end
