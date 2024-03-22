@@ -1,13 +1,5 @@
 
 -- todo
--- the selection box is a bit awkward.
--- make it further away, but still
--- not pass through the nearest
--- panel.
--- also if you go down, then right, it shouldn't
--- jump so far...
--- turn off key repeat by reimplementing
--- btnp
 -- add total electricity generated
 -- add energy storage
 -- add day/night cycle
@@ -51,7 +43,7 @@ sprites = {
 
 -- These are a 2d array of booleans to make random access easier.
 -- [x] = {[y]=true}
-panel_locations={}
+panel_locations = {}
 rock_locations = {}
 wire_locations = {}
 
@@ -248,8 +240,7 @@ function bound(val, min, max)
     return val
 end
 
-function _update60()
-
+function handle_frame_timing()
     -- Handle physics advancement timing
     ft=t()
     elapsed=ft-last_t
@@ -260,6 +251,16 @@ function _update60()
         -- make sure we don't skip physics too far if the game hiccups
         elapsed=max_elapsed
     end
+    return elapsed
+end
+
+function _update60()
+    elapsed = handle_frame_timing()
+    handle_player_movement(elapsed)
+    handle_selection_and_placement()
+end
+
+function handle_player_movement(elapsed)
 
     -- Check for player movement
     local x=0
@@ -358,7 +359,9 @@ function _update60()
     else
         char.frame = 0.99 -- TODO ?? why is this .99?
     end
+end
 
+function set_place_mode()
     if btnp(🅾️) then
         if char.place_mode == "place_panel" then
             char.place_mode = "place_wire"
@@ -366,10 +369,11 @@ function _update60()
             char.place_mode = "place_panel"
         end
     end
-    handle_selection_and_placement()
 end
 
 function handle_selection_and_placement()
+    set_place_mode()
+
     -- choose a selection sprite
 
     -- truth table for which icon to draw:
