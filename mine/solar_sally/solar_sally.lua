@@ -166,6 +166,8 @@ function draw_spr(s,x,y)
     end
 end
 
+-- TODO can we implement all these "at" functions using some kind of lookup table?
+-- like e.g. "placeables = panel, wire" etc. -- use string flags instead of function names for type
 function panel_at(x,y)
     return thing_at(x,y,panel_locations)
 end
@@ -178,16 +180,19 @@ function wire_at(x,y)
     return thing_at(x,y,wire_locations)
 end
 
+function placeable_at(x, y)
+    return panel_at(x, y) or wire_at(x, y)
+end
+
+function walking_obstruction_at(x, y)
+    return panel_at(x, y) or rock_at(x, y)
+end
+
+function anything_at(x, y)
+    return panel_at(x, y) or rock_at(x, y) or wire_at(x, y)
+end
+
 function thing_at(x,y,tbl)
-    if tbl == nil then -- TODO extract this into obstruction_at
-        if panel_at(x,y) then
-            return true
-        end
-        if rock_at(x,y) then
-            return true
-        end
-        return false
-    end
     xp = tbl[x]
     return xp and xp[y]
 end
@@ -335,13 +340,13 @@ function _update60()
     char.sel_x = flr(char.sel_x_p)
     char.sel_y = flr(char.sel_y_p)
     -- The player can't walk through panels
-    if not thing_at(
+    if not walking_obstruction_at(
         flr(char.x+char_x+.6),
         flr(char.y+1)
     ) then
         char.x += char_x
     end
-    if not thing_at(
+    if not walking_obstruction_at(
         flr(char.x+.6),
         flr(char.y+char_y+1)
     ) then
@@ -361,7 +366,10 @@ function _update60()
             char.place_mode = "place_panel"
         end
     end
+    handle_selection_and_placement()
+end
 
+function handle_selection_and_placement()
     -- choose a selection sprite
 
     -- truth table for which icon to draw:
@@ -381,7 +389,7 @@ function _update60()
     if char.is_placing then
         char.sel_sprite = char.place_mode
     end
-    if not char.is_removing and not panel_at(char.sel_x, char.sel_y) then
+    if not char.is_removing and not placeable_at(char.sel_x, char.sel_y) then
         char.sel_sprite = char.place_mode
     end
 
@@ -393,26 +401,36 @@ function _update60()
 end
 
 function handle_item_removal_and_placement()
-    local tbl = panel_locations
-    if char.place_mode == "place_wire" then
-        tbl = wire_locations
-    end
     if btn(❎) then
-        if not tbl[char.sel_x] then
-            tbl[char.sel_x] = {}
+        local tbl = panel_locations
+        if char.place_mode == "place_wire" then
+            tbl = wire_locations
         end
         if not char.is_placing and not char.is_removing then
-            -- first press frame, determine if we're placing or removing
-            if tbl[char.sel_x][char.sel_y] then
+            -- first press frame, determine if we're placing or removing and which table we're modifying
+            if panel_at(char.sel_x, char.sel_y) then
                 char.is_removing = true
+                char.place_mode = "place_panel"
+                tbl = panel_locations
+            elseif wire_at(char.sel_x, char.sel_y) then
+                char.is_removing = true
+                char.place_mode = "place_wire"
+                tbl = wire_locations
             else
                 char.is_placing = true
             end
         end
+        if not tbl[char.sel_x] then
+            tbl[char.sel_x] = {}
+        end
         if char.is_placing then
-            tbl[char.sel_x][char.sel_y] = true
+            if not anything_at(char.sel_x, char.sel_y) then
+                tbl[char.sel_x][char.sel_y] = true
+            end
         elseif char.is_removing then
-            tbl[char.sel_x][char.sel_y] = nil
+            if not rock_at(char.sel_x, char.sel_y) then
+                tbl[char.sel_x][char.sel_y] = nil
+            end
         end
     else
         char.is_placing = false
