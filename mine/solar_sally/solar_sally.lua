@@ -46,6 +46,7 @@ sprites = {
 
 -- These are a 2d array of booleans to make random access easier.
 -- [x] = {[y]=true}
+-- TODO should I combine these into a single structure?
 panel_locations = {}
 rock_locations = {}
 wire_locations = {}
@@ -201,6 +202,74 @@ function iter_thing_types(key)
         end
     end
 end
+
+-- for each entity that has the "location" component,
+-- for each entity that has both the "location" component and the "placeable" component/attribute
+-- for each placeable entity
+-- should a single panel be an entity or should "panels" collectively be an entity?
+-- - seems more flexible for a single panel to be an entity
+-- get_entities_with_component("placeable")
+-- a component can just be a boolean attribute
+-- recursive component groups -> archetypes like "placeable"
+-- a component can be a set of other components
+-- id = create_entity(...)
+-- associate_component_with_entity(id, component)
+-- entity.associate_component(component) vs. component.associate_entity(id)
+-- does a component just have a list of entity ids associated with it? that'd make iterating them easy
+-- create_panel() would be just like.. create an entity id, associate panel components with it, like sprite.add_entity(panel_id, sprites["panel"])
+-- so associating component with entity should validate all the data needed for the component is provided
+-- recursive components shouldn't have a list of ids though... and a components' child components' ids could be duplicates
+-- - the list could be built on the fly.. is that fast enough? is that better than storing and maintaining a list of ids on the recursive component?
+-- adding a recursive component to an entity would need to take data for all the children of the recursive component, which means the method signature would change if the child components changed
+-- - this may be why archetypes are a different type than components in unity
+-- - it could just take a variable-size list of structs
+-- if I add "placeable" to one entity, then directly add "panel" and "wire" to another entity, then request the list of "placeable", it should NOT include the panel/wire entity.
+-- - An example of this would be a new item which is both a panel and a wire, but is not placeable.
+-- - This means recursive entities MUST store their own list of entities.
+-- - I'm off in the weeds here.  This kind of problem would get solved via implementation.
+-- - if something is "placeable" that doesn't ever mean it's both panel and wire.
+-- "get all placeable items" -> get all wire, get all panels, (deduplicate?), return
+-- "is there a placeable thing at x/y?" -> "is there a wire at x/y?" followed by "is there a panel at x/y?"
+-- - should this be "get all things at x/y", "are any of them panel or wire?"?
+-- - "get all things at x/y" and "get all wire" should both be valid ways to get lists of entity ids
+-- - "get all things at x/y" looks like "get all entities with a location component", "foreach query the location component for its x/y"
+-- - "get all wire" looks like "get all entities with a wire component", "get the location component for each & query its x/y"
+-- - so we definitely need "given an entity id, get its location component"
+-- - - "get_component(entity_id, component_type)" -- in c# this would be generic
+-- - - maybe "location_component_manager.get_component(entity_id)"
+-- do we need "get all components associated with this entity id"?
+-- - maybe not
+--
+-- get_component(entity_id, component_type)
+-- get_all_entities(component) -- including compound components, which might mean deduplicating or storing redundant data
+-- get_all_components(entity_id) -- may not be needed
+--
+-- then thing_at could be implemented as:
+-- function thing_at(x, y, thing_type)
+--     for ent in get_all_entities(thing_type) do
+--         l = get_component(ent, location)
+--           if l.x == x and l.y == y then
+--               return true
+--           end
+--     end
+--     return false
+-- end
+--
+-- OR
+--
+-- function thing_at(x, y, thing_type)
+--     for ent in get_all_entities(location) do
+--         if ent.x == x and ent.y == y and get_component(ent, thing_type) then
+--             return true
+--         end
+--     end
+--     return false
+-- end
+--
+-- maybe the first one is faster because the number of wires is smaller than the number of things with a location? not sure
+--
+-- associate_component(entity_id, component_type, data)
+-- id = create_entity()
 
 function thing_at(x, y, thing_type)
     for tbl in iter_thing_types(thing_type) do
