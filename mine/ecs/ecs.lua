@@ -54,6 +54,7 @@ function ECS:associate_component(entity_id, component_type, data)
 end
 
 function ECS:get_component(entity_id, component_type)
+    -- TODO this needs to be O(1), not O(n)
     for c in all(self.components) do
         if c.component_type == component_type.component_type and c.entity_id == entity_id then
             return c
@@ -69,7 +70,7 @@ function ECS:create_entity()
 end
 
 function ECS:get_all_entities(component_type)
-    ret = {}
+    local ret = {}
     for c in all(self.components) do
         if c.component_type == component_type.component_type then
             add(ret, c.entity_id)
@@ -79,36 +80,38 @@ function ECS:get_all_entities(component_type)
     return ret
 end
 
+function print_location_of(entity) -- example of "system"
+    local c = my_ecs:get_component(entity, LocationComponent)
+    local x, y = c:getPosition()
+    print("location of entity "..entity..": "..tostr(x)..", "..tostr(y))
+end
+
+function print_all_entities_with_location()
+    print("entities with a location:")
+    for x in all(my_ecs:get_all_entities(LocationComponent)) do
+        print("    "..tostr(x))
+    end
+end
+
 my_ecs = ECS:new()
 
 eid = my_ecs:create_entity()
-my_ecs:associate_component(eid, LocationComponent)
-c = my_ecs:get_component(eid, LocationComponent)
-x, y = c:getPosition()
-print(tostr(x)..", "..tostr(y))
+c = my_ecs:associate_component(eid, LocationComponent)
+print_location_of(eid)
 
 -- prove component data is mutable
 c.x = 47
 c.y = 23
-x, y = c:getPosition()
-print(tostr(x)..", "..tostr(y))
+print_location_of(eid)
 
-for x in all(my_ecs:get_all_entities(LocationComponent)) do
-    print(x)
-end
+print_all_entities_with_location()
 
 eid2 = my_ecs:create_entity()
 c = my_ecs:associate_component(eid2, LocationComponent)
 c.x = 10
 c.y = 11
-c = my_ecs:get_component(eid2, LocationComponent)
-x, y = c:getPosition()
-print("eid2:"..tostr(x)..", "..tostr(y))
+print_location_of(eid2)
 
-c = my_ecs:get_component(eid, LocationComponent)
-x, y = c:getPosition()
-print("eid1:"..tostr(x)..", "..tostr(y))
+print_location_of(eid)
 
-for x in all(my_ecs:get_all_entities(LocationComponent)) do
-    print(x)
-end
+print_all_entities_with_location()
