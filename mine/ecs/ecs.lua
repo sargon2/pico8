@@ -50,6 +50,7 @@ function ECS:associate_component(entity_id, component_type, data)
     -- TODO should this prevent adding the same component to the same entity twice?
     local component = component_type:new(entity_id, data)
     add(self.components, component)
+    return component
 end
 
 function ECS:get_component(entity_id, component_type)
@@ -91,6 +92,22 @@ c.x = 47
 c.y = 23
 x, y = c:getPosition()
 print(tostr(x)..", "..tostr(y))
+
+for x in all(my_ecs:get_all_entities(LocationComponent)) do
+    print(x)
+end
+
+eid2 = my_ecs:create_entity()
+c = my_ecs:associate_component(eid2, LocationComponent)
+c.x = 10
+c.y = 11
+c = my_ecs:get_component(eid2, LocationComponent)
+x, y = c:getPosition()
+print("eid2:"..tostr(x)..", "..tostr(y))
+
+c = my_ecs:get_component(eid, LocationComponent)
+x, y = c:getPosition()
+print("eid1:"..tostr(x)..", "..tostr(y))
 
 for x in all(my_ecs:get_all_entities(LocationComponent)) do
     print(x)
