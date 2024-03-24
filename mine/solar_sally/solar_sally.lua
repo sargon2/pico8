@@ -56,8 +56,7 @@ function dump(o)
     else
         return tostring(o)
     end
- end
-
+end
 
 -- These are a 2d array of booleans to make random access easier.
 -- [x] = {[y]=true}
@@ -90,12 +89,24 @@ function _init()
     distribute_rocks()
 end
 
+rock_ent_id = ecs:create_entity() -- TODO this is global
+
+-- TODO this shouldn't live here
+function getOnlyElement(tbl)
+    assert(#tbl == 1) -- getOnlyElement requires 1 element in the table
+    for x in all(tbl) do
+        return x
+    end
+end
+
+-- TODO this shouldn't live here
 function distribute_rocks()
+    ecs:associate_component(rock_ent_id, RockComponent)
+    local l = getOnlyElement(ecs:get_components(rock_ent_id, LocationComponent)) -- created by RockComponent's constructor
     for i=1,1000 do
         local x = flr(rnd(100))
         local y = flr(rnd(100))
-        local rock_ent_id = ecs:create_entity()
-        ecs:associate_component(rock_ent_id, RockComponent, {x = x, y = y})
+        l:associate_location(x, y)
     end
 end
 
@@ -107,11 +118,14 @@ function draw_simple(tbl, spritenum)
     end
 end
 
+-- TODO this shouldn't live here
 function draw_rocks()
-    for c in all(ecs:get_all_components_with_type(RockComponent)) do
-        -- Get the rock's nested location component
-        local l = c.locationComponent
-        draw_spr(sprites["rock"], l.x, l.y)
+    -- Get the rock's nested location component
+    local l = getOnlyElement(ecs:get_components(rock_ent_id, LocationComponent))
+    for x, ys in pairs(l:getLocationsWithin(char.x - 9, char.x + 8, char.y - 9, char.y + 8)) do -- TODO getVisibleEntities(char.x, char.y)
+        for y in all(ys) do
+            draw_spr(sprites["rock"], x, y)
+        end
     end
 end
 
@@ -164,6 +178,7 @@ end
 function _draw()
     cls()
     map(0,0,64-(char.x*8),64-(char.y*8))
+    -- TODO this should call LocationComponent:getEntitiesWithin(), then get the "Drawable" component and tell it to draw for each
     draw_rocks()
     draw_panels()
     draw_wire()
@@ -488,7 +503,7 @@ function handle_selection_and_placement()
     local entity_at_sel = LocationComponent:getEntityAt(char.sel_x, char.sel_y) -- may be nil
 
     local selected_type = nil
-    if ECS:has_component(entity_at_sel, RockComponent) then
+    if ECS:has_components(entity_at_sel, RockComponent) then
         selected_type = "rock"
     elseif panel_locations[char.sel_x][char.sel_y] then -- TODO temporary; replace with has_component
         selected_type = "panel"
