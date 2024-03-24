@@ -155,12 +155,9 @@ end
 function _draw()
     cls()
     map(0,0,64-(char.x*8),64-(char.y*8))
-    for ent in all(LocationComponent:getVisibleEntities(char.x, char.y)) do
-        for drawable in all(ecs:get_components(ent, DrawableComponent)) do
-            drawable:draw()
-        end
-    end
-    -- draw_rocks()
+    -- draw rocks
+    getOnlyElement(ecs:get_components(rock_ent_id, DrawableComponent)):draw()
+
     draw_panels()
     draw_wire()
     draw_transformers()
