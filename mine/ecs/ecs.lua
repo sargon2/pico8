@@ -27,7 +27,7 @@ end
 
 function ECS:has_component(entity_id, component_type)
     -- Return boolean whether or not it has it
-    if ECS:get_component(entity_id, component_type) == nil then
+    if self:get_component(entity_id, component_type) == nil then
         return false
     end
     return true

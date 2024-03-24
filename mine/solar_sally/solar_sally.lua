@@ -485,10 +485,10 @@ function handle_selection_and_placement()
     set_place_mode()
 
     -- Determine what we have selected
-    entity_at_sel = LocationComponent:getEntityAt(char.sel_x, char.sel_y) -- may be nil
+    local entity_at_sel = LocationComponent:getEntityAt(char.sel_x, char.sel_y) -- may be nil
 
     local selected_type = nil
-    if ECS:has_component(entity_id, RockComponent) then
+    if ECS:has_component(entity_at_sel, RockComponent) then
         selected_type = "rock"
     elseif panel_locations[char.sel_x][char.sel_y] then -- TODO temporary; replace with has_component
         selected_type = "panel"
@@ -500,6 +500,8 @@ function handle_selection_and_placement()
     action = determine_action(selected_type)
 
     -- 2. determine sprite from action
+    -- TODO when we're removing, we shouldn't get the "x" selection icon unless we're hovering over a non-removable item
+    -- TODO same for placing, we shouldn't get the "x" directly after placing something
     char.sel_sprite = determine_sprite_from_action(action)
 
     -- 3. take action if button pressed, and set placement/removal state
