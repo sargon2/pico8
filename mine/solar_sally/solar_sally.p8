@@ -1,7 +1,9 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
+#include ../table_helpers.lua
 #include ../ecs/ecs.lua
+#include LocationComponent.lua
 #include ../vector_utils.lua
 #include solar_sally.lua
 __gfx__

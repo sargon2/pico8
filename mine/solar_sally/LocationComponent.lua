@@ -22,14 +22,15 @@ function LocationComponent:new(entity_id, data)
         o.y = 0
     end
 
-    components_by_location[o.x][o.y]
+    -- components_by_location[o.x][o.y]
     return o
 end
 
-function LocationComponent:getPosition()
-    return self.x, self.y
+function LocationComponent:getComponentAt(x, y)
+    -- TODO this should be O(1), not O(n) -- build components_by_location in new() and reference it here?
 end
 
-function LocationComponent:getComponentAt(x, y)
-    -- TODO this should be O(1), not O(n) -- build components_by_location in new() and reference it here
+function LocationComponent:getComponentsWithin(xmin, xmax, ymin, ymax)
+    -- TODO this needs to be fast
+    -- TODO getAllVisibleComponents(), getAllVisibleComponentsOfType(component_type)
 end

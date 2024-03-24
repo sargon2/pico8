@@ -58,25 +58,11 @@ function dump(o)
     end
  end
 
--- TODO this probably shouldn't live here
-function table_with_default_val_inserted(default)
-    local ret = {}
-    local mt = {
-        __index = function(t, k)
-            local val = {}
-            t[k] = val -- Insert the default value into the table
-            return val
-        end
-    }
-    setmetatable(ret, mt)
-    return ret
-end
 
 -- These are a 2d array of booleans to make random access easier.
 -- [x] = {[y]=true}
 -- TODO should I combine these into a single structure?
 panel_locations = table_with_default_val_inserted({})
-rock_locations = table_with_default_val_inserted({})
 wire_locations = table_with_default_val_inserted({})
 transformer_left_locations = {
     [2] = {[2]=true}
@@ -99,6 +85,19 @@ function draw_selection(char)
     draw_spr(sprites[char.sel_sprite],char.sel_x,char.sel_y-1)
 end
 
+-- TODO move this elsewhere
+RockComponent = ECSComponent:new()
+RockComponent.component_type = "RockComponent"
+RockComponent.__index = RockComponent
+
+function RockComponent:new(entity_id)
+    local o = {}
+    setmetatable(o, self)
+
+    o.entity_id = entity_id
+    return o
+end
+
 function _init()
     srand(12345) -- it isn't a procedural game, we want to be able to tune the experience, so we need rands to be consistent
     distribute_rocks()
@@ -108,7 +107,10 @@ function distribute_rocks()
     for i=0,1000 do
         x = flr(rnd(100))
         y = flr(rnd(100))
-        rock_locations[x][y] = true
+        rock_ent_id = ecs:create_entity()
+        -- TODO compound components so we only have to do one associate() call here
+        ecs:associate_component(rock_ent_id, LocationComponent, {x = x, y = y})
+        ecs:associate_component(rock_ent_id, RockComponent)
     end
 end
 
@@ -121,7 +123,12 @@ function draw_simple(tbl, spritenum)
 end
 
 function draw_rocks()
-    draw_simple(rock_locations, sprites["rock"])
+    -- TODO this method is very slow and is taking up 40% of our entire frame budget
+    for c in all(ecs:get_all_components_with_type(RockComponent)) do
+        -- Get the rock's location component
+        l = ecs:get_component(c.entity_id, LocationComponent)
+        draw_spr(sprites["rock"], l.x, l.y)
+    end 
 end
 
 function draw_transformers()
@@ -199,10 +206,11 @@ function draw_spr(s,x,y)
 end
 
 function iter_thing_types(key)
+    -- TODO finish converting these to components
     thing_types = {
         wire = {wire_locations},
         panel = {panel_locations},
-        rock = {rock_locations},
+        rock = {},
         placeable = {"panel", "wire"},
         walking_obstruction = {"panel", "rock"},
         anything = {"panel", "wire", "rock"},
