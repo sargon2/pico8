@@ -85,29 +85,6 @@ function draw_selection(char)
     draw_spr(sprites[char.sel_sprite],char.sel_x,char.sel_y-1)
 end
 
--- TODO move this elsewhere
-
-RockComponent = {
-    locationComponent = nil
-}
-
-RockComponent = ECSComponent:new()
-RockComponent.component_type = "RockComponent"
-RockComponent.__index = RockComponent
-
-function RockComponent:new(entity_id, data)
-    local o = {}
-    setmetatable(o, self)
-
-    o.entity_id = entity_id
-
-    -- Rock contains a nested Location
-    l = ecs:associate_component(entity_id, LocationComponent, data)
-    self.locationComponent = l
-
-    return o
-end
-
 function _init()
     srand(12345) -- it isn't a procedural game, we want to be able to tune the experience, so we need rands to be consistent
     distribute_rocks()
@@ -131,7 +108,6 @@ function draw_simple(tbl, spritenum)
 end
 
 function draw_rocks()
-    -- TODO this method is very slow and is taking up 40% of our entire frame budget
     for c in all(ecs:get_all_components_with_type(RockComponent)) do
         -- Get the rock's nested location component
         l = c.locationComponent
@@ -494,70 +470,112 @@ function set_place_mode()
     end
 end
 
+function determine_sprite_from_action(action)
+    local sprites_from_action = {
+        no_action = "no_action",
+        pick_up_panel = "pick_up",
+        pick_up_wire = "pick_up",
+        place_panel = "place_panel",
+        place_wire = "place_wire",
+    }
+    return sprites_from_action[action]
+end
+
 function handle_selection_and_placement()
     set_place_mode()
 
-    -- choose a selection sprite
+    -- Determine what we have selected
+    entity_at_sel = LocationComponent:getEntityAt(char.sel_x, char.sel_y) -- may be nil
 
-    -- truth table for which icon to draw:
-    -- is_removing is_placing panel_at - result
-    -- T T T - error
-    -- T T F - error
-
-    -- T F T - remove
-    -- T F F - remove
-    -- F F T - remove
-
-    -- F T T - place
-    -- F T F - place
-    -- F F F - place
-
-    char.sel_sprite = "pick_up"
-    if char.is_placing then
-        char.sel_sprite = char.place_mode
-    end
-    if not char.is_removing and not thing_at(char.sel_x, char.sel_y, "placeable") then
-        char.sel_sprite = char.place_mode
+    local selected_type = nil
+    if ECS:has_component(entity_id, RockComponent) then
+        selected_type = "rock"
+    elseif panel_locations[char.sel_x][char.sel_y] then -- TODO temporary; replace with has_component
+        selected_type = "panel"
+    elseif  wire_locations[char.sel_x][char.sel_y] then -- TODO temporary
+        selected_type = "wire"
     end
 
-    if thing_at(char.sel_x, char.sel_y, "rock") then
-        char.sel_sprite = "no_action"
-    else
-        handle_item_removal_and_placement()
-    end
-end
+    -- 1. determine action -- no action, pick up panel, pick up wire, place panel, place wire
+    action = determine_action(selected_type)
 
-function handle_item_removal_and_placement()
+    -- 2. determine sprite from action
+    char.sel_sprite = determine_sprite_from_action(action)
+
+    -- 3. take action if button pressed, and set placement/removal state
     if btn(❎) then
-        local tbl = panel_locations
-        if char.place_mode == "place_wire" then
-            tbl = wire_locations
-        end
-        if not char.is_placing and not char.is_removing then
-            -- first press frame, determine if we're placing or removing and which table we're modifying
-            if thing_at(char.sel_x, char.sel_y, "panel") then
-                char.is_removing = true
-                char.place_mode = "place_panel"
-                tbl = panel_locations
-            elseif thing_at(char.sel_x, char.sel_y, "wire") then
-                char.is_removing = true
-                char.place_mode = "place_wire"
-                tbl = wire_locations
-            else
-                char.is_placing = true
-            end
-        end
-        if char.is_placing then
-            if not thing_at(char.sel_x, char.sel_y, "anything") then
-                tbl[char.sel_x][char.sel_y] = true
-            end
-        elseif char.is_removing then
-            if not thing_at(char.sel_x, char.sel_y, "rock") then
-                tbl[char.sel_x][char.sel_y] = nil
-            end
+        -- TODO convert this to a table of lambda functions?
+        if action == "no_action" then
+            -- pass
+        elseif action == "pick_up_panel" then
+            char.is_removing = true
+            char.place_mode = "place_panel"
+            panel_locations[char.sel_x][char.sel_y] = nil
+        elseif action == "pick_up_wire" then
+            char.is_removing = true
+            char.place_mode = "place_wire"
+            wire_locations[char.sel_x][char.sel_y] = nil
+        elseif action == "place_panel" then
+            char.is_placing = true
+            char.place_mode = "place_panel"
+            panel_locations[char.sel_x][char.sel_y] = true
+        elseif action == "place_wire" then
+            char.is_placing = true
+            char.place_mode = "place_wire"
+            wire_locations[char.sel_x][char.sel_y] = true
+        else
+            assert(false) -- unknown action
         end
     else
         char.is_placing = false
         char.is_removing = false
     end
+end
+
+function determine_action(selected_type)
+    local action
+
+    -- If we're placing, then we place on empty, and everything else is no_action.
+    -- If we're removing, then we remove panels/wire, and everything else is no_action.
+    -- If we're not placing or removing, action depends on entity.
+    -- This is fizzbuzz.
+
+    if char.is_placing then
+        if selected_type == nil then
+            action = char.place_mode
+        else
+            action = "no_action"
+        end
+    elseif char.is_removing then
+        if char.place_mode == "place_panel" then
+            if selected_type == "panel" then
+                action = "pick_up_panel"
+            else
+                action = "no_action"
+            end
+        elseif char.place_mode == "place_wire" then
+            if selected_type == "wire" then
+                action = "pick_up_wire"
+            else
+                action = "no_action"
+            end
+        else
+            assert(false) -- Unknown place mode
+        end
+    else
+        -- we're not currently placing or removing
+        -- TODO lookup table?
+        if selected_type == "rock" then
+            action = "no_action"
+        elseif selected_type == "panel" then
+            action = "pick_up_panel"
+        elseif selected_type == "wire" then
+            action = "pick_up_wire"
+        else
+            -- If nothing's there, we're in place mode, and we use the user's selected mode.
+            action = char.place_mode
+        end
+    end
+
+    return action
 end

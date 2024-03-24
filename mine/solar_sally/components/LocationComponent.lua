@@ -7,27 +7,22 @@ LocationComponent = ECSComponent:new() -- make LocationComponent inherit from EC
 LocationComponent.component_type = "LocationComponent"
 LocationComponent.__index = LocationComponent
 
-components_by_location = {}
+entities_by_location = table_with_default_val_inserted({})
 
 function LocationComponent:new(entity_id, data)
     local o = {}
     setmetatable(o, self)
 
     o.entity_id = entity_id
-    if data then
-        o.x = data.x
-        o.y = data.y
-    else
-        o.x = 0
-        o.y = 0
-    end
+    o.x = data.x
+    o.y = data.y
 
-    -- components_by_location[o.x][o.y]
+    entities_by_location[o.x][o.y] = entity_id -- TODO multiple entities at one location?
     return o
 end
 
-function LocationComponent:getComponentAt(x, y)
-    -- TODO this should be O(1), not O(n) -- build components_by_location in new() and reference it here?
+function LocationComponent:getEntityAt(x, y)
+    return entities_by_location[x][y]
 end
 
 function LocationComponent:getComponentsWithin(xmin, xmax, ymin, ymax)

@@ -19,7 +19,18 @@ function ECS:associate_component(entity_id, component_type, data)
 end
 
 function ECS:get_component(entity_id, component_type)
+    if entity_id == nil then
+        return nil
+    end
     return self.components[component_type.component_type][entity_id]
+end
+
+function ECS:has_component(entity_id, component_type)
+    -- Return boolean whether or not it has it
+    if ECS:get_component(entity_id, component_type) == nil then
+        return false
+    end
+    return true
 end
 
 function ECS:create_entity()
