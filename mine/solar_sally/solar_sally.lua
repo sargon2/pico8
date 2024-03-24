@@ -86,6 +86,11 @@ function draw_selection(char)
 end
 
 -- TODO move this elsewhere
+
+RockComponent = {
+    locationComponent = nil
+}
+
 RockComponent = ECSComponent:new()
 RockComponent.component_type = "RockComponent"
 RockComponent.__index = RockComponent
@@ -97,7 +102,8 @@ function RockComponent:new(entity_id, data)
     o.entity_id = entity_id
 
     -- Rock contains a nested Location
-    ecs:associate_component(entity_id, LocationComponent, data)
+    l = ecs:associate_component(entity_id, LocationComponent, data)
+    self.locationComponent = l
 
     return o
 end
@@ -127,8 +133,8 @@ end
 function draw_rocks()
     -- TODO this method is very slow and is taking up 40% of our entire frame budget
     for c in all(ecs:get_all_components_with_type(RockComponent)) do
-        -- Get the rock's location component
-        l = ecs:get_component(c.entity_id, LocationComponent)
+        -- Get the rock's nested location component
+        l = c.locationComponent
         draw_spr(sprites["rock"], l.x, l.y)
     end 
 end
