@@ -90,11 +90,15 @@ RockComponent = ECSComponent:new()
 RockComponent.component_type = "RockComponent"
 RockComponent.__index = RockComponent
 
-function RockComponent:new(entity_id)
+function RockComponent:new(entity_id, data)
     local o = {}
     setmetatable(o, self)
 
     o.entity_id = entity_id
+
+    -- Rock contains a nested Location
+    ecs:associate_component(entity_id, LocationComponent, data)
+
     return o
 end
 
@@ -108,9 +112,7 @@ function distribute_rocks()
         x = flr(rnd(100))
         y = flr(rnd(100))
         rock_ent_id = ecs:create_entity()
-        -- TODO compound components so we only have to do one associate() call here
-        ecs:associate_component(rock_ent_id, LocationComponent, {x = x, y = y})
-        ecs:associate_component(rock_ent_id, RockComponent)
+        ecs:associate_component(rock_ent_id, RockComponent, {x = x, y = y})
     end
 end
 
