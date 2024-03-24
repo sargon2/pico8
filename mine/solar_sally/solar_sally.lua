@@ -44,12 +44,40 @@ sprites = {
     wire_down = 52,
 }
 
+-- TODO this probably shouldn't live here
+function dump(o)
+    if type(o) == 'table' then
+        local s = '{ '
+        for k,v in pairs(o) do
+            if type(k) ~= 'number' then k = '"'..k..'"' end
+            s = s .. '['..k..'] = ' .. dump(v) .. ','
+        end
+        return s .. '} '
+    else
+        return tostring(o)
+    end
+ end
+
+-- TODO this probably shouldn't live here
+function table_with_default_val_inserted(default)
+    local ret = {}
+    local mt = {
+        __index = function(t, k)
+            local val = {}
+            t[k] = val -- Insert the default value into the table
+            return val
+        end
+    }
+    setmetatable(ret, mt)
+    return ret
+end
+
 -- These are a 2d array of booleans to make random access easier.
 -- [x] = {[y]=true}
 -- TODO should I combine these into a single structure?
-panel_locations = {}
-rock_locations = {}
-wire_locations = {}
+panel_locations = table_with_default_val_inserted({})
+rock_locations = table_with_default_val_inserted({})
+wire_locations = table_with_default_val_inserted({})
 transformer_left_locations = {
     [2] = {[2]=true}
 }
@@ -76,19 +104,11 @@ function _init()
     distribute_rocks()
 end
 
-function set_with_create(tbl, x, y)
-    -- will set the value to true
-    if not tbl[x] then
-        tbl[x] = {}
-    end
-    tbl[x][y] = true
-end
-
 function distribute_rocks()
     for i=0,1000 do
         x = flr(rnd(100))
         y = flr(rnd(100))
-        set_with_create(rock_locations, x, y)
+        rock_locations[x][y] = true
     end
 end
 
@@ -273,8 +293,7 @@ end
 
 function thing_at(x, y, thing_type)
     for tbl in iter_thing_types(thing_type) do
-        xp = tbl[x]
-        if xp and xp[y] then
+        if tbl[x][y] then
             return true
         end
     end
@@ -282,15 +301,12 @@ function thing_at(x, y, thing_type)
 end
 
 function draw_panels()
-    overlays={}
+    local overlays=table_with_default_val_inserted({})
     for x,ys in pairs(panel_locations) do
         for y,t in pairs(ys) do
             -- draw overlays
             -- careful about leg length
             if thing_at(x+1, y+1, "panel") then
-                if not overlays[x] then
-                    overlays[x] = {}
-                end
                 -- short legs override long
                 if not overlays[x][y] then
                     if thing_at(x, y+1, "panel") then
@@ -301,9 +317,6 @@ function draw_panels()
                 end
             end
             if thing_at(x+1, y-1, "panel") then
-                if not overlays[x] then
-                    overlays[x] = {}
-                end
                 overlays[x][y-1]=2
             end
             draw_spr(17,x,y)
@@ -517,9 +530,6 @@ function handle_item_removal_and_placement()
             else
                 char.is_placing = true
             end
-        end
-        if not tbl[char.sel_x] then
-            tbl[char.sel_x] = {}
         end
         if char.is_placing then
             if not thing_at(char.sel_x, char.sel_y, "anything") then
