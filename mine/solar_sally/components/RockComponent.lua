@@ -13,8 +13,7 @@ function RockComponent:new(entity_id, data)
     o.entity_id = entity_id
 
     -- Rock contains a nested Location
-    l = ecs:associate_component(entity_id, LocationComponent, data)
-    self.locationComponent = l
+    o.locationComponent = ecs:associate_component(entity_id, LocationComponent, data)
 
     return o
 end

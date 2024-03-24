@@ -91,10 +91,10 @@ function _init()
 end
 
 function distribute_rocks()
-    for i=0,1000 do
-        x = flr(rnd(100))
-        y = flr(rnd(100))
-        rock_ent_id = ecs:create_entity()
+    for i=1,1000 do
+        local x = flr(rnd(100))
+        local y = flr(rnd(100))
+        local rock_ent_id = ecs:create_entity()
         ecs:associate_component(rock_ent_id, RockComponent, {x = x, y = y})
     end
 end
@@ -110,9 +110,9 @@ end
 function draw_rocks()
     for c in all(ecs:get_all_components_with_type(RockComponent)) do
         -- Get the rock's nested location component
-        l = c.locationComponent
+        local l = c.locationComponent
         draw_spr(sprites["rock"], l.x, l.y)
-    end 
+    end
 end
 
 function draw_transformers()
