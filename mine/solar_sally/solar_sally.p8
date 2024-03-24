@@ -3,6 +3,7 @@ version 42
 __lua__
 #include ../table_helpers.lua
 #include ../ecs/ecs.lua
+#include components/DrawableComponent.lua
 #include components/LocationComponent.lua
 #include components/RockComponent.lua
 #include ../vector_utils.lua

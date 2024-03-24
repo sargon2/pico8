@@ -54,3 +54,26 @@ function LocationComponent:getLocationsWithin(xmin, xmax, ymin, ymax) -- that ma
     end
     return ret
 end
+
+-- TODO static -- does it go on the metatable?
+function LocationComponent:getEntitiesWithin(xmin, xmax, ymin, ymax)
+    ret = {}
+    for x, ys in pairs(entities_by_location) do
+        if xmin <= x and x <= xmax then
+            for y, ent_id in pairs(ys) do
+                if ymin <= y and y <= ymax do
+                    add(ret, ent_id)
+                end
+            end
+        end
+    end
+    return ret
+end
+
+function LocationComponent:getVisibleLocations(x, y) -- that match our entity_id
+    return self:getLocationsWithin(x - 9, x + 8, y - 9, y + 8)
+end
+
+function LocationComponent:getVisibleEntities(x, y)
+    return self:getEntitiesWithin(x - 9, x + 8, y - 9, y + 8)
+end

@@ -84,12 +84,11 @@ function draw_selection(char)
     draw_spr(sprites[char.sel_sprite],char.sel_x,char.sel_y-1)
 end
 
-function _init()
-    srand(12345) -- it isn't a procedural game, we want to be able to tune the experience, so we need rands to be consistent
-    distribute_rocks()
-end
+-- TODO where should this live? It can't live in _init because rocks are placed before that right now
+srand(12345) -- it isn't a procedural game, we want to be able to tune the experience, so we need rands to be consistent
 
 rock_ent_id = ecs:create_entity() -- TODO this is global
+ecs:associate_component(rock_ent_id, RockComponent)
 
 -- TODO this shouldn't live here
 function getOnlyElement(tbl)
@@ -99,32 +98,10 @@ function getOnlyElement(tbl)
     end
 end
 
--- TODO this shouldn't live here
-function distribute_rocks()
-    ecs:associate_component(rock_ent_id, RockComponent)
-    local l = getOnlyElement(ecs:get_components(rock_ent_id, LocationComponent)) -- created by RockComponent's constructor
-    for i=1,1000 do
-        local x = flr(rnd(100))
-        local y = flr(rnd(100))
-        l:associate_location(x, y)
-    end
-end
-
 function draw_simple(tbl, spritenum)
     for x,ys in pairs(tbl) do
         for y,t in pairs(ys) do
             draw_spr(spritenum,x,y)
-        end
-    end
-end
-
--- TODO this shouldn't live here
-function draw_rocks()
-    -- Get the rock's nested location component
-    local l = getOnlyElement(ecs:get_components(rock_ent_id, LocationComponent))
-    for x, ys in pairs(l:getLocationsWithin(char.x - 9, char.x + 8, char.y - 9, char.y + 8)) do -- TODO getVisibleEntities(char.x, char.y)
-        for y in all(ys) do
-            draw_spr(sprites["rock"], x, y)
         end
     end
 end
@@ -178,8 +155,12 @@ end
 function _draw()
     cls()
     map(0,0,64-(char.x*8),64-(char.y*8))
-    -- TODO this should call LocationComponent:getEntitiesWithin(), then get the "Drawable" component and tell it to draw for each
-    draw_rocks()
+    for ent in all(LocationComponent:getVisibleEntities(char.x, char.y)) do
+        for drawable in all(ecs:get_components(ent, DrawableComponent)) do
+            drawable:draw()
+        end
+    end
+    -- draw_rocks()
     draw_panels()
     draw_wire()
     draw_transformers()
