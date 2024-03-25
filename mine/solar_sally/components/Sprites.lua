@@ -29,8 +29,8 @@ function Sprites.draw_spr(s,x,y)
     end
     spr(
         s,
-        (8+x-char.x)*8,
-        (8+y-char.y)*8
+        (8+x-Character.x)*8,
+        (8+y-Character.y)*8
     )
     if changed_transparency then
         palt()

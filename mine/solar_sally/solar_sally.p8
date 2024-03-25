@@ -6,6 +6,8 @@ __lua__
 #include components/FrameTimer.lua
 #include components/Entities.lua
 #include components/Sprites.lua
+#include components/Character.lua
+#include components/Placement.lua
 #include components/Drawable.lua
 #include components/Locations.lua
 #include components/ObjectTypes.lua
