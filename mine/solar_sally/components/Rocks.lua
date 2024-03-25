@@ -2,7 +2,7 @@ Rocks = {  -- Not a component, just a namespace.  Or is it a "system"?
     ent_id = nil
 }
 
-function Rocks.create_rocks()
+function Rocks.init()
     Rocks.ent_id = Entities.create_entity()
     Attributes.set_attr(Rocks.ent_id, "WalkingObstruction", true)
     ObjectTypes.add_entity(Rocks.ent_id, "rock")

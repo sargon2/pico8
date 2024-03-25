@@ -14,6 +14,11 @@ function Placement.init()
     Placement.place_mode = Panels.ent_id -- by default we place panels
 end
 
+function Placement.draw_selection()
+    Sprites.draw_spr("selection_box",Placement.sel_x,Placement.sel_y)
+    Sprites.draw_spr(Placement.sel_sprite,Placement.sel_x,Placement.sel_y-1)
+end
+
 function Placement.set_place_mode(button_pressed)
     -- TODO rotate through items with "placeable" attribute
     if button_pressed then
