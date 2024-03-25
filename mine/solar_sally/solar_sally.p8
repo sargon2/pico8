@@ -1,6 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
+#include ../lua_extensions.lua
 #include ../table_helpers.lua
 #include ../vector_utils.lua
 #include components/Entities.lua
@@ -10,6 +11,7 @@ __lua__
 #include components/ObjectTypes.lua
 #include components/Panels.lua
 #include components/Rocks.lua
+#include components/Wire.lua
 #include components/WalkingObstructions.lua
 #include solar_sally.lua
 __gfx__

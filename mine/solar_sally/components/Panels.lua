@@ -8,8 +8,8 @@ function Panels.init()
     ObjectTypes.add_entity(Panels.ent_id, "panel")
 end
 
-function Panels.panel_at(x, y) -- TODO this shouldn't exist because it's doing too many lookups
-    if ObjectTypes.type_of(Locations.getEntityAt(x, y)) == "panel" then
+function Panels.panel_at(x, y)
+    if Locations.entity_at(x, y) == Panels.ent_id then
         return true
     end
     return false

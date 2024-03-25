@@ -1,4 +1,7 @@
 Locations = {
+    -- TODO this is being used largely to get all locations of a certain entity, not all locations of all entities
+    -- so maybe it'd make more sense to organize locations as locations[ent_id][x] = {y1, y2, ...}?
+    -- maybe even don't track entity id? and this is just a boolean grid, and each of Rocks/Panels/etc. can just have an instance of it
     locations = table_with_default_val_inserted({}),
 }
 
@@ -11,30 +14,20 @@ function Locations.remove_entity_at(x, y)
     Locations.place_entity(nil, x, y)
 end
 
-function Locations.getEntityAt(x, y)
+function Locations.entity_at(x, y)
     return Locations.locations[x][y]
 end
 
 function Locations.getEntitiesWithin(xmin, xmax, ymin, ymax)
+    return getLocationsOfEntityWithin(nil, xmin, xmax, ymin, ymax)
+end
+
+function Locations.getLocationsOfEntityWithin(requested_ent_id, xmin, xmax, ymin, ymax)
     local ret = table_with_default_val_inserted({})
     for x, ys in pairs(Locations.locations) do
         if xmin <= x and x <= xmax then
             for y, ent_id in pairs(ys) do
-                if ymin <= y and y <= ymax do
-                    ret[x][y] = ent_id
-                end
-            end
-        end
-    end
-    return ret
-end
-
-function Locations.getLocationsOfEntityWithin(requested_ent_id, xmin, xmax, ymin, ymax)
-    local ret = table_with_default_val_inserted({}) -- TODO a lot of this is dup'd with above
-    for x, ys in pairs(Locations.locations) do
-        if xmin <= x and x <= xmax then
-            for y, ent_id in pairs(ys) do
-                if requested_ent_id == ent_id then
+                if requested_ent_id == nil or requested_ent_id == ent_id then
                     if ymin <= y and y <= ymax do
                         add(ret[x], y)
                     end

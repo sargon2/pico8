@@ -29,24 +29,6 @@ char = {
     place_mode = "place_panel",
 }
 
--- TODO this probably shouldn't live here
-function dump(o)
-    if type(o) == 'table' then
-        local s = '{ '
-        for k,v in pairs(o) do
-            if type(k) ~= 'number' then k = '"'..k..'"' end
-            s = s .. '['..k..'] = ' .. dump(v) .. ','
-        end
-        return s .. '} '
-    else
-        return tostring(o)
-    end
-end
-
--- These are a 2d array of booleans to make random access easier.
--- [x] = {[y]=true}
--- TODO should I combine these into a single structure?
-wire_locations = table_with_default_val_inserted({})
 transformer_left_locations = {
     [2] = {[2]=true}
 }
@@ -73,6 +55,7 @@ function _init()
     srand(12345)
     Rocks.create_rocks()
     Panels.init()
+    Wire.init()
 end
 
 -- TODO this shouldn't live here
@@ -96,46 +79,6 @@ function draw_transformers()
     draw_simple(transformer_right_locations, "transformer_right")
 end
 
-function draw_wire_tile(x, y)
-    local left = thing_at(x-1,y, "wire")
-    local right = thing_at(x+1,y, "wire")
-    local up = thing_at(x,y-1, "wire")
-    local down = thing_at(x,y+1, "wire")
-
-    -- straight has a couple of special cases (0 or 1 connections)
-    if not up and not down then
-        Sprites.draw_spr("wire_left", x, y)
-        Sprites.draw_spr("wire_right", x, y)
-        return
-    end
-    if not left and not right then
-        Sprites.draw_spr("wire_up", x, y)
-        Sprites.draw_spr("wire_down", x, y)
-        return
-    end
-
-    -- the other cases are all straightforward.  The order here matters for wire overlap.
-    if up then
-        Sprites.draw_spr("wire_up", x, y)
-    end
-    if left then
-        Sprites.draw_spr("wire_left", x, y)
-    end
-    if right then
-        Sprites.draw_spr("wire_right", x, y)
-    end
-    if down then
-        Sprites.draw_spr("wire_down", x, y)
-    end
-end
-
-function draw_wire()
-    for x,ys in pairs(wire_locations) do
-        for y,t in pairs(ys) do
-            draw_wire_tile(x,y)
-        end
-    end
-end
 
 function _draw()
     cls()
@@ -144,7 +87,7 @@ function _draw()
     -- TODO once these are all componentized, remake Drawable to handle drawing in aggregate
     Rocks.draw_rocks(char.x, char.y)
     Panels.draw_panels(char.x, char.y)
-    draw_wire()
+    Wire.draw_wire(char.x, char.y)
     draw_transformers()
     draw_char(char, 64, 64)
     draw_selection(char)
@@ -411,13 +354,9 @@ function handle_selection_and_placement()
     set_place_mode()
 
     -- Determine what we have selected
-    local entity_at_sel = Locations.getEntityAt(char.sel_x, char.sel_y) -- may be nil
+    local entity_at_sel = Locations.entity_at(char.sel_x, char.sel_y) -- may be nil
 
     local selected_type = ObjectTypes.type_of(entity_at_sel)
-
-    if wire_locations[char.sel_x][char.sel_y] then -- TODO temporary
-        selected_type = "wire"
-    end
 
     -- 1. determine action -- no action, pick up panel, pick up wire, place panel, place wire
     action = determine_action(selected_type)
@@ -439,7 +378,7 @@ function handle_selection_and_placement()
         elseif action == "pick_up_wire" then
             char.is_removing = true
             char.place_mode = "place_wire"
-            wire_locations[char.sel_x][char.sel_y] = nil
+            Locations.remove_entity_at(char.sel_x, char.sel_y)
         elseif action == "place_panel" then
             char.is_placing = true
             char.place_mode = "place_panel"
@@ -447,7 +386,7 @@ function handle_selection_and_placement()
         elseif action == "place_wire" then
             char.is_placing = true
             char.place_mode = "place_wire"
-            wire_locations[char.sel_x][char.sel_y] = true
+            Wire.place_wire_at(char.sel_x, char.sel_y)
         else
             assert(false) -- unknown action
         end

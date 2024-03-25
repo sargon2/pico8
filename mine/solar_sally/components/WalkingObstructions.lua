@@ -13,5 +13,5 @@ function WalkingObstructions.obstructs(ent_id)
 end
 
 function WalkingObstructions.obstructed(x, y)
-    return WalkingObstructions.obstructs(Locations.getEntityAt(x, y))
+    return WalkingObstructions.obstructs(Locations.entity_at(x, y))
 end
