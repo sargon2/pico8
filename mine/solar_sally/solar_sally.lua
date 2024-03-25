@@ -127,7 +127,7 @@ function handle_player_movement(elapsed)
         y=y/2
     else
         -- Then for subsequent frames, we normalize the movement speed to the frame rate.
-        x, y = normalize(x, y, sel_speed*elapsed) -- TODO vector type instead of tuple?
+        x, y = normalize(x, y, sel_speed*elapsed)
     end
     char.sel_x_p += x
     char.sel_y_p += y
@@ -163,7 +163,7 @@ function handle_player_movement(elapsed)
     if char_x!=0 or char_y!=0 then
         char.frame += char.anim_speed*elapsed
     else
-        char.frame = 0.99 -- TODO ?? why is this .99?
+        char.frame = 0.99 -- Very close to the next frame to increase responsivenes
     end
 end
 
@@ -206,7 +206,6 @@ function handle_selection_and_placement()
 
     -- 3. take action if button pressed, and set placement/removal state
     if btn(❎) then
-        -- TODO convert this to a table of lambda functions?
         if action == "no_action" then
             -- pass
         elseif action == "pick_up_panel" then

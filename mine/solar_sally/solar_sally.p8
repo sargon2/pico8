@@ -2,7 +2,6 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 #include ../lua_extensions.lua
-#include ../table_helpers.lua
 #include ../vector_utils.lua
 #include components/FrameTimer.lua
 #include components/Entities.lua
