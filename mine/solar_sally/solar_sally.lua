@@ -242,7 +242,7 @@ function determine_action(selected_type)
     -- If we're not placing or removing, action depends on entity.
     -- This is fizzbuzz.
 
-    -- TODO this has a lot of hardcoded types.  It should be acting on attributes such as "is removable"
+    -- TODO refactor this so we don't hardcode panel/wire -- we should have a map like "panel" -> "pick_up_panel" etc.
 
     if char.is_placing then
         if selected_type == nil then
@@ -268,16 +268,16 @@ function determine_action(selected_type)
         end
     else
         -- we're not currently placing or removing
-        -- TODO lookup table?
-        if selected_type == "rock" or selected_type == "transformer" then
-            action = "no_action"
-        elseif selected_type == "panel" then
+        if selected_type == "panel" then
             action = "pick_up_panel"
         elseif selected_type == "wire" then
             action = "pick_up_wire"
-        else
+        elseif selected_type == nil then
             -- If nothing's there, we're in place mode, and we use the user's selected mode.
             action = char.place_mode
+        else
+            -- something's there, but it's not a removable type
+            action = "no_action"
         end
     end
 
