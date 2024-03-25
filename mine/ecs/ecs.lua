@@ -13,6 +13,7 @@ end
 
 function ECS:associate_component(entity_id, component_type, data)
     -- TODO should components track their entity ids instead of tracking them in ECS?
+    -- - ANSWER: Components should track them, because they may want to store data efficiently rather than making thousands of component objects.
     assert(component_type ~= nil)
     -- TODO should this prevent adding the same component to the same entity twice?
     local component = component_type:new(entity_id, data)

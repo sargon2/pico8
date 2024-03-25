@@ -27,7 +27,7 @@ function LocationComponent:associate_location(x, y)
 end
 
 function LocationComponent:get_all_locations() -- that match our entity_id
-    ret = table_with_default_val_inserted({})
+    local ret = table_with_default_val_inserted({})
     for x, ys in pairs(entities_by_location) do
         for y, ent_id in pairs(ys) do
             if ent_id == self.entity_id then
@@ -40,7 +40,7 @@ end
 
 -- TODO getEntitiesWithin(), getAllVisibleComponents(), getAllVisibleComponentsOfType(component_type)
 function LocationComponent:getLocationsWithin(xmin, xmax, ymin, ymax) -- that match our entity_id
-    ret = table_with_default_val_inserted({})
+    local ret = table_with_default_val_inserted({})
     for x, ys in pairs(entities_by_location) do
         if xmin <= x and x <= xmax then
             for y, ent_id in pairs(ys) do
@@ -57,7 +57,7 @@ end
 
 -- TODO static -- does it go on the metatable?
 function LocationComponent:getEntitiesWithin(xmin, xmax, ymin, ymax)
-    ret = {}
+    local ret = {}
     for x, ys in pairs(entities_by_location) do
         if xmin <= x and x <= xmax then
             for y, ent_id in pairs(ys) do

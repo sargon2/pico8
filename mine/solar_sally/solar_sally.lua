@@ -155,9 +155,7 @@ end
 function _draw()
     cls()
     map(0,0,64-(char.x*8),64-(char.y*8))
-    -- draw rocks
-    getOnlyElement(ecs:get_components(rock_ent_id, DrawableComponent)):draw()
-
+    getOnlyElement(ecs:get_components(rock_ent_id, DrawableComponent)):draw() -- draw rocks
     draw_panels()
     draw_wire()
     draw_transformers()
