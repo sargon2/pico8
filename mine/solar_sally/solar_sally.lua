@@ -234,50 +234,39 @@ function handle_selection_and_placement()
     end
 end
 
+-- Define a table mapping item types to their actions
+local action_map = {
+    panel = {
+        place_action = "place_panel",  -- action when placing this item
+        pick_up_action = "pick_up_panel",  -- action when picking up this item
+    },
+    wire = {
+        place_action = "place_wire",
+        pick_up_action = "pick_up_wire",
+    },
+    -- Add new item types and their actions here
+}
+
 function determine_action(selected_type)
-    local action
-
-    -- If we're placing, then we place on empty, and everything else is no_action.
-    -- If we're removing, then we remove panels/wire, and everything else is no_action.
-    -- If we're not placing or removing, action depends on entity.
-    -- This is fizzbuzz.
-
-    -- TODO refactor this so we don't hardcode panel/wire -- we should have a map like "panel" -> "pick_up_panel" etc.
+    local action = "no_action"  -- Default action
 
     if char.is_placing then
         if selected_type == nil then
+            -- We're in place mode but haven't selected a type; use the user's selected mode.
             action = char.place_mode
-        else
-            action = "no_action"
         end
     elseif char.is_removing then
-        if char.place_mode == "place_panel" then
-            if selected_type == "panel" then
-                action = "pick_up_panel"
-            else
-                action = "no_action"
-            end
-        elseif char.place_mode == "place_wire" then
-            if selected_type == "wire" then
-                action = "pick_up_wire"
-            else
-                action = "no_action"
-            end
-        else
-            assert(false) -- Unknown place mode
+        -- Check if the selected type has a mapped action for removing
+        if action_map[selected_type] and action_map[selected_type].pick_up_action then
+            action = action_map[selected_type].pick_up_action
         end
     else
-        -- we're not currently placing or removing
-        if selected_type == "panel" then
-            action = "pick_up_panel"
-        elseif selected_type == "wire" then
-            action = "pick_up_wire"
+        -- Not placing or removing; check if we should pick up an item
+        if selected_type and action_map[selected_type] and action_map[selected_type].pick_up_action then
+            action = action_map[selected_type].pick_up_action
         elseif selected_type == nil then
-            -- If nothing's there, we're in place mode, and we use the user's selected mode.
+            -- If nothing's there, we're in place mode; use the user's selected mode.
             action = char.place_mode
-        else
-            -- something's there, but it's not a removable type
-            action = "no_action"
         end
     end
 
