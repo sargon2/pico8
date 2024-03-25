@@ -21,6 +21,7 @@ function _init()
     Panels.init()
     Wire.init()
     Transformers.init()
+    Placement.init()
 end
 
 function _draw()
@@ -36,7 +37,7 @@ end
 function _update60()
     local elapsed = FrameTimer.calculate_elapsed()
     handle_player_movement(elapsed)
-    handle_selection_and_placement()
+    Placement.handle_selection_and_placement()
 end
 
 -- Convenience method
@@ -139,122 +140,3 @@ function handle_player_movement(elapsed)
     end
 end
 
-function determine_sprite(entity_at_sel, selected_type, action)
-    local sprite_from_entid = {
-        [Panels.ent_id] = "place_panel",
-        [Wire.ent_id] = "place_wire",
-    }
-
-    local sprites_from_action = {
-        no_action = "no_action",
-        pick_up_panel = "pick_up",
-        pick_up_wire = "pick_up",
-        place_panel = "place_panel",
-        place_wire = "place_wire",
-    }
-
-    if entity_at_sel != nil and entity_at_sel == Character.is_placing then
-        return sprite_from_entid[entity_at_sel]
-    end
-
-    if Character.is_removing then
-        if entity_at_sel != nil then
-            return "no_action"
-        end
-        return "pick_up"
-    end
-
-    return sprites_from_action[action]
-end
-
-function handle_selection_and_placement()
-    Placement.set_place_mode(btnp(🅾️))
-
-    -- Determine what we have selected
-    local entity_at_sel = Locations.entity_at(Placement.sel_x, Placement.sel_y) -- may be nil
-
-    local selected_type = ObjectTypes.type_of(entity_at_sel) -- TODO this shouldn't be needed since entity id is good enough <-- is that true?
-
-    -- 1. determine action -- no action, pick up panel, pick up wire, place panel, place wire
-    action = determine_action(selected_type)
-
-    -- 2. determine sprite
-    Placement.sel_sprite = determine_sprite(entity_at_sel, selected_type, action)
-
-    -- 3. take action if button pressed, and set placement/removal state
-
-    -- TODO keep refactoring this until we don't need string action flags
-
-    local function remove(ent_id, mode, x, y)
-        Character.is_removing = ent_id
-        Placement.place_mode = mode
-        Locations.remove_entity(x, y)
-    end
-
-    local function place(ent_id, x, y)
-        Character.is_placing = ent_id
-        if ent_id == Panels.ent_id then
-            Placement.place_mode = "place_panel"
-        elseif ent_id == Wire.ent_id then
-            Placement.place_mode = "place_wire"
-        end
-        Locations.place_entity(ent_id, Placement.sel_x, Placement.sel_y)
-    end
-
-    if btn(❎) then
-        if action == "no_action" then
-            -- pass
-        elseif action == "pick_up_panel" then
-            remove(Panels.ent_id, "place_panel", Placement.sel_x, Placement.sel_y)
-        elseif action == "pick_up_wire" then
-            remove(Wire.ent_id, "place_wire", Placement.sel_x, Placement.sel_y)
-        elseif action == "place_panel" then
-            place(Panels.ent_id, Placement.sel_x, Placement.sel_y)
-        elseif action == "place_wire" then
-            place(Wire.ent_id, Placement.sel_x, Placement.sel_y)
-        else
-            assert(false) -- unknown action
-        end
-    else
-        Character.is_placing = nil
-        Character.is_removing = nil
-    end
-end
-
--- Define a table mapping item types to their actions
-local action_map = {
-    panel = {
-        place_action = "place_panel",  -- action when placing this item
-        pick_up_action = "pick_up_panel",  -- action when picking up this item
-    },
-    wire = {
-        place_action = "place_wire",
-        pick_up_action = "pick_up_wire",
-    },
-}
-
-function determine_action(selected_type)
-    local action = "no_action"  -- Default action
-
-    if Character.is_placing then
-        if selected_type == nil then
-            -- We're in place mode but haven't selected a type; use the user's selected mode.
-            action = Placement.place_mode
-        end
-    elseif Character.is_removing then
-        -- Check if the selected type has a mapped action for removing
-        if action_map[selected_type] and action_map[selected_type].pick_up_action then
-            action = action_map[selected_type].pick_up_action
-        end
-    else
-        -- Not placing or removing; check if we should pick up an item
-        if selected_type and action_map[selected_type] and action_map[selected_type].pick_up_action then
-            action = action_map[selected_type].pick_up_action
-        elseif selected_type == nil then
-            -- If nothing's there, we're in place mode; use the user's selected mode.
-            action = Placement.place_mode
-        end
-    end
-
-    return action
-end
