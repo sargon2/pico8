@@ -10,7 +10,7 @@ __lua__
 #include components/Drawable.lua
 #include components/Locations.lua
 #include components/ObjectTypes.lua
-#include components/WalkingObstructions.lua
+#include components/Attributes.lua
 #include components/Panels.lua
 #include components/Rocks.lua
 #include components/Wire.lua

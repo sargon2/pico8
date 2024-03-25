@@ -1,0 +1,20 @@
+Attributes = {
+    attr = table_with_default_val_inserted({})
+}
+
+function Attributes.set_attr(ent_id, key, value)
+    Attributes.attr[ent_id][key] = value
+end
+
+function Attributes.get_attr(ent_id, key)
+    return Attributes.attr[ent_id][key]
+end
+
+-- Convenience method
+function Attributes.get_attr_by_location(x, y, key)
+    local ent = Locations.entity_at(x, y)
+    if ent == nil then
+        return false
+    end
+    return Attributes.attr[ent][key]
+end

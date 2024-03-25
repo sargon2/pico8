@@ -66,6 +66,12 @@ function _update60()
     handle_selection_and_placement()
 end
 
+-- Convenience method
+function obstructed(x, y)
+    return Attributes.get_attr_by_location(x, y, "WalkingObstruction")
+end
+
+
 function handle_player_movement(elapsed)
 
     -- Check for player movement
@@ -147,10 +153,10 @@ function handle_player_movement(elapsed)
     char.sel_x = flr(char.sel_x_p)
     char.sel_y = flr(char.sel_y_p)
     -- The player can't walk through panels
-    if not WalkingObstructions.obstructed(flr(char.x+char_x+.6), flr(char.y+1)) then
+    if not obstructed(flr(char.x+char_x+.6), flr(char.y+1)) then
         char.x += char_x
     end
-    if not WalkingObstructions.obstructed(flr(char.x+.6), flr(char.y+char_y+1)) then
+    if not obstructed(flr(char.x+.6), flr(char.y+char_y+1)) then
         char.y += char_y
     end
     -- Animate walking
@@ -236,6 +242,8 @@ function determine_action(selected_type)
     -- If we're not placing or removing, action depends on entity.
     -- This is fizzbuzz.
 
+    -- TODO this has a lot of hardcoded types.  It should be acting on attributes such as "is removable"
+
     if char.is_placing then
         if selected_type == nil then
             action = char.place_mode
@@ -261,7 +269,7 @@ function determine_action(selected_type)
     else
         -- we're not currently placing or removing
         -- TODO lookup table?
-        if selected_type == "rock" then
+        if selected_type == "rock" or selected_type == "transformer" then
             action = "no_action"
         elseif selected_type == "panel" then
             action = "pick_up_panel"

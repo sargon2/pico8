@@ -4,7 +4,7 @@ Panels = {
 
 function Panels.init()
     Panels.ent_id = Entities.create_entity()
-    WalkingObstructions.add_entity(Panels.ent_id)
+    Attributes.set_attr(Panels.ent_id, "WalkingObstruction", true)
     ObjectTypes.add_entity(Panels.ent_id, "panel")
     Drawable.add_aggregate_draw_fn(Panels.draw_panels)
 end

@@ -7,11 +7,11 @@ function Transformers.init()
     Transformers.ent_left = Entities.create_entity()
     Transformers.ent_right = Entities.create_entity()
 
-    WalkingObstructions.add_entity(Transformers.ent_left)
-    WalkingObstructions.add_entity(Transformers.ent_right)
+    Attributes.set_attr(Transformers.ent_left, "WalkingObstruction", true)
+    Attributes.set_attr(Transformers.ent_right, "WalkingObstruction", true)
 
-    ObjectTypes.add_entity(Transformers.ent_left, "transformer_left")
-    ObjectTypes.add_entity(Transformers.ent_right, "transformer_right")
+    ObjectTypes.add_entity(Transformers.ent_left, "transformer")
+    ObjectTypes.add_entity(Transformers.ent_right, "transformer")
 
     Drawable.add_tile_sprite(Transformers.ent_left, "transformer_left")
     Drawable.add_tile_sprite(Transformers.ent_right, "transformer_right")
