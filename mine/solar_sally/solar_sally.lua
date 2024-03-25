@@ -84,11 +84,11 @@ function draw_selection(char)
     draw_spr(sprites[char.sel_sprite],char.sel_x,char.sel_y-1)
 end
 
--- TODO where should this live? It can't live in _init because rocks are placed before that right now
-srand(12345) -- it isn't a procedural game, we want to be able to tune the experience, so we need rands to be consistent
 
-rock_ent_id = ecs:create_entity() -- TODO this is global
-ecs:associate_component(rock_ent_id, RockComponent)
+function _init()
+    srand(12345)
+    Rocks.create_rocks()
+end
 
 -- TODO this shouldn't live here
 function getOnlyElement(tbl)
@@ -155,7 +155,7 @@ end
 function _draw()
     cls()
     map(0,0,64-(char.x*8),64-(char.y*8))
-    getOnlyElement(ecs:get_components(rock_ent_id, DrawableComponent)):draw() -- draw rocks
+    RenderAll(char.x, char.y)
     draw_panels()
     draw_wire()
     draw_transformers()
@@ -476,12 +476,11 @@ function handle_selection_and_placement()
     set_place_mode()
 
     -- Determine what we have selected
-    local entity_at_sel = LocationComponent:getEntityAt(char.sel_x, char.sel_y) -- may be nil
+    local entity_at_sel = Locations.getEntityAt(char.sel_x, char.sel_y) -- may be nil
 
-    local selected_type = nil
-    if ECS:has_components(entity_at_sel, RockComponent) then
-        selected_type = "rock"
-    elseif panel_locations[char.sel_x][char.sel_y] then -- TODO temporary; replace with has_component
+    local selected_type = ObjectTypes.get_type_of(entity_at_sel)
+
+    if panel_locations[char.sel_x][char.sel_y] then -- TODO temporary
         selected_type = "panel"
     elseif  wire_locations[char.sel_x][char.sel_y] then -- TODO temporary
         selected_type = "wire"

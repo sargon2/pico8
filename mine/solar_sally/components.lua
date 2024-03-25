@@ -1,3 +1,14 @@
+Entities = {
+    current_entity_id = 0
+}
+
+function Entities.create_entity()
+    -- returns an integer id
+    Entities.current_entity_id += 1
+    return Entities.current_entity_id
+end
+
+
 Locations = {
     locations = table_with_default_val_inserted({}),
 }
@@ -41,20 +52,20 @@ function WalkingObstructions.obstructs(ent_id)
     return WalkingObstructions.obstr[ent_id]
 end
 
-function WalkingObstruction.obstructed(x, y)
-    return WalkingObstruction.obstructs(Locations.getEntityAt(x, y))
+function WalkingObstructions.obstructed(x, y)
+    return WalkingObstructions.obstructs(Locations.getEntityAt(x, y))
 end
 
 
-ObjectType = { -- e.g. "rock", "panel", "wire", etc.
+ObjectTypes = { -- e.g. "rock", "panel", "wire", etc.
     types = {}
 }
 
-function ObjectType.add_entity(ent_id, type)
+function ObjectTypes.add_entity(ent_id, type)
     ObjectTypes.types[ent_id] = type
 end
 
-function ObjectType.get_type_of(ent_id)
+function ObjectTypes.get_type_of(ent_id)
     return ObjectTypes.types[ent_id]
 end
 
@@ -81,9 +92,9 @@ function Rocks.draw_one_rock(x, y)
 end
 
 function Rocks.create_rocks()
-    Rocks.ent_id = ecs:create_entity()
+    Rocks.ent_id = Entities.create_entity()
     WalkingObstructions.add_entity(Rocks.ent_id)
-    ObjectType.add_entity(Rocks.ent_id, "rock")
+    ObjectTypes.add_entity(Rocks.ent_id, "rock")
     Drawable.add_entity(Rocks.ent_id, Rocks.draw_one_rock)
     for i=1,1000 do
         local x = flr(rnd(100))
