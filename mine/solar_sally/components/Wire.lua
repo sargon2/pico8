@@ -5,17 +5,15 @@ Wire = {
 function Wire.init()
     Wire.ent_id = Entities.create_entity()
     ObjectTypes.add_entity(Wire.ent_id, "wire")
+    Drawable.add_tile_draw_fn(Wire.ent_id, Wire.draw_wire_tile)
 end
 
-function Wire.place_wire_at(x, y) -- TODO dup'd with panels
+function Wire.place_wire_at(x, y)
     Locations.place_entity(Wire.ent_id, x, y)
 end
 
-function Wire.wire_at(x, y) -- TODO dup'd with panels
-    if Locations.entity_at(x, y) == Wire.ent_id then
-        return true
-    end
-    return false
+function Wire.wire_at(x, y)
+    return Locations.entity_at(x, y) == Wire.ent_id
 end
 
 function Wire.draw_wire_tile(x, y)
@@ -48,15 +46,5 @@ function Wire.draw_wire_tile(x, y)
     end
     if down then
         Sprites.draw_spr("wire_down", x, y)
-    end
-end
-
-function Wire.draw_wire(x, y) -- TODO dup'd with draw_rocks
-    local locations = Locations.getVisibleLocationsOfEntity(Wire.ent_id, x, y)
-
-    for x,ys in pairs(locations) do
-        for y in all(ys) do
-            Wire.draw_wire_tile(x,y)
-        end
     end
 end

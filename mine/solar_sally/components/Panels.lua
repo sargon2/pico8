@@ -6,17 +6,15 @@ function Panels.init()
     Panels.ent_id = Entities.create_entity()
     WalkingObstructions.add_entity(Panels.ent_id)
     ObjectTypes.add_entity(Panels.ent_id, "panel")
-end
-
-function Panels.panel_at(x, y)
-    if Locations.entity_at(x, y) == Panels.ent_id then
-        return true
-    end
-    return false
+    Drawable.add_aggregate_draw_fn(Panels.draw_panels)
 end
 
 function Panels.place_panel_at(x, y)
     Locations.place_entity(Panels.ent_id, x, y)
+end
+
+function Panels.panel_at(x, y)
+    return Locations.entity_at(x, y) == Panels.ent_id
 end
 
 function Panels.draw_panels(x, y)

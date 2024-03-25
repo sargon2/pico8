@@ -84,11 +84,10 @@ function _draw()
     cls()
     map(0,0,64-(char.x*8),64-(char.y*8))
 
-    -- TODO once these are all componentized, remake Drawable to handle drawing in aggregate
-    Rocks.draw_rocks(char.x, char.y)
-    Panels.draw_panels(char.x, char.y)
-    Wire.draw_wire(char.x, char.y)
-    draw_transformers()
+    Drawable.draw_all(char.x, char.y)
+
+    draw_transformers() -- TODO componentize
+
     draw_char(char, 64, 64)
     draw_selection(char)
 end
@@ -307,18 +306,10 @@ function handle_player_movement(elapsed)
     char.sel_x = flr(char.sel_x_p)
     char.sel_y = flr(char.sel_y_p)
     -- The player can't walk through panels
-    if not thing_at(
-        flr(char.x+char_x+.6),
-        flr(char.y+1),
-        "walking_obstruction"
-    ) then
+    if not WalkingObstructions.obstructed(flr(char.x+char_x+.6), flr(char.y+1)) then
         char.x += char_x
     end
-    if not thing_at(
-        flr(char.x+.6),
-        flr(char.y+char_y+1),
-        "walking_obstruction"
-    ) then
+    if not WalkingObstructions.obstructed(flr(char.x+.6), flr(char.y+char_y+1)) then
         char.y += char_y
     end
     -- Animate walking
