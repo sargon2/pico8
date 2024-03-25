@@ -88,7 +88,7 @@ Rocks = {  -- Not a component, just a namespace.  Or is it a "system"?
 }
 
 function Rocks.draw_one_rock(x, y)
-    draw_spr(sprites["rock"], x, y)
+    Sprites.draw_spr("rock", x, y)
 end
 
 function Rocks.create_rocks()
@@ -104,17 +104,42 @@ function Rocks.create_rocks()
 end
 
 
--- TODO This is simple, but is it fast?
--- TODO Where should this method live? I guess it's a "system"?
-function RenderAll(x, y)
-    -- Note draw order doesn't matter here because we can only have one entity per grid location.  Character, etc. is rendered after this
+Sprites = {
+    solar_panel = 17,
+    transformer_left = 18,
+    transformer_right = 19,
+    solar_panel_overlay_ul = 21,
+    solar_panel_overlay_ur = 22,
+    solar_panel_overlay_ll = 37,
+    solar_panel_overlay_lr = 38,
+    solar_panel_overlay_ll_short_leg = 53,
+    selection_box = 32,
+    place_panel = 33,
+    pick_up = 34,
+    no_action = 35,
+    place_wire = 36,
+    rock = 48,
+    wire_left = 49,
+    wire_right = 50,
+    wire_up = 51,
+    wire_down = 52,
+}
 
-    local entities = Locations.getVisibleEntities(x, y)
-
-    for x, ys in pairs(entities) do
-        for y, ent_id in pairs(ys) do
-            Drawable.draw(ent_id, x, y)
-        end
+function Sprites.draw_spr(s,x,y)
+    s = Sprites[s]
+    local changed_transparency = false
+    if fget(s, 0) then
+        -- flag 0 means "use purple as transparent"
+        palt(0b0010000000000000) -- purple
+        changed_transparency = true
     end
-
+    spr(
+        s,
+        (8+x-char.x)*8,
+        (8+y-char.y)*8
+    )
+    if changed_transparency then
+        palt()
+    end
 end
+

@@ -29,21 +29,6 @@ char = {
     place_mode = "place_panel",
 }
 
-sprites = {
-    transformer_left = 18,
-    transformer_right = 19,
-    selection_box = 32,
-    place_panel = 33,
-    pick_up = 34,
-    no_action = 35,
-    place_wire = 36,
-    rock = 48,
-    wire_left = 49,
-    wire_right = 50,
-    wire_up = 51,
-    wire_down = 52,
-}
-
 -- TODO this probably shouldn't live here
 function dump(o)
     if type(o) == 'table' then
@@ -80,8 +65,8 @@ function draw_char(char,x,y)
 end
 
 function draw_selection(char)
-    draw_spr(sprites["selection_box"],char.sel_x,char.sel_y)
-    draw_spr(sprites[char.sel_sprite],char.sel_x,char.sel_y-1)
+    Sprites.draw_spr("selection_box",char.sel_x,char.sel_y)
+    Sprites.draw_spr(char.sel_sprite,char.sel_x,char.sel_y-1)
 end
 
 
@@ -101,14 +86,14 @@ end
 function draw_simple(tbl, spritenum)
     for x,ys in pairs(tbl) do
         for y,t in pairs(ys) do
-            draw_spr(spritenum,x,y)
+            Sprites.draw_spr(spritenum,x,y)
         end
     end
 end
 
 function draw_transformers()
-    draw_simple(transformer_left_locations, sprites["transformer_left"])
-    draw_simple(transformer_right_locations, sprites["transformer_right"])
+    draw_simple(transformer_left_locations, "transformer_left")
+    draw_simple(transformer_right_locations, "transformer_right")
 end
 
 function draw_wire_tile(x, y)
@@ -119,28 +104,28 @@ function draw_wire_tile(x, y)
 
     -- straight has a couple of special cases (0 or 1 connections)
     if not up and not down then
-        draw_spr(sprites["wire_left"], x, y)
-        draw_spr(sprites["wire_right"], x, y)
+        Sprites.draw_spr("wire_left", x, y)
+        Sprites.draw_spr("wire_right", x, y)
         return
     end
     if not left and not right then
-        draw_spr(sprites["wire_up"], x, y)
-        draw_spr(sprites["wire_down"], x, y)
+        Sprites.draw_spr("wire_up", x, y)
+        Sprites.draw_spr("wire_down", x, y)
         return
     end
 
     -- the other cases are all straightforward.  The order here matters for wire overlap.
     if up then
-        draw_spr(sprites["wire_up"], x, y)
+        Sprites.draw_spr("wire_up", x, y)
     end
     if left then
-        draw_spr(sprites["wire_left"], x, y)
+        Sprites.draw_spr("wire_left", x, y)
     end
     if right then
-        draw_spr(sprites["wire_right"], x, y)
+        Sprites.draw_spr("wire_right", x, y)
     end
     if down then
-        draw_spr(sprites["wire_down"], x, y)
+        Sprites.draw_spr("wire_down", x, y)
     end
 end
 
@@ -152,32 +137,26 @@ function draw_wire()
     end
 end
 
+function RenderLocationEntities(x, y)
+    -- Note draw order doesn't matter here because we can only have one entity per grid location.
+    local entities = Locations.getVisibleEntities(x, y)
+
+    for x, ys in pairs(entities) do
+        for y, ent_id in pairs(ys) do
+            Drawable.draw(ent_id, x, y)
+        end
+    end
+end
+
 function _draw()
     cls()
     map(0,0,64-(char.x*8),64-(char.y*8))
-    RenderAll(char.x, char.y)
+    RenderLocationEntities(char.x, char.y)
     draw_panels()
     draw_wire()
     draw_transformers()
     draw_char(char, 64, 64)
     draw_selection(char)
-end
-
-function draw_spr(s,x,y)
-    local changed_transparency = false
-    if fget(s, 0) then
-        -- flag 0 means "use purple as transparent"
-        palt(0b0010000000000000) -- purple
-        changed_transparency = true
-    end
-    spr(
-        s,
-        (8+x-char.x)*8,
-        (8+y-char.y)*8
-    )
-    if changed_transparency then
-        palt()
-    end
 end
 
 function iter_thing_types(key)
@@ -302,18 +281,18 @@ function draw_panels()
             if thing_at(x+1, y-1, "panel") then
                 overlays[x][y-1]=2
             end
-            draw_spr(17,x,y)
+            Sprites.draw_spr("solar_panel",x,y)
         end
     end
     for x,row in pairs(overlays) do
         for y,v in pairs(row) do
-            draw_spr(21,x,y)
-            draw_spr(38,x+1,y+1)
-            draw_spr(22,x+1,y)
+            Sprites.draw_spr("solar_panel_overlay_ul",x,y)
+            Sprites.draw_spr("solar_panel_overlay_lr",x+1,y+1)
+            Sprites.draw_spr("solar_panel_overlay_ur",x+1,y)
             if v==1 then
-                draw_spr(37,x,y+1) -- long leg
+                Sprites.draw_spr("solar_panel_overlay_ll",x,y+1)
             else
-                draw_spr(53,x,y+1) -- short leg
+                Sprites.draw_spr("solar_panel_overlay_ll_short_leg",x,y+1)
             end
         end
     end
