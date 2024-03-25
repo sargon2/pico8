@@ -3,7 +3,14 @@ version 42
 __lua__
 #include ../table_helpers.lua
 #include ../vector_utils.lua
-#include components.lua
+#include components/Entities.lua
+#include components/Sprites.lua
+#include components/Drawable.lua
+#include components/Locations.lua
+#include components/ObjectTypes.lua
+#include components/Panels.lua
+#include components/Rocks.lua
+#include components/WalkingObstructions.lua
 #include solar_sally.lua
 __gfx__
 00000000000000000044440000000000004440000000000000444400000000000044400000000000004444000000000000000000000000000000000000000000

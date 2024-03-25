@@ -46,7 +46,6 @@ end
 -- These are a 2d array of booleans to make random access easier.
 -- [x] = {[y]=true}
 -- TODO should I combine these into a single structure?
-panel_locations = table_with_default_val_inserted({})
 wire_locations = table_with_default_val_inserted({})
 transformer_left_locations = {
     [2] = {[2]=true}
@@ -73,6 +72,7 @@ end
 function _init()
     srand(12345)
     Rocks.create_rocks()
+    Panels.init()
 end
 
 -- TODO this shouldn't live here
@@ -137,22 +137,13 @@ function draw_wire()
     end
 end
 
-function RenderLocationEntities(x, y)
-    -- Note draw order doesn't matter here because we can only have one entity per grid location.
-    local entities = Locations.getVisibleEntities(x, y)
-
-    for x, ys in pairs(entities) do
-        for y, ent_id in pairs(ys) do
-            Drawable.draw(ent_id, x, y)
-        end
-    end
-end
-
 function _draw()
     cls()
     map(0,0,64-(char.x*8),64-(char.y*8))
-    RenderLocationEntities(char.x, char.y)
-    draw_panels()
+
+    -- TODO once these are all componentized, remake Drawable to handle drawing in aggregate
+    Rocks.draw_rocks(char.x, char.y)
+    Panels.draw_panels(char.x, char.y)
     draw_wire()
     draw_transformers()
     draw_char(char, 64, 64)
@@ -262,41 +253,6 @@ function thing_at(x, y, thing_type)
     return false
 end
 
-function draw_panels()
-    local overlays=table_with_default_val_inserted({})
-    for x,ys in pairs(panel_locations) do
-        for y,t in pairs(ys) do
-            -- draw overlays
-            -- careful about leg length
-            if thing_at(x+1, y+1, "panel") then
-                -- short legs override long
-                if not overlays[x][y] then
-                    if thing_at(x, y+1, "panel") then
-                        overlays[x][y]=2
-                    else
-                        overlays[x][y]=1
-                    end
-                end
-            end
-            if thing_at(x+1, y-1, "panel") then
-                overlays[x][y-1]=2
-            end
-            Sprites.draw_spr("solar_panel",x,y)
-        end
-    end
-    for x,row in pairs(overlays) do
-        for y,v in pairs(row) do
-            Sprites.draw_spr("solar_panel_overlay_ul",x,y)
-            Sprites.draw_spr("solar_panel_overlay_lr",x+1,y+1)
-            Sprites.draw_spr("solar_panel_overlay_ur",x+1,y)
-            if v==1 then
-                Sprites.draw_spr("solar_panel_overlay_ll",x,y+1)
-            else
-                Sprites.draw_spr("solar_panel_overlay_ll_short_leg",x,y+1)
-            end
-        end
-    end
-end
 
 function bound(val, min, max)
     if val < min then
@@ -457,11 +413,9 @@ function handle_selection_and_placement()
     -- Determine what we have selected
     local entity_at_sel = Locations.getEntityAt(char.sel_x, char.sel_y) -- may be nil
 
-    local selected_type = ObjectTypes.get_type_of(entity_at_sel)
+    local selected_type = ObjectTypes.type_of(entity_at_sel)
 
-    if panel_locations[char.sel_x][char.sel_y] then -- TODO temporary
-        selected_type = "panel"
-    elseif  wire_locations[char.sel_x][char.sel_y] then -- TODO temporary
+    if wire_locations[char.sel_x][char.sel_y] then -- TODO temporary
         selected_type = "wire"
     end
 
@@ -481,7 +435,7 @@ function handle_selection_and_placement()
         elseif action == "pick_up_panel" then
             char.is_removing = true
             char.place_mode = "place_panel"
-            panel_locations[char.sel_x][char.sel_y] = nil
+            Locations.remove_entity_at(char.sel_x, char.sel_y)
         elseif action == "pick_up_wire" then
             char.is_removing = true
             char.place_mode = "place_wire"
@@ -489,7 +443,7 @@ function handle_selection_and_placement()
         elseif action == "place_panel" then
             char.is_placing = true
             char.place_mode = "place_panel"
-            panel_locations[char.sel_x][char.sel_y] = true
+            Panels.place_panel_at(char.sel_x, char.sel_y)
         elseif action == "place_wire" then
             char.is_placing = true
             char.place_mode = "place_wire"
