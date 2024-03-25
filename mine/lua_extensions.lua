@@ -26,3 +26,20 @@ function table_with_default_val_inserted(default) -- TODO name
     setmetatable(ret, mt)
     return ret
 end
+
+function bound(val, min, max)
+    if val < min then
+        return min
+    elseif val > max then
+        return max
+    end
+    return val
+end
+
+function get_only_element(tbl)
+    assert(#tbl == 1)
+    for x in all(tbl) do
+        return x
+    end
+end
+

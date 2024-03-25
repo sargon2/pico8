@@ -29,15 +29,6 @@ char = {
     place_mode = "place_panel",
 }
 
-transformer_left_locations = {
-    [2] = {[2]=true}
-}
-transformer_right_locations = {
-    [3] = {[2]=true}
-}
-
-last_t=0
-
 function draw_char(char,x,y)
     local f=char.anim_frames[
         1+(flr(char.frame) % #char.anim_frames)
@@ -50,35 +41,14 @@ function draw_selection(char)
     Sprites.draw_spr(char.sel_sprite,char.sel_x,char.sel_y-1)
 end
 
-
 function _init()
     srand(12345)
+
     Rocks.create_rocks()
     Panels.init()
     Wire.init()
+    Transformers.init()
 end
-
--- TODO this shouldn't live here
-function getOnlyElement(tbl)
-    assert(#tbl == 1) -- getOnlyElement requires 1 element in the table
-    for x in all(tbl) do
-        return x
-    end
-end
-
-function draw_simple(tbl, spritenum)
-    for x,ys in pairs(tbl) do
-        for y,t in pairs(ys) do
-            Sprites.draw_spr(spritenum,x,y)
-        end
-    end
-end
-
-function draw_transformers()
-    draw_simple(transformer_left_locations, "transformer_left")
-    draw_simple(transformer_right_locations, "transformer_right")
-end
-
 
 function _draw()
     cls()
@@ -86,141 +56,12 @@ function _draw()
 
     Drawable.draw_all(char.x, char.y)
 
-    draw_transformers() -- TODO componentize
-
     draw_char(char, 64, 64)
     draw_selection(char)
 end
 
-function iter_thing_types(key)
-    -- TODO finish converting these to components
-    thing_types = {
-        wire = {wire_locations},
-        panel = {panel_locations},
-        rock = {},
-        placeable = {"panel", "wire"},
-        walking_obstruction = {"panel", "rock"},
-        anything = {"panel", "wire", "rock"},
-    }
-
-    local stack = {key}
-    return function()
-        while #stack > 0 do
-            local next = deli(stack)
-            if type(next) == "string" then
-                for i = 1, #thing_types[next] do
-                    add(stack, thing_types[next][i]) -- Push items to be processed onto the stack
-                end
-            else
-                return next -- Yield value
-            end
-        end
-    end
-end
-
--- for each entity that has the "location" component,
--- for each entity that has both the "location" component and the "placeable" component/attribute
--- for each placeable entity
--- should a single panel be an entity or should "panels" collectively be an entity?
--- - seems more flexible for a single panel to be an entity
--- get_entities_with_component("placeable")
--- a component can just be a boolean attribute
--- recursive component groups -> archetypes like "placeable"
--- a component can be a set of other components
--- id = create_entity(...)
--- associate_component_with_entity(id, component)
--- entity.associate_component(component) vs. component.associate_entity(id)
--- does a component just have a list of entity ids associated with it? that'd make iterating them easy
--- create_panel() would be just like.. create an entity id, associate panel components with it, like sprite.add_entity(panel_id, sprites["panel"])
--- so associating component with entity should validate all the data needed for the component is provided
--- recursive components shouldn't have a list of ids though... and a components' child components' ids could be duplicates
--- - the list could be built on the fly.. is that fast enough? is that better than storing and maintaining a list of ids on the recursive component?
--- adding a recursive component to an entity would need to take data for all the children of the recursive component, which means the method signature would change if the child components changed
--- - this may be why archetypes are a different type than components in unity
--- - it could just take a variable-size list of structs
--- if I add "placeable" to one entity, then directly add "panel" and "wire" to another entity, then request the list of "placeable", it should NOT include the panel/wire entity.
--- - An example of this would be a new item which is both a panel and a wire, but is not placeable.
--- - This means recursive entities MUST store their own list of entities.
--- - I'm off in the weeds here.  This kind of problem would get solved via implementation.
--- - if something is "placeable" that doesn't ever mean it's both panel and wire.
--- "get all placeable items" -> get all wire, get all panels, (deduplicate?), return
--- "is there a placeable thing at x/y?" -> "is there a wire at x/y?" followed by "is there a panel at x/y?"
--- - should this be "get all things at x/y", "are any of them panel or wire?"?
--- - "get all things at x/y" and "get all wire" should both be valid ways to get lists of entity ids
--- - "get all things at x/y" looks like "get all entities with a location component", "foreach query the location component for its x/y"
--- - "get all wire" looks like "get all entities with a wire component", "get the location component for each & query its x/y"
--- - so we definitely need "given an entity id, get its location component"
--- - - "get_component(entity_id, component_type)" -- in c# this would be generic
--- - - maybe "location_component_manager.get_component(entity_id)"
--- do we need "get all components associated with this entity id"?
--- - maybe not
---
--- get_component(entity_id, component_type)
--- get_all_entities(component) -- including compound components, which might mean deduplicating or storing redundant data
--- get_all_components(entity_id) -- may not be needed
---
--- then thing_at could be implemented as:
--- function thing_at(x, y, thing_type)
---     for ent in get_all_entities(thing_type) do
---         l = get_component(ent, location)
---           if l.x == x and l.y == y then
---               return true
---           end
---     end
---     return false
--- end
---
--- OR
---
--- function thing_at(x, y, thing_type)
---     for ent in get_all_entities(location) do
---         if ent.x == x and ent.y == y and get_component(ent, thing_type) then
---             return true
---         end
---     end
---     return false
--- end
---
--- maybe the first one is faster because the number of wires is smaller than the number of things with a location? not sure
---
--- associate_component(entity_id, component_type, data)
--- id = create_entity()
-
-function thing_at(x, y, thing_type)
-    for tbl in iter_thing_types(thing_type) do
-        if tbl[x][y] then
-            return true
-        end
-    end
-    return false
-end
-
-
-function bound(val, min, max)
-    if val < min then
-        return min
-    elseif val > max then
-        return max
-    end
-    return val
-end
-
-function handle_frame_timing()
-    -- Handle physics advancement timing
-    ft=t()
-    elapsed=ft-last_t
-    last_t=ft
-    max_skip_fps=15
-    max_elapsed=1/max_skip_fps
-    if elapsed>max_elapsed then
-        -- make sure we don't skip physics too far if the game hiccups
-        elapsed=max_elapsed
-    end
-    return elapsed
-end
-
 function _update60()
-    elapsed = handle_frame_timing()
+    local elapsed = FrameTimer.calculate_elapsed()
     handle_player_movement(elapsed)
     handle_selection_and_placement()
 end
