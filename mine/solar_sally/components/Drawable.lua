@@ -18,7 +18,12 @@ end
 
 function Drawable.draw_all(char_x, char_y)
     for ent_id, sprite in pairs(Drawable.tile_sprites) do
-        Drawable.draw_sprite(ent_id, sprite, char_x, char_y)
+        Drawable.draw_entity(
+            ent_id, 
+            function (x, y)
+                Sprites.draw_spr(sprite, x, y)
+            end,
+            char_x, char_y)
     end
 
     for ent_id, fn in pairs(Drawable.tile_draw_fns) do
@@ -27,17 +32,6 @@ function Drawable.draw_all(char_x, char_y)
 
     for fn in all(Drawable.aggregate_draw_fns) do
         fn(char_x, char_y)
-    end
-end
-
-function Drawable.draw_sprite(ent_id, sprite, char_x, char_y)
-    local locations = Locations.getVisibleLocationsOfEntity(ent_id, char_x, char_y)
-
-    -- This is really similar to below but we want to avoid the overhead of a lambda function. TODO test performance impact
-    for x, ys in pairs(locations) do
-        for y in all(ys) do
-            Sprites.draw_spr(sprite, x, y)
-        end
     end
 end
 

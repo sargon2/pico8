@@ -1,7 +1,4 @@
 Locations = {
-    -- TODO this is being used largely to get all locations of a certain entity, not all locations of all entities
-    -- so maybe it'd make more sense to organize locations as locations[ent_id][x] = {y1, y2, ...}?
-    -- maybe even don't track entity id? and this is just a boolean grid, and each of Rocks/Panels/etc. can just have an instance of it
     locations = table_with_default_val_inserted({}),
 }
 
@@ -10,7 +7,7 @@ function Locations.place_entity(ent_id, x, y)
     Locations.locations[x][y] = ent_id
 end
 
-function Locations.remove_entity_at(x, y)
+function Locations.remove_entity(x, y)
     Locations.place_entity(nil, x, y)
 end
 

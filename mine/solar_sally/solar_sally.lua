@@ -206,11 +206,11 @@ function handle_selection_and_placement()
         elseif action == "pick_up_panel" then
             char.is_removing = true
             char.place_mode = "place_panel"
-            Locations.remove_entity_at(char.sel_x, char.sel_y)
+            Locations.remove_entity(char.sel_x, char.sel_y)
         elseif action == "pick_up_wire" then
             char.is_removing = true
             char.place_mode = "place_wire"
-            Locations.remove_entity_at(char.sel_x, char.sel_y)
+            Locations.remove_entity(char.sel_x, char.sel_y)
         elseif action == "place_panel" then
             char.is_placing = true
             char.place_mode = "place_panel"
