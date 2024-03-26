@@ -76,57 +76,35 @@ function Placement.handle_selection_and_placement()
 end
 
 function Placement.determine_action_and_sprite(entity_at_sel)
-    local action, action_ent, sprite
-
-    if Placement.is_placing then
-        -- entity_at_sel can be nil, equal to is_placing, or something else
-        if entity_at_sel == nil then
-            -- We're in place mode but haven't selected a type; use the user's selected mode.
-            action = "place"
-            action_ent = Placement.place_ent_id
-            sprite = Attributes.get_attr(Placement.place_ent_id, "placement_sprite")
-        elseif entity_at_sel == Placement.is_placing then
-            action = "no_action"
-            action_ent = nil
-            sprite = Attributes.get_attr(entity_at_sel, "placement_sprite")
+    if entity_at_sel == nil then
+        if Placement.is_removing then
+            -- If we have nothing selected, but we're removing, we take no action but retain the pick_up sprite.
+            return "no_action", nil, "pick_up"
         else
-            action = "no_action"
-            action_ent = nil
-            sprite = "no_action"
-        end
-    elseif Placement.is_removing then
-        -- Keep removing the same type of thing only
-        if entity_at_sel == nil then
-            action = "no_action"
-            action_ent = nil
-            sprite = "pick_up"
-        elseif entity_at_sel == Placement.is_removing then
-            action = "pick_up"
-            action_ent = entity_at_sel
-            sprite = "pick_up" -- note this sprite won't be rendered for more than 1 frame because the ent will be removed this frame
-        else
-            -- We're removing, but have something we're not removing selected
-            action = "no_action"
-            action_ent = nil
-            sprite = "no_action"
-        end
-    else
-        -- Not placing or removing; check if we should pick up an item
-        if entity_at_sel == nil then
-            -- If nothing's there, we're in place mode; use the user's selected mode.
-            action = "place"
-            action_ent = Placement.place_ent_id
-            sprite = Attributes.get_attr(Placement.place_ent_id, "placement_sprite")
-        elseif Attributes.get_attr(entity_at_sel, "pick_uppable") then
-            action = "pick_up"
-            action_ent = entity_at_sel
-            sprite = "pick_up"
-        else
-            action = "no_action"
-            action_ent = nil
-            sprite = "no_action"
+            -- We're not removing and we have nothing selected, so we're placing the user's selected item.
+            return "place", Placement.place_ent_id, Attributes.get_attr(Placement.place_ent_id, "placement_sprite")
         end
     end
 
-    return action, action_ent, sprite
+    -- We have something selected
+
+    -- If we're placing the currently selected item
+    if entity_at_sel == Placement.is_placing then
+        -- We can't re-place an item, but we let the user know we're still placing.
+        return "no_action", nil, Attributes.get_attr(entity_at_sel, "placement_sprite")
+    end
+
+    -- If we're removing the currently selected item, pick it up.
+    -- Note this will only happen for 1 frame because the item will be removed this frame
+    if entity_at_sel == Placement.is_removing then
+        return "pick_up", entity_at_sel, "pick_up"
+    end
+
+    -- If we're not placing or removing, and we have something pick-uppable selected, pick it up.
+    if not Placement.is_placing and not Placement.is_removing and Attributes.get_attr(entity_at_sel, "pick_uppable") then
+        return "pick_up", entity_at_sel, "pick_up"
+    end
+
+    -- No valid action was found.
+    return "no_action", nil, "no_action"
 end
