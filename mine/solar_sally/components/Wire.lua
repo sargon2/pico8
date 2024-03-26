@@ -4,8 +4,9 @@ Wire = {
 
 function Wire.init()
     Wire.ent_id = Entities.create_entity()
-    ObjectTypes.add_entity(Wire.ent_id, "wire")
     Drawable.add_tile_draw_fn(Wire.ent_id, Wire.draw_wire_tile)
+    Attributes.set_attr(Wire.ent_id, "pick_uppable", true)
+    Attributes.set_attr(Wire.ent_id, "placement_sprite", "place_wire")
 end
 
 function Wire.place_wire_at(x, y)
