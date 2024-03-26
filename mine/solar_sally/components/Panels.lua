@@ -6,7 +6,6 @@ function Panels.init()
     Panels.ent_id = Entities.create_entity()
     Attributes.set_attr(Panels.ent_id, "WalkingObstruction", true)
     Drawable.add_aggregate_draw_fn(Panels.draw_panels)
-    Attributes.set_attr(Panels.ent_id, "pick_uppable", true) -- TODO read placement_sprite instead
     Attributes.set_attr(Panels.ent_id, "placement_sprite", "place_panel")
 end
 

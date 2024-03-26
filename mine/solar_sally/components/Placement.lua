@@ -45,19 +45,10 @@ end
 function Placement.handle_selection_and_placement()
     Placement.set_place_ent_id(btnp(🅾️))
 
-    -- Determine what we have selected
     local entity_at_sel = Locations.entity_at(Placement.sel_x, Placement.sel_y) -- may be nil
 
-    -- 1. determine action -- no action, pick up, place
-    -- local action, action_ent = Placement.determine_action(entity_at_sel)
-
-    -- 2. determine sprite
-    -- Placement.sel_sprite = Placement.determine_placement_sprite(entity_at_sel, action, action_ent)
-
     local action, action_ent, sprite = Placement.determine_action_and_sprite(entity_at_sel)
-    Placement.sel_sprite = sprite -- TODO can this be inlined?
-
-    -- 3. take action if button pressed, and set placement/removal state
+    Placment.sele_sprite = sprite
 
     if btn(❎) then
         if action == "no_action" then
@@ -101,7 +92,7 @@ function Placement.determine_action_and_sprite(entity_at_sel)
     end
 
     -- If we're not placing or removing, and we have something pick-uppable selected, pick it up.
-    if not Placement.is_placing and not Placement.is_removing and Attributes.get_attr(entity_at_sel, "pick_uppable") then
+    if not Placement.is_placing and not Placement.is_removing and Attributes.get_attr(entity_at_sel, "placement_sprite") then
         return "pick_up", entity_at_sel, "pick_up"
     end
 
