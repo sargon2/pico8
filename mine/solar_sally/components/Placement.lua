@@ -5,13 +5,17 @@ Placement = {
     sel_x=0,
     sel_y=0,
     sel_sprite = "no_action",
-    place_ent_id = nil,
     is_placing = nil, -- ent id of what we're placing
     is_removing = nil, --ent id of what we're removing
+    placeable_entities = nil,
+    placeable_index = 1,
+    place_ent_id = nil, -- technically redundant, but it's simpler and faster to cache it
 }
 
 function Placement.init()
-    Placement.place_ent_id = Panels.ent_id -- by default we place panels
+    -- Add placeable entities in the same order they'll show up to the user
+    Placement.placeable_entities = {Panels.ent_id, Wire.ent_id}
+    Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
 end
 
 function Placement.draw_selection()
@@ -19,15 +23,11 @@ function Placement.draw_selection()
     Sprites.draw_spr(Placement.sel_sprite,Placement.sel_x,Placement.sel_y-1)
 end
 
-function Placement.set_place_ent_id(button_pressed)
-    -- TODO rotate through items with "placeable" attribute
-    if button_pressed then
-        if Placement.place_ent_id == Panels.ent_id then
-            Placement.place_ent_id = Wire.ent_id
-        else
-            Placement.place_ent_id = Panels.ent_id
-        end
-    end
+function Placement.rotate_place_ent_id()
+    Placement.placeable_index %= #Placement.placeable_entities
+    Placement.placeable_index += 1
+
+    Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
 end
 
 function Placement.remove(ent_id, x, y)
@@ -43,12 +43,14 @@ function Placement.place(ent_id, x, y)
 end
 
 function Placement.handle_selection_and_placement()
-    Placement.set_place_ent_id(btnp(🅾️))
+    if btnp(🅾️) then
+        Placement.rotate_place_ent_id()
+    end
 
     local entity_at_sel = Locations.entity_at(Placement.sel_x, Placement.sel_y) -- may be nil
 
     local action, action_ent, sprite = Placement.determine_action_and_sprite(entity_at_sel)
-    Placment.sele_sprite = sprite
+    Placement.sel_sprite = sprite
 
     if btn(❎) then
         if action == "no_action" then
