@@ -10,12 +10,27 @@ Placement = {
     placeable_entities = nil,
     placeable_index = 1,
     place_ent_id = nil, -- technically redundant, but it's simpler and faster to cache it
+    placement_fns = {},
+    removal_fns = {},
+    obstructed_fns = {},
 }
 
 function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
-    Placement.placeable_entities = {Panels.ent_id, Wire.ent_id}
+    Placement.placeable_entities = {Panels.ent_id, Wire.ent_id, Transformers.ent_left}
     Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
+end
+
+function Placement.set_placement_fn(ent_id, fn)
+    Placement.placement_fns[ent_id] = fn
+end
+
+function Placement.set_removal_fn(ent_id, fn)
+    Placement.removal_fns[ent_id] = fn
+end
+
+function Placement.set_placement_obstruction_fn(ent_id, fn)
+    Placement.obstructed_fns[ent_id] = fn
 end
 
 function Placement.draw_selection()
@@ -31,15 +46,28 @@ function Placement.rotate_place_ent_id()
 end
 
 function Placement.remove(ent_id, x, y)
+    local fn = Placement.removal_fns[ent_id]
+    if fn then
+        local e = fn(x, y)
+        if e then
+            ent_id = e
+        end
+    else
+        Locations.remove_entity(x, y)
+    end
     Placement.is_removing = ent_id
     Placement.place_ent_id = ent_id
-    Locations.remove_entity(x, y)
 end
 
 function Placement.place(ent_id, x, y)
     Placement.is_placing = ent_id
     Placement.place_ent_id = ent_id
-    Locations.place_entity(ent_id, Placement.sel_x, Placement.sel_y)
+    local fn = Placement.placement_fns[ent_id]
+    if fn then
+        fn(x, y)
+    else
+        Locations.place_entity(ent_id, x, y)
+    end
 end
 
 function Placement.handle_selection_and_placement()
@@ -74,6 +102,10 @@ function Placement.determine_action_and_sprite(entity_at_sel)
             -- If we have nothing selected, but we're removing, we take no action but retain the pick_up sprite.
             return "no_action", nil, "pick_up"
         else
+            local fn = Placement.obstructed_fns[Placement.place_ent_id]
+            if fn and fn(Placement.sel_x, Placement.sel_y) then
+                return "no_action", nil, "no_action" -- TODO should this be a custom sprite?
+            end
             -- We're not removing and we have nothing selected, so we're placing the user's selected item.
             return "place", Placement.place_ent_id, Attributes.get_attr(Placement.place_ent_id, "placement_sprite")
         end

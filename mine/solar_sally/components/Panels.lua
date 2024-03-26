@@ -9,10 +9,6 @@ function Panels.init()
     Attributes.set_attr(Panels.ent_id, "placement_sprite", "place_panel")
 end
 
-function Panels.place_panel_at(x, y)
-    Locations.place_entity(Panels.ent_id, x, y)
-end
-
 function Panels.panel_at(x, y)
     return Locations.entity_at(x, y) == Panels.ent_id
 end

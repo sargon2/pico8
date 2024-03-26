@@ -8,10 +8,6 @@ function Wire.init()
     Attributes.set_attr(Wire.ent_id, "placement_sprite", "place_wire")
 end
 
-function Wire.place_wire_at(x, y)
-    Locations.place_entity(Wire.ent_id, x, y)
-end
-
 function Wire.wire_at(x, y)
     return Locations.entity_at(x, y) == Wire.ent_id
 end
