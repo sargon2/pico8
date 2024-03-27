@@ -10,8 +10,8 @@ function Transformers.init()
     Attributes.set_attr(Transformers.ent_left, "WalkingObstruction", true)
     Attributes.set_attr(Transformers.ent_right, "WalkingObstruction", true)
 
-    Drawable.add_tile_sprite(Transformers.ent_left, "transformer_left")
-    Drawable.add_tile_sprite(Transformers.ent_right, "transformer_right")
+    Drawable.add_tile_sprite(ZValues["Transformers"], Transformers.ent_left, "transformer_left")
+    Drawable.add_tile_sprite(ZValues["Transformers"], Transformers.ent_right, "transformer_right")
 
     Placement.set_placement_fn(Transformers.ent_left, Transformers.place)
 

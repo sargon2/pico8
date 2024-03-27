@@ -19,8 +19,14 @@ function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
     Placement.placeable_entities = {Panels.ent_id, Wire.ent_id, Transformers.ent_left}
     Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
+    Drawable.add_aggregate_draw_fn(ZValues["Placement"], Placement.draw_selection)
 end
 
+function Placement.update(elapsed)
+    Placement.handle_selection_and_placement()
+end
+
+-- TODO these set_fn methods are weird and only needed since not all entities are exactly 1 tile
 function Placement.set_placement_fn(ent_id, fn)
     Placement.placement_fns[ent_id] = fn
 end

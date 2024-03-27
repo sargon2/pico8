@@ -9,29 +9,37 @@
 -- add trees
 -- add houses?
 
+solar_sally = {
+    -- The order here is important (think dep injection dependency graph)
+    systems = {Rocks, Panels, Wire, Transformers, Placement, Drawable, Character, Map, FrameTimer}
+}
+
 function _init()
     srand(12345)
 
-    Rocks.init()
-    Panels.init()
-    Wire.init()
-    Transformers.init()
-    Placement.init()
+    for system in all(solar_sally.systems) do
+        if system.init then
+            system.init()
+        end
+    end
 end
 
 function _draw()
     cls()
-    map(0,0,64-(Character.x*8),64-(Character.y*8)) -- TODO should this be in draw_all as a Map component?
 
-    Drawable.draw_all(Character.x, Character.y)
-
-    -- TODO should these be in draw_all somehow?
-    Character.draw(64, 64)
-    Placement.draw_selection()
+    for system in all(solar_sally.systems) do
+        if system.draw then
+            system.draw()
+        end
+    end
 end
 
 function _update60()
     local elapsed = FrameTimer.calculate_elapsed()
-    Character.handle_player_movement(elapsed)
-    Placement.handle_selection_and_placement()
+
+    for system in all(solar_sally.systems) do
+        if system.update then
+            system.update(elapsed)
+        end
+    end
 end

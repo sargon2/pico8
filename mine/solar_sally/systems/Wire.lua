@@ -4,7 +4,7 @@ Wire = {
 
 function Wire.init()
     Wire.ent_id = Entities.create_entity()
-    Drawable.add_tile_draw_fn(Wire.ent_id, Wire.draw_wire_tile)
+    Drawable.add_tile_draw_fn(ZValues["Wire"], Wire.ent_id, Wire.draw_wire_tile)
     Attributes.set_attr(Wire.ent_id, "placement_sprite", "place_wire")
 end
 

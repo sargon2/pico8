@@ -9,11 +9,19 @@ Character = {
     is_moving = false,
 }
 
-function Character.draw(x,y)
+function Character.init()
+    Drawable.add_aggregate_draw_fn(ZValues["Character"], Character.drawChar)
+end
+
+function Character.update(elapsed)
+    Character.handle_player_movement(elapsed)
+end
+
+function Character.drawChar()
     local f=Character.anim_frames[
         1+(flr(Character.frame) % #Character.anim_frames)
     ]
-    spr(f,x,y,1,1,Character.flip_x)
+    spr(f,64,64,1,1,Character.flip_x)
 end
 
 -- Convenience method; TODO where should this live?
