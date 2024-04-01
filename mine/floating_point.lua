@@ -111,7 +111,7 @@ function df_tostr(val)
 		local adj_exp=exponent+#coefficient-1
 		
 		--character form
-		if exponent<=0 and adj_exp>=-6 then
+		-- if exponent<=0 and adj_exp>=-6 then
 			if exponent==0 then
 				str..=coefficient
 			else
@@ -121,10 +121,10 @@ function df_tostr(val)
 				str..=sub("0"..coefficient,#coefficient<=-exponent and 1 or 2,exponent-1).."."..sub(coefficient,exponent)
 			end
 		--exponential notation
-		else
-			if (#coefficient>1) coefficient=subc(coefficient,1).."."..sub(coefficient,2)
-			str..=coefficient.."e"..(exponent>0 and "+" or "-")..abs(adj_exp)
-		end
+		-- else
+		-- 	if (#coefficient>1) coefficient=subc(coefficient,1).."."..sub(coefficient,2)
+		-- 	str..=coefficient.."e"..(exponent>0 and "+" or "-")..abs(adj_exp)
+		-- end
 	else
 		str..=df_is_snan(val) and "snan" or df_is_nan(val) and "nan" or "infinity"
 	end
