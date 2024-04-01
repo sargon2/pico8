@@ -9,7 +9,7 @@ function dump(o)
         end
         return s .. '} '
     else
-        return tostring(o)
+        return tostr(o)
     end
 end
 

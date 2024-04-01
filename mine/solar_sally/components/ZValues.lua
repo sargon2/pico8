@@ -9,4 +9,5 @@ ZValues = {
     Wire = 5,
     Character = 6,
     Placement = 7,
+    PanelCalculator = 8
 }

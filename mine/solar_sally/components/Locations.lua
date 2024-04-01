@@ -1,14 +1,27 @@
 Locations = {
     locations = table_with_default_val_inserted({}),
+    num_panels = 0 -- TODO temporary
 }
 
 function Locations.place_entity(ent_id, x, y)
     -- pass nil for ent_id to remove entity at location
     Locations.locations[x][y] = ent_id
+    if ent_id == Panels.ent_id then
+        Locations.num_panels += 1
+    end
 end
 
 function Locations.remove_entity(x, y)
+    -- TODO temporary
+    if Locations.entity_at(x, y) == Panels.ent_id then
+        Locations.num_panels -= 1
+    end
+
     Locations.place_entity(nil, x, y)
+end
+
+function Locations.getNumPanels() -- TODO temporary
+    return Locations.num_panels
 end
 
 function Locations.entity_at(x, y)

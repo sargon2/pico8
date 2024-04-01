@@ -1,6 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
+#include ../floating_point.lua
 #include ../lua_extensions.lua
 #include ../vector_utils.lua
 #include systems/FrameTimer.lua
@@ -17,6 +18,7 @@ __lua__
 #include systems/Rocks.lua
 #include systems/Wire.lua
 #include systems/Transformers.lua
+#include systems/PanelCalculator.lua
 #include solar_sally.lua
 __gfx__
 00000000000000000044440000000000004440000000000000444400000000000044400000000000004444000000000000000000000000000000000000000000

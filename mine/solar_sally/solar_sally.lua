@@ -11,7 +11,7 @@
 
 solar_sally = {
     -- The order here is important (think dep injection dependency graph)
-    systems = {Rocks, Panels, Wire, Transformers, Placement, Drawable, Character, Map, FrameTimer}
+    systems = {Rocks, Panels, Wire, Transformers, Placement, Drawable, Character, Map, FrameTimer, PanelCalculator}
 }
 
 function _init()

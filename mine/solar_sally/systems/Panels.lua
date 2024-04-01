@@ -49,3 +49,7 @@ function Panels.draw_panels(x, y)
         end
     end
 end
+
+function Panels.getNumPanels()
+    return Locations.getNumPanels() -- TODO move that logic here
+end
