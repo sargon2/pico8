@@ -59,9 +59,9 @@ end
 function Drawable.draw_entity(ent_id, draw_fn, char_x, char_y)
     local locations = Locations.getVisibleLocationsOfEntity(ent_id, char_x, char_y)
 
-    for x, ys in pairs(locations) do
-        for y in all(ys) do
-            draw_fn(x, y)
-        end
+    for t in locations do
+        local x = t[1]
+        local y = t[2]
+        draw_fn(x, y)
     end
 end

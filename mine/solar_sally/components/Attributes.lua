@@ -6,6 +6,12 @@ function Attributes.set_attr(ent_id, key, value)
     Attributes.attr[ent_id][key] = value
 end
 
+function Attributes.set_attrs(ent_id, ...)
+    for k, v in pairs(...) do
+        Attributes.set_attr(ent_id, k, v)
+    end
+end
+
 function Attributes.get_attr(ent_id, key)
     return Attributes.attr[ent_id][key]
 end

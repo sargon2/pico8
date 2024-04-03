@@ -4,10 +4,15 @@ Panels = {
 
 function Panels.init()
     Panels.ent_id = Entities.create_entity()
-    Attributes.set_attr(Panels.ent_id, "WalkingObstruction", true)
-    Attributes.set_attr(Panels.ent_id, "removable", true)
+    Attributes.set_attrs(Panels.ent_id,
+        {
+            WalkingObstruction = true,
+            removable = true,
+            connectable = true,
+            placement_sprite = "place_panel",
+        }
+    )
     Drawable.add_aggregate_draw_fn(ZValues["Panels"], Panels.draw_panels)
-    Attributes.set_attr(Panels.ent_id, "placement_sprite", "place_panel")
 end
 
 function Panels._panel_at(x, y)
@@ -15,27 +20,26 @@ function Panels._panel_at(x, y)
 end
 
 function Panels.draw_panels(x, y)
-    panel_locations = Locations.getVisibleLocationsOfEntity(Panels.ent_id, x, y)
     local overlays=table_with_default_table_inserted()
-    for x,ys in pairs(panel_locations) do
-        for y in all(ys) do
-            -- draw overlays
-            -- careful about leg length
-            if Panels._panel_at(x+1, y+1) then
-                -- short legs override long
-                if not overlays[x][y] then
-                    if Panels._panel_at(x, y+1) then
-                        overlays[x][y]=2
-                    else
-                        overlays[x][y]=1
-                    end
+    for t in Locations.getVisibleLocationsOfEntity(Panels.ent_id, x, y) do
+        local x = t[1]
+        local y = t[2]
+        -- draw overlays
+        -- careful about leg length
+        if Panels._panel_at(x+1, y+1) then
+            -- short legs override long
+            if not overlays[x][y] then
+                if Panels._panel_at(x, y+1) then
+                    overlays[x][y]=2
+                else
+                    overlays[x][y]=1
                 end
             end
-            if Panels._panel_at(x+1, y-1) then
-                overlays[x][y-1]=2
-            end
-            Sprites.draw_spr("solar_panel",x,y)
         end
+        if Panels._panel_at(x+1, y-1) then
+            overlays[x][y-1]=2
+        end
+        Sprites.draw_spr("solar_panel",x,y)
     end
     for x,row in pairs(overlays) do
         for y,v in pairs(row) do

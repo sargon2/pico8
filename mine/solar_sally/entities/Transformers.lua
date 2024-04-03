@@ -7,8 +7,22 @@ function Transformers.init()
     Transformers.ent_left = Entities.create_entity()
     Transformers.ent_right = Entities.create_entity()
 
-    Attributes.set_attr(Transformers.ent_left, "WalkingObstruction", true)
-    Attributes.set_attr(Transformers.ent_right, "WalkingObstruction", true)
+    Attributes.set_attrs(Transformers.ent_left, 
+        {
+            WalkingObstruction = true,
+            placement_sprite = "place_transformer",
+            removable = true,
+            connectable = true,
+        }
+    )
+
+    Attributes.set_attrs(Transformers.ent_right, 
+        {
+            WalkingObstruction = true,
+            removable = true,
+            connectable = true,
+        }
+    )
 
     Drawable.add_tile_sprite(ZValues["Transformers"], Transformers.ent_left, "transformer_left")
     Drawable.add_tile_sprite(ZValues["Transformers"], Transformers.ent_right, "transformer_right")
@@ -19,11 +33,6 @@ function Transformers.init()
     Placement.set_removal_fn(Transformers.ent_right, Transformers.remove_right)
 
     Placement.set_placement_obstruction_fn(Transformers.ent_left, Transformers.placement_obstructed)
-
-    Attributes.set_attr(Transformers.ent_left, "placement_sprite", "place_transformer")
-
-    Attributes.set_attr(Transformers.ent_left, "removable", true)
-    Attributes.set_attr(Transformers.ent_right, "removable", true)
 
 end
 

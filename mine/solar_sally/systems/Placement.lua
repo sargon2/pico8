@@ -74,6 +74,8 @@ function Placement.place(ent_id, x, y)
     else
         Locations.place_entity(ent_id, x, y)
     end
+
+    Circuits.recalculate() -- TODO this probably shouldn't live here
 end
 
 function Placement.handle_selection_and_placement()

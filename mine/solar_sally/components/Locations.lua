@@ -30,21 +30,22 @@ function Locations.getEntitiesWithin(xmin, xmax, ymin, ymax)
 end
 
 function Locations.getLocationsOfEntityWithin(requested_ent_id, xmin, xmax, ymin, ymax)
+    return make_iter(Locations._getLocationsOfEntityWithin_co, requested_ent_id, xmin, xmax, ymin, ymax)
+end
+
+function Locations._getLocationsOfEntityWithin_co(requested_ent_id, xmin, xmax, ymin, ymax)
     -- TODO this method would be a lot faster if we organized locations by entity id, like locations[ent_id][x][y] = true.  Is that worth the tradeoff?
-    -- TODO convert this to an iterator?
-    local ret = table_with_default_table_inserted()
     for x, ys in pairs(Locations.locations) do
         if xmin <= x and x <= xmax then
             for y, ent_id in pairs(ys) do
                 if requested_ent_id == nil or requested_ent_id == ent_id then
-                    if ymin <= y and y <= ymax do
-                        add(ret[x], y)
+                    if ymin <= y and y <= ymax then
+                        yield({x, y})
                     end
                 end
             end
         end
     end
-    return ret
 end
 
 function Locations.iterate_all_entity_locations(ent_ids)
@@ -54,7 +55,7 @@ end
 function Locations._iterate_all_entity_locations_co(ent_ids)
     for x, ys in pairs(Locations.locations) do
         for y, ent_id in pairs(ys) do
-            if contains(ent_ids, ent_id) then
+            if ent_ids == nil or contains(ent_ids, ent_id) then
                 yield({x, y})
             end
         end
@@ -62,15 +63,7 @@ function Locations._iterate_all_entity_locations_co(ent_ids)
 end
 
 function Locations.iterate_all()
-    return make_iter(Locations._iterate_all_co)
-end
-
-function Locations._iterate_all_co() -- TODO very similar to above
-    for x, ys in pairs(Locations.locations) do
-        for y, ent_id in pairs(ys) do
-            yield({x, y})
-        end
-    end
+    return make_iter(Locations._iterate_all_entity_locations_co)
 end
 
 function Locations.getVisibleEntities(x, y)
