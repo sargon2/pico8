@@ -4,21 +4,21 @@ __lua__
 #include ../floating_point.lua
 #include ../lua_extensions.lua
 #include ../vector_utils.lua
-#include systems/FrameTimer.lua
 #include components/Entities.lua
 #include components/Sprites.lua
 #include components/ZValues.lua
+#include components/Locations.lua
+#include components/Attributes.lua
+#include systems/FrameTimer.lua
 #include systems/Character.lua
 #include systems/Placement.lua
 #include systems/Drawable.lua
 #include systems/Map.lua
-#include components/Locations.lua
-#include components/Attributes.lua
-#include systems/Panels.lua
-#include systems/Rocks.lua
-#include systems/Wire.lua
-#include systems/Transformers.lua
 #include systems/PanelCalculator.lua
+#include entities/Panels.lua
+#include entities/Rocks.lua
+#include entities/Wire.lua
+#include entities/Transformers.lua
 #include solar_sally.lua
 __gfx__
 00000000000000000044440000000000004440000000000000444400000000000044400000000000004444000000000000000000000000000000000000000000

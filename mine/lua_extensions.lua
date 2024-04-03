@@ -13,14 +13,26 @@ function dump(o)
     end
 end
 
-function table_with_default_val_inserted(default) -- TODO name
+function table_with_default_table_inserted() -- TODO name
     -- TODO this is filling the table with empty tables on every get that returns nil
+    -- If insert is nil, don't insert.
     local ret = {}
     local mt = {
         __index = function(t, k)
             local val = {}
-            t[k] = val -- Insert the default value into the table
+            t[k] = val
             return val
+        end
+    }
+    setmetatable(ret, mt)
+    return ret
+end
+
+function table_with_default_val(default) -- TODO name
+    local ret = {}
+    local mt = {
+        __index = function(t, k)
+            return default
         end
     }
     setmetatable(ret, mt)

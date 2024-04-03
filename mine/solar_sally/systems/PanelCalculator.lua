@@ -36,7 +36,7 @@ end
 function PanelCalculator.update(elapsed)
     -- We need to get the total number of powered panels.
     -- For now, we'll just get the number of panels.  TODO update this to only powered panels.
-    local num_panels = Panels.getNumPanels()
+    local num_panels = Locations.count_placed(Panels.ent_id)
     local elapsed_hours = df_divide(df_double(elapsed), df_double(3600)) -- convert seconds to hours
 
     PanelCalculator.capacity = df_double(num_panels) -- 1000 watts per panel

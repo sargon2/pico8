@@ -24,8 +24,7 @@ function Character.drawChar()
     spr(f,64,64,1,1,Character.flip_x)
 end
 
--- Convenience method; TODO where should this live?
-function obstructed(x, y)
+function Character._obstructed(x, y)
     return Attributes.get_attr_by_location(x, y, "WalkingObstruction")
 end
 
@@ -110,10 +109,10 @@ function Character.handle_player_movement(elapsed)
     Placement.sel_x = flr(Placement.sel_x_p)
     Placement.sel_y = flr(Placement.sel_y_p)
     -- The player can't walk through panels
-    if not obstructed(flr(Character.x+char_x+.6), flr(Character.y+1)) then
+    if not Character._obstructed(flr(Character.x+char_x+.6), flr(Character.y+1)) then
         Character.x += char_x
     end
-    if not obstructed(flr(Character.x+.6), flr(Character.y+char_y+1)) then
+    if not Character._obstructed(flr(Character.x+.6), flr(Character.y+char_y+1)) then
         Character.y += char_y
     end
     -- Animate walking

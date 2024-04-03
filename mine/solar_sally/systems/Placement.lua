@@ -132,7 +132,7 @@ function Placement.determine_action_and_sprite(entity_at_sel)
     end
 
     -- If we're not placing or removing, and we have something pick-uppable selected, pick it up.
-    if not Placement.is_placing and not Placement.is_removing and Attributes.get_attr(entity_at_sel, "placement_sprite") then
+    if not Placement.is_placing and not Placement.is_removing and Attributes.get_attr(entity_at_sel, "removable") then
         return "pick_up", entity_at_sel, "pick_up"
     end
 

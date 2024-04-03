@@ -1,27 +1,24 @@
 Locations = {
-    locations = table_with_default_val_inserted({}),
-    num_panels = 0 -- TODO temporary
+    locations = table_with_default_table_inserted(),
+    ent_counts = table_with_default_val(0),
 }
 
 function Locations.place_entity(ent_id, x, y)
     -- pass nil for ent_id to remove entity at location
-    Locations.locations[x][y] = ent_id
-    if ent_id == Panels.ent_id then
-        Locations.num_panels += 1
+    if ent_id then
+        Locations.ent_counts[ent_id] += 1
+    else
+        Locations.ent_counts[Locations.entity_at(x, y)] -= 1
     end
+    Locations.locations[x][y] = ent_id
 end
 
 function Locations.remove_entity(x, y)
-    -- TODO temporary
-    if Locations.entity_at(x, y) == Panels.ent_id then
-        Locations.num_panels -= 1
-    end
-
     Locations.place_entity(nil, x, y)
 end
 
-function Locations.getNumPanels() -- TODO temporary
-    return Locations.num_panels
+function Locations.count_placed(ent_id)
+    return Locations.ent_counts[ent_id]
 end
 
 function Locations.entity_at(x, y)
@@ -33,7 +30,7 @@ function Locations.getEntitiesWithin(xmin, xmax, ymin, ymax)
 end
 
 function Locations.getLocationsOfEntityWithin(requested_ent_id, xmin, xmax, ymin, ymax)
-    local ret = table_with_default_val_inserted({})
+    local ret = table_with_default_table_inserted()
     for x, ys in pairs(Locations.locations) do
         if xmin <= x and x <= xmax then
             for y, ent_id in pairs(ys) do

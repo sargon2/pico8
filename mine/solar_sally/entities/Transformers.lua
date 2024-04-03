@@ -21,7 +21,10 @@ function Transformers.init()
     Placement.set_placement_obstruction_fn(Transformers.ent_left, Transformers.placement_obstructed)
 
     Attributes.set_attr(Transformers.ent_left, "placement_sprite", "place_transformer")
-    Attributes.set_attr(Transformers.ent_right, "placement_sprite", "place_transformer") -- TODO this is only needed to cue Placement we can remove it, we should have a better way to tell if it's removable
+
+    Attributes.set_attr(Transformers.ent_left, "removable", true)
+    Attributes.set_attr(Transformers.ent_right, "removable", true)
+
 end
 
 function Transformers.place(x, y)

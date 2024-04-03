@@ -4,10 +4,10 @@ ZValues = {
     -- - We can't init the other classes before this one because their inits depend on z value
     Map = 1,
     Panels = 2,
-    Rocks = 3,
-    Transformers = 4,
-    Wire = 5,
-    Character = 6,
-    Placement = 7,
-    PanelCalculator = 8
+    Rocks = 2,
+    Transformers = 2,
+    Wire = 2,
+    Character = 3,
+    Placement = 4,
+    PanelCalculator = 4
 }
