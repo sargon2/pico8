@@ -5,5 +5,7 @@ function Map.init()
 end
 
 function Map.drawMap()
-    map(0,0,64-(Character.x*8),64-(Character.y*8))
+    -- The pico8 map only contains grass, and only in the top left 17x17 square.
+    -- We only need to draw the map around the player's current position, nowhere else.
+    map(0,0,(flr(Character.x) - Character.x)*8,(flr(Character.y) - Character.y)*8, 17, 17)
 end
