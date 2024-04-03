@@ -1,0 +1,14 @@
+GridWire = {
+    ent_id = nil,
+}
+
+function GridWire.init()
+    GridWire.ent_id = Entities.create_entity()
+    Attributes.set_attr(GridWire.ent_id, "WalkingObstruction", true)
+    Drawable.add_tile_sprite(ZValues["GridWire"], GridWire.ent_id, "grid_wire")
+    printh(Sprites["grid_wire"])
+
+    for i=-100,100 do
+        Locations.place_entity(GridWire.ent_id, i, 10)
+    end
+end

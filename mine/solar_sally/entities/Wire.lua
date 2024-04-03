@@ -10,7 +10,13 @@ function Wire.init()
 end
 
 function Wire.wire_at(x, y)
-    return Locations.entity_at(x, y) == Wire.ent_id
+    local e = Locations.entity_at(x, y)
+    if e == Wire.ent_id then
+        return true
+    end
+    if e == GridWire.ent_id then -- Wire connects to GridWire
+        return true
+    end
 end
 
 function Wire.draw_wire_tile(x, y)

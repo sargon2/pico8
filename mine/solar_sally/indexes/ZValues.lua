@@ -7,6 +7,7 @@ ZValues = {
     Rocks = 2,
     Transformers = 2,
     Wire = 2,
+    GridWire = 2,
     Character = 3,
     Placement = 4,
     PanelCalculator = 4

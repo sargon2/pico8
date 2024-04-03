@@ -11,7 +11,8 @@
 
 solar_sally = {
     -- The order here is important (think dep injection dependency graph)
-    systems = {Rocks, Panels, Wire, Transformers, Placement, Drawable, Character, Map, FrameTimer, PanelCalculator}
+    -- Includes entities as well as systems; anything that needs to be init'd
+    systems = {Rocks, Panels, Wire, GridWire, Transformers, Placement, Drawable, Character, Map, FrameTimer, PanelCalculator}
 }
 
 function _init()
@@ -22,6 +23,8 @@ function _init()
             system.init()
         end
     end
+
+    Circuits.recalculate() -- TODO remove
 end
 
 function _draw()

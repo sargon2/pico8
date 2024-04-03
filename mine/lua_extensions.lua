@@ -55,3 +55,25 @@ function get_only_element(tbl)
     end
 end
 
+function make_iter(f, ...)
+    -- Turn the given function (coroutine) into an iterator.  It should call 'yield' to return each value.
+    local cor = cocreate(f)
+    local args = {...}
+    return function ()
+        if cor and costatus(cor) != 'dead' then
+            local _, val = coresume(cor, unpack(args))
+            return val
+        else
+            return nil
+        end
+    end
+end
+
+function contains(haystack, needle)
+    for val in all(haystack) do
+        if val == needle then
+            return true
+        end
+    end
+    return false
+end

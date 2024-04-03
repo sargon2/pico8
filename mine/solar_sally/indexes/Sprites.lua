@@ -18,6 +18,7 @@ Sprites = {
     wire_right = 50,
     wire_up = 51,
     wire_down = 52,
+    grid_wire = 54,
 }
 
 function Sprites.draw_spr(s,x,y)
