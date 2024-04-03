@@ -1,4 +1,5 @@
 Character = {
+    ent_id = nil,
     x=0,
     y=0,
     frame=1,
@@ -10,6 +11,7 @@ Character = {
 }
 
 function Character.init()
+    Character.ent_id = Entities.create_entity()
     Drawable.add_aggregate_draw_fn(ZValues["Character"], Character.drawChar)
 end
 
