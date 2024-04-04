@@ -15,7 +15,6 @@ end
 
 function table_with_default_table_inserted() -- TODO name
     -- TODO this is filling the table with empty tables on every get that returns nil
-    -- If insert is nil, don't insert.
     local ret = {}
     local mt = {
         __index = function(t, k)
