@@ -15,6 +15,10 @@ function Character.init()
     Drawable.add_aggregate_draw_fn(ZValues["Character"], Character.ent_id, Character.drawChar)
 end
 
+function Character.get_name()
+    return "Character"
+end
+
 function Character.update(elapsed)
     Character.handle_player_movement(elapsed)
 end

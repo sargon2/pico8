@@ -20,6 +20,10 @@ function PanelCalculator.init()
     PanelCalculator.earned = df_double({"+", "0", 0})
 end
 
+function PanelCalculator.get_name()
+    return "PanelCalculator"
+end
+
 function df_and_trim(val, digits)
     if not digits then
         digits = 10

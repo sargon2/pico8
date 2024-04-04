@@ -11,6 +11,7 @@ __lua__
 #include components/Entities.lua
 #include components/Locations.lua
 #include components/Attributes.lua
+#include systems/PerfTimer.lua
 #include systems/FrameTimer.lua
 #include systems/Placement.lua
 #include systems/Drawable.lua

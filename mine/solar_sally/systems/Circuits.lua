@@ -25,6 +25,10 @@ function Circuits.recalculate()
     Circuits.mark_powered_panels(components)
 end
 
+function Circuits.get_name()
+    return "Circuits"
+end
+
 function Circuits.mark_powered_panels(components)
     Panels.clear_powered()
 

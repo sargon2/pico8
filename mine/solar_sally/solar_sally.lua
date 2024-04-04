@@ -30,9 +30,11 @@ end
 function _draw()
     cls()
 
+    if(Settings.debug_timing) printh("Drawing; start "..tostr(PerfTimer.get_and_advance()))
     for system in all(solar_sally.systems) do
         if system.draw then
             system.draw()
+            if(Settings.debug_timing) printh(system.get_name()..".draw(): "..tostr(PerfTimer.get_and_advance()))
         end
     end
 end
@@ -40,9 +42,15 @@ end
 function _update60()
     local elapsed = FrameTimer.calculate_elapsed()
 
+    if Settings.debug_timing then
+        PerfTimer.reset()
+        printh("")
+        printh("Updating; start "..tostr(PerfTimer.get_and_advance()))
+    end
     for system in all(solar_sally.systems) do
         if system.update then
             system.update(elapsed)
+            if(Settings.debug_timing) printh(system.get_name()..".update(): "..tostr(PerfTimer.get_and_advance()))
         end
     end
 end

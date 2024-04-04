@@ -24,6 +24,10 @@ function Placement.init()
     Drawable.add_aggregate_draw_fn(ZValues["Placement"], Placement.ent_id, Placement.draw_selection)
 end
 
+function Placement.get_name()
+    return "Placement"
+end
+
 function Placement.update(elapsed)
     Placement.handle_selection_and_placement()
 end

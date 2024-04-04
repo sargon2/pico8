@@ -11,6 +11,10 @@ function Drawable.init()
     end
 end
 
+function Drawable.get_name()
+    return "Drawable"
+end
+
 function Drawable.add_aggregate_draw_fn(z, ent_id, aggregate_draw_fn)
     Drawable.aggregate_draw_fns[z][ent_id] = aggregate_draw_fn
 end
@@ -42,7 +46,7 @@ function Drawable.draw_all(char_x, char_y)
 end
 
 function Drawable.draw_entity(ent_id, draw_fn, char_x, char_y)
-    local locations = Locations.getVisibleLocationsOfEntity(ent_id, char_x, char_y)
+    local locations = Locations.getVisibleLocationsOfEntity(ent_id, char_x, char_y) -- TODO this is the slowest call in the game
 
     for t in locations do
         local x = t[1]

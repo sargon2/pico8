@@ -1,5 +1,5 @@
 Locations = {
-    locations = table_with_default_table_inserted(),
+    locations = table_with_default_table_inserted(), -- locations[x][y] = ent_id
     ent_counts = table_with_default_val(0),
 }
 
