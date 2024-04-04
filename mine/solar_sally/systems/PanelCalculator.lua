@@ -27,6 +27,7 @@ function df_and_trim(val, digits)
 end
 
 function PanelCalculator.draw()
+    color(6)
     print("capacity: "..df_and_trim(PanelCalculator.capacity).."000 watts")
     print("total: "..df_and_trim(PanelCalculator.total_generated, 6).." watt-hours")
     print("earning: $"..df_and_trim(PanelCalculator.earning).."/h")

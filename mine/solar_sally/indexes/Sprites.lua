@@ -38,3 +38,21 @@ function Sprites.draw_spr(s,x,y)
         palt()
     end
 end
+
+function Sprites.set_pixel(x,y,xoffset,yoffset,c) -- TODO where should this live?
+    pset(
+        (8+x-Character.x)*8+xoffset,
+        (8+y-Character.y)*8+yoffset,
+        c
+    )
+end
+
+function Sprites.rect(x,y,xmin,ymin,xmax,ymax,c) -- TODO where should this live?
+    rect(
+        (8+x-Character.x)*8+xmin,
+        (8+y-Character.y)*8+ymin,
+        (8+x-Character.x)*8+xmax,
+        (8+y-Character.y)*8+ymax,
+        c
+    )
+end

@@ -1,11 +1,14 @@
 Transformers = {
     ent_left = nil,
     ent_right = nil,
+    powered_transformers = nil,
 }
 
 function Transformers.init()
     Transformers.ent_left = Entities.create_entity()
     Transformers.ent_right = Entities.create_entity()
+
+    Transformers.clear_powered()
 
     Attributes.set_attrs(Transformers.ent_left, 
         {
@@ -24,8 +27,7 @@ function Transformers.init()
         }
     )
 
-    Drawable.add_tile_sprite(ZValues["Transformers"], Transformers.ent_left, "transformer_left")
-    Drawable.add_tile_sprite(ZValues["Transformers"], Transformers.ent_right, "transformer_right")
+    Drawable.add_tile_draw_fn(ZValues["Transformers"], Transformers.ent_left, Transformers.draw_at)
 
     Placement.set_placement_fn(Transformers.ent_left, Transformers.place)
 
@@ -33,7 +35,15 @@ function Transformers.init()
     Placement.set_removal_fn(Transformers.ent_right, Transformers.remove_right)
 
     Placement.set_placement_obstruction_fn(Transformers.ent_left, Transformers.placement_obstructed)
+end
 
+function Transformers.clear_powered()
+    Transformers.powered_transformers = BooleanGrid:new()
+end
+
+function Transformers.mark_powered(x, y)
+    -- Pass in location of left side
+    Transformers.powered_transformers:set(x, y)
 end
 
 function Transformers.place(x, y)
@@ -58,4 +68,13 @@ function Transformers.placement_obstructed(x, y)
         return true
     end
     return false
+end
+
+function Transformers.draw_at(x, y)
+    Sprites.draw_spr("transformer_left", x, y)
+    Sprites.draw_spr("transformer_right", x+1, y)
+    if Transformers.powered_transformers:is_set(x, y) then
+        Sprites.set_pixel(x,y,5,5,11)
+        -- Sprites.rect(x,y,5,4,4,5,11)
+    end
 end

@@ -22,37 +22,30 @@ function Circuits.recalculate()
     -- 1. (later) Sally's house should be connected to "the grid"
     -- 1. implement above phases
 
-    local components = get_connected_components()
+    local grid_components, components = get_connected_components()
 
-    printh(dump(components))
-
-    local powered_transformers = mark_powered_transformers(components)
-
-    printh(dump(powered_transformers))
+    mark_powered_transformers(grid_components)
 end
 
-function mark_powered_transformers(components)
-    local powered_transformers = BooleanGrid:new()
+function mark_powered_transformers(grid_components)
+    Transformers.clear_powered()
 
-    for component in all(components) do
-        -- TODO this is failing because GridWire is not connectable.  We can't make it connectable because you can put a transformer directly next to grid wire, and have a component without any regular wire.
-        -- So, the fix is probably for the 'components' data structure to include whether or not each component contains grid wire or not.
-        -- Maybe get_grid_component() should be separate from get_connected_components().
-        if is_grid_component(component) then -- if this component is connected to the grid; there's only ever 1 grid component
-            for x, y in pairs(components[Transformers.ent_left]) do
-                powered_transformers:set(x, y)
-                powered_transformers:set(x+1, y)
+    for component in all(grid_components) do
+        for x, ys in pairs(component[Transformers.ent_left]) do
+            for y in all(ys) do
+                Transformers.mark_powered(x, y)
             end
-            for x, y in pairs(components[Transformers.ent_right]) do
-                powered_transformers:set(x, y)
-                powered_transformers:set(x-1, y)
+        end
+        for x, ys in pairs(component[Transformers.ent_right]) do
+            for y in all(ys) do
+                Transformers.mark_powered(x-1, y)
             end
         end
     end
-    return powered_transformers
 end
 
 function get_connected_components()
+    local grid_components = {}
     local components = {}
 
     local visited = BooleanGrid:new()
@@ -82,7 +75,21 @@ function get_connected_components()
         end
     end
 
-    for t in Locations.iterate_all_entity_locations({Wire.ent_id, GridWire.ent_id}) do
+    for t in Locations.iterate_all_entity_locations({GridWire.ent_id}) do
+        local x = t[1]
+        local y = t[2]
+
+        if not visited:is_set(x, y) then
+            visit(x, y) -- Will visit the entire component
+
+            if next(current_component) != nil then -- if it's not empty
+                add(grid_components, current_component)
+            end
+            current_component = {}
+        end
+    end
+
+    for t in Locations.iterate_all_entity_locations({Wire.ent_id}) do
         local x = t[1]
         local y = t[2]
 
@@ -96,7 +103,7 @@ function get_connected_components()
         end
     end
 
-    return components
+    return grid_components, components
 end
 
 function Circuits.is_powered(x, y)

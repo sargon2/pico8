@@ -63,6 +63,8 @@ function Placement.remove(ent_id, x, y)
     end
     Placement.is_removing = ent_id
     Placement.place_ent_id = ent_id
+
+    Circuits.recalculate() -- TODO this probably shouldn't live here
 end
 
 function Placement.place(ent_id, x, y)
