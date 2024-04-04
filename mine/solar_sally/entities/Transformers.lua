@@ -46,6 +46,10 @@ function Transformers.mark_powered(x, y)
     Transformers.powered_transformers:set(x, y)
 end
 
+function Transformers.is_powered(x, y)
+    return Transformers.powered_transformers:is_set(x, y)
+end
+
 function Transformers.place(x, y)
     Locations.place_entity(Transformers.ent_left, x, y)
     Locations.place_entity(Transformers.ent_right, x+1, y)
@@ -73,7 +77,7 @@ end
 function Transformers.draw_at(x, y)
     Sprites.draw_spr("transformer_left", x, y)
     Sprites.draw_spr("transformer_right", x+1, y)
-    if Transformers.powered_transformers:is_set(x, y) then
+    if Transformers.is_powered(x, y) then
         Sprites.set_pixel(x,y,5,5,11)
         -- Sprites.rect(x,y,5,4,4,5,11)
     end

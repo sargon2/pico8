@@ -1,9 +1,5 @@
 Circuits = {}
 
-function init()
-    Circuits.is_powered_by_loc = BooleanGrid:new()
-end
-
 function Circuits.recalculate()
     -- Panels provide power so really anything hooked up to a panel & wire should be powered, but
     -- for the purposes of determining if a panel is "powered" (that is, generating to the grid)
@@ -22,12 +18,65 @@ function Circuits.recalculate()
     -- 1. (later) Sally's house should be connected to "the grid"
     -- 1. implement above phases
 
-    local grid_components, components = get_connected_components()
+    local grid_components, components = Circuits.get_connected_components()
 
-    mark_powered_transformers(grid_components)
+    Circuits.mark_powered_transformers(grid_components)
+
+    Circuits.mark_powered_panels(components)
 end
 
-function mark_powered_transformers(grid_components)
+function Circuits.mark_powered_panels(components)
+    Panels.clear_powered()
+
+    local total_powered_panels = 0
+
+    for component in all(components) do
+        local num_powered_transformers = 0
+        local num_panels = 0
+
+        -- TODO but how do we avoid double-counting transformers that have both left & right on the wire?
+        -- first, consolidate all the right-side transformers into lefts
+        if component[Transformers.ent_right] then
+            for x, ys in pairs(component[Transformers.ent_right]) do
+                for y in all(ys) do
+                    if not contains(components[Transformers.ent_left][x-1], y) then
+                        add(components[Transformers.ent_left][x-1], y)
+                    end
+                end
+            end
+        end
+        if component[Transformers.ent_left] then
+            for x, ys in pairs(component[Transformers.ent_left]) do
+                for y in all(ys) do
+                    if Transformers.is_powered(x, y) then
+                        num_powered_transformers += 1
+                    end
+                end
+            end
+        end
+
+        if component[Panels.ent_id] then
+            for x, ys in pairs(component[Panels.ent_id]) do
+                for y in all(ys) do
+                    num_panels += 1
+                end
+            end
+
+            if num_powered_transformers >= num_panels / 8 then -- TODO put the 8 in a settings place
+                for x, ys in pairs(component[Panels.ent_id]) do
+                    for y in all(ys) do
+                        Panels.mark_powered(x, y)
+                        total_powered_panels += 1
+                    end
+                end    
+            end
+        end
+    end
+
+    PanelCalculator.set_powered_panel_count(total_powered_panels)
+end
+
+function Circuits.mark_powered_transformers(grid_components)
     Transformers.clear_powered()
 
     for component in all(grid_components) do
@@ -44,7 +93,8 @@ function mark_powered_transformers(grid_components)
     end
 end
 
-function get_connected_components()
+function Circuits.get_connected_components()
+    -- both of these are components[ent_id][x] = {y1, y2, ...}
     local grid_components = {}
     local components = {}
 
@@ -104,8 +154,4 @@ function get_connected_components()
     end
 
     return grid_components, components
-end
-
-function Circuits.is_powered(x, y)
-    return Circuits.is_powered_by_loc[x][y]
 end

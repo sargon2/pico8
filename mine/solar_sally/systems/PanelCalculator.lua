@@ -6,6 +6,7 @@
 -- - Total earned ($)
 
 PanelCalculator = {
+    powered_panel_count = 0,
     capacity = 0, -- watts
     total_generated = 0, -- watt-hours
     earning = 0, -- $/h
@@ -35,9 +36,7 @@ function PanelCalculator.draw()
 end
 
 function PanelCalculator.update(elapsed)
-    -- We need to get the total number of powered panels.
-    -- For now, we'll just get the number of panels.  TODO update this to only powered panels.
-    local num_panels = Locations.count_placed(Panels.ent_id)
+    local num_panels = PanelCalculator.powered_panel_count
     local elapsed_hours = df_divide(df_double(elapsed), df_double(3600)) -- convert seconds to hours
 
     PanelCalculator.capacity = df_double(num_panels) -- 1000 watts per panel
@@ -45,4 +44,8 @@ function PanelCalculator.update(elapsed)
 
     PanelCalculator.earning = df_divide(PanelCalculator.capacity, df_double("20000")) -- wattage / 1000000 to get MW, then * $50 to get 20,000
     PanelCalculator.earned = df_add(PanelCalculator.earned, df_multiply(elapsed_hours, PanelCalculator.earning))
+end
+
+function PanelCalculator.set_powered_panel_count(c)
+    PanelCalculator.powered_panel_count = c
 end
