@@ -55,8 +55,8 @@ function get_only_element(tbl)
     end
 end
 
+-- Turn the given function (coroutine) into an iterator.  It should call 'yield' to return each value.
 function make_iter(f, ...)
-    -- Turn the given function (coroutine) into an iterator.  It should call 'yield' to return each value.
     local cor = cocreate(f)
     local args = {...}
     return function ()
@@ -69,6 +69,7 @@ function make_iter(f, ...)
     end
 end
 
+-- Be careful using this, it's O(n)
 function contains(haystack, needle)
     for val in all(haystack) do
         if val == needle then

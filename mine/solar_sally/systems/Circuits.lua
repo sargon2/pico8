@@ -34,50 +34,63 @@ function Circuits.mark_powered_panels(components)
         local num_powered_transformers = 0
         local num_panels = 0
 
-        -- TODO but how do we avoid double-counting transformers that have both left & right on the wire?
+        -- we need to avoid double-counting transformers that have both left & right on the same wire
         -- first, consolidate all the right-side transformers into lefts
         if component[Transformers.ent_right] then
             for x, ys in pairs(component[Transformers.ent_right]) do
-                for y in all(ys) do
-                    if(not component[Transformers.ent_left]) component[Transformers.ent_left] = {}
-                    if(not component[Transformers.ent_left][x-1]) component[Transformers.ent_left][x-1] = {}
-                    if not contains(component[Transformers.ent_left][x-1], y) then
-                        add(component[Transformers.ent_left][x-1], y)
+                for y, t in pairs(ys) do
+                    if t then
+                        if(not component[Transformers.ent_left]) component[Transformers.ent_left] = {}
+                        if(not component[Transformers.ent_left][x-1]) component[Transformers.ent_left][x-1] = {}
+                        if(not component[Transformers.ent_left][x-1][y]) component[Transformers.ent_left][x-1][y] = {}
+                        component[Transformers.ent_left][x-1][y] = true
                     end
                 end
             end
         end
+
+        -- count powered transformers
         if component[Transformers.ent_left] then
             for x, ys in pairs(component[Transformers.ent_left]) do
-                for y in all(ys) do
-                    if Transformers.is_powered(x, y) then
-                        num_powered_transformers += 1
+                for y, t in pairs(ys) do
+                    if t then
+                        if Transformers.is_powered(x, y) then
+                            num_powered_transformers += 1
+                        end
                     end
                 end
             end
         end
 
         if component[Panels.ent_id] then
+            -- count panels
             for x, ys in pairs(component[Panels.ent_id]) do
-                for y in all(ys) do
-                    num_panels += 1
+                for y, t in pairs(ys) do
+                    if t then
+                        num_panels += 1
+                    end
                 end
             end
 
+            -- check if transformers are overloaded
             if num_panels / num_powered_transformers <= Settings.max_panels_per_transformer then
                 for x, ys in pairs(component[Panels.ent_id]) do
-                    for y in all(ys) do
-                        if not Panels.is_powered(x, y) then
-                            Panels.mark_powered(x, y)
-                            total_powered_panels += 1
+                    for y, t in pairs(ys) do
+                        if t then
+                            if not Panels.is_powered(x, y) then
+                                Panels.mark_powered(x, y)
+                                total_powered_panels += 1
+                            end
                         end
                     end
                 end
             else
                 -- Transformers are overloaded
                 for x, ys in pairs(component[Transformers.ent_left]) do
-                    for y in all(ys) do
-                        Transformers.mark_overloaded(x, y)
+                    for y, t in pairs(ys) do
+                        if t then
+                            Transformers.mark_overloaded(x, y)
+                        end
                     end
                 end
             end
@@ -92,13 +105,17 @@ function Circuits.mark_powered_transformers(grid_components)
 
     for component in all(grid_components) do
         for x, ys in pairs(component[Transformers.ent_left]) do
-            for y in all(ys) do
-                Transformers.mark_powered(x, y)
+            for y, t in pairs(ys) do
+                if t then
+                    Transformers.mark_powered(x, y)
+                end
             end
         end
         for x, ys in pairs(component[Transformers.ent_right]) do
-            for y in all(ys) do
-                Transformers.mark_powered(x-1, y)
+            for y, t in pairs(ys) do
+                if t then
+                    Transformers.mark_powered(x-1, y)
+                end
             end
         end
     end
@@ -124,9 +141,8 @@ function Circuits.get_connected_components()
                 -- If it's a circuit component, add it to the list of connected entities for this graph component
                 if(not current_component[ent_id]) current_component[ent_id] = {}
                 if(not current_component[ent_id][x]) current_component[ent_id][x] = {}
-                if not contains(current_component[ent_id][x], y) then
-                    add(current_component[ent_id][x], y)
-                end
+                if(not current_component[ent_id][x][y]) current_component[ent_id][x][y] = {}
+                current_component[ent_id][x][y] = true
             elseif ent_id == Wire.ent_id or ent_id == GridWire.ent_id then
                 -- If it's wire or gridwire, continue recursing
                 visited:set(x, y)
@@ -138,33 +154,24 @@ function Circuits.get_connected_components()
         end
     end
 
-    for t in Locations.iterate_all_entity_locations({GridWire.ent_id}) do
-        local x = t[1]
-        local y = t[2]
+    function collect_components(target, ent_ids)
+        for t in Locations.iterate_all_entity_locations(ent_ids) do
+            local x = t[1]
+            local y = t[2]
 
-        if not visited:is_set(x, y) then
-            visit(x, y) -- Will visit the entire component
+            if not visited:is_set(x, y) then
+                visit(x, y) -- Will visit the entire component
 
-            if next(current_component) != nil then -- if it's not empty
-                add(grid_components, current_component)
+                if next(current_component) != nil then -- if it's not empty
+                    add(target, current_component)
+                end
+                current_component = {}
             end
-            current_component = {}
         end
     end
 
-    for t in Locations.iterate_all_entity_locations({Wire.ent_id}) do
-        local x = t[1]
-        local y = t[2]
-
-        if not visited:is_set(x, y) then
-            visit(x, y) -- Will visit the entire component
-
-            if next(current_component) != nil then -- if it's not empty
-                add(components, current_component)
-            end
-            current_component = {}
-        end
-    end
+    collect_components(grid_components, {GridWire.ent_id})
+    collect_components(components, {Wire.ent_id})
 
     return grid_components, components
 end
