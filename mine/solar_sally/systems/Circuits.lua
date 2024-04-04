@@ -39,8 +39,10 @@ function Circuits.mark_powered_panels(components)
         if component[Transformers.ent_right] then
             for x, ys in pairs(component[Transformers.ent_right]) do
                 for y in all(ys) do
-                    if not contains(components[Transformers.ent_left][x-1], y) then
-                        add(components[Transformers.ent_left][x-1], y)
+                    if(not component[Transformers.ent_left]) component[Transformers.ent_left] = {}
+                    if(not component[Transformers.ent_left][x-1]) component[Transformers.ent_left][x-1] = {}
+                    if not contains(component[Transformers.ent_left][x-1], y) then
+                        add(component[Transformers.ent_left][x-1], y)
                     end
                 end
             end
@@ -109,8 +111,8 @@ function Circuits.get_connected_components()
         -- What entity type are we?
         local ent_id = Locations.entity_at(x, y)
         if ent_id != nil then
-            if Attributes.get_attr(ent_id, "connectable") then
-                -- If it's connectable, add it to the list of connected entities for this component
+            if Attributes.get_attr(ent_id, "is_circuit_component") then
+                -- If it's a circuit component, add it to the list of connected entities for this graph component
                 if(not current_component[ent_id]) current_component[ent_id] = {}
                 if(not current_component[ent_id][x]) current_component[ent_id][x] = {}
                 add(current_component[ent_id][x], y)

@@ -7,6 +7,7 @@ function GridWire.init()
     Attributes.set_attrs(GridWire.ent_id,
         {
             WalkingObstruction = true,
+            pluggable = true,
         }
     )
     Drawable.add_tile_sprite(ZValues["GridWire"], GridWire.ent_id, "grid_wire")

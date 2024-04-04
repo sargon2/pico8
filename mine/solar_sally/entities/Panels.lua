@@ -12,8 +12,9 @@ function Panels.init()
         {
             WalkingObstruction = true,
             removable = true,
-            connectable = true,
+            is_circuit_component = true,
             placement_sprite = "place_panel",
+            pluggable = true,
         }
     )
     Drawable.add_aggregate_draw_fn(ZValues["Panels"], Panels.draw_panels)
@@ -54,7 +55,7 @@ function Panels.draw_panels(char_x, char_y)
         end
         Sprites.draw_spr("solar_panel",x,y)
         if Panels.powered_panels:is_set(x, y) then
-            Sprites.set_pixel(x,y,7,4,11)
+            Sprites.set_pixel(x,y,4,4,11)
         end
     end
     for x,row in pairs(overlays) do

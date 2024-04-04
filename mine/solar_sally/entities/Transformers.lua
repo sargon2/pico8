@@ -15,7 +15,8 @@ function Transformers.init()
             WalkingObstruction = true,
             placement_sprite = "place_transformer",
             removable = true,
-            connectable = true,
+            is_circuit_component = true,
+            pluggable = true,
         }
     )
 
@@ -23,7 +24,8 @@ function Transformers.init()
         {
             WalkingObstruction = true,
             removable = true,
-            connectable = true,
+            is_circuit_component = true,
+            pluggable = true,
         }
     )
 
@@ -44,6 +46,7 @@ end
 function Transformers.mark_powered(x, y)
     -- Pass in location of left side
     Transformers.powered_transformers:set(x, y)
+    Transformers.powered_transformers:set(x+1, y)
 end
 
 function Transformers.is_powered(x, y)
