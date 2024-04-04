@@ -8,7 +8,8 @@ ZValues = {
     Transformers = 2,
     Wire = 2,
     GridWire = 2,
-    Character = 3,
-    Placement = 4,
-    PanelCalculator = 4
+    Trees = 3, -- things can be behind the top of trees
+    Character = 4,
+    Placement = 5,
+    PanelCalculator = 5
 }

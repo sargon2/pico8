@@ -67,9 +67,9 @@ function Locations.iterate_all()
 end
 
 function Locations.getVisibleEntities(x, y)
-    return Locations.getEntitiesWithin(x - 9, x + 8, y - 9, y + 8)
+    return Locations.getEntitiesWithin(x - 10, x + 8, y - 9, y + 9)
 end
 
 function Locations.getVisibleLocationsOfEntity(ent_id, x, y)
-    return Locations.getLocationsOfEntityWithin(ent_id, x - 9, x + 8, y - 9, y + 8)
+    return Locations.getLocationsOfEntityWithin(ent_id, x - 10, x + 8, y - 9, y + 9)
 end

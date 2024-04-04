@@ -19,6 +19,8 @@ Sprites = {
     wire_up = 51,
     wire_down = 52,
     grid_wire = 54,
+    tree_top = 21,
+    tree_bottom = 37,
 }
 
 function Sprites.draw_spr(s,x,y)
@@ -27,6 +29,10 @@ function Sprites.draw_spr(s,x,y)
     if fget(s, 0) then
         -- flag 0 means "use purple as transparent"
         palt(0b0010000000000000) -- purple
+        changed_transparency = true
+    elseif fget(s, 1) then
+        -- flag 1 means "use white as transparent"
+        palt(0b0000000100000000)
         changed_transparency = true
     end
     spr(
