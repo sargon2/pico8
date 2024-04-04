@@ -24,35 +24,56 @@ function Circuits.recalculate()
 
     local components = get_connected_components()
 
-    mark_powered_transformers(components)
-
     printh(dump(components))
+
+    local powered_transformers = mark_powered_transformers(components)
+
+    printh(dump(powered_transformers))
 end
 
 function mark_powered_transformers(components)
-    -- TODO This would be easier if we had different entity ids for each transformer in the world.  Should we?
+    local powered_transformers = BooleanGrid:new()
+
+    for component in all(components) do
+        -- TODO this is failing because GridWire is not connectable.  We can't make it connectable because you can put a transformer directly next to grid wire, and have a component without any regular wire.
+        -- So, the fix is probably for the 'components' data structure to include whether or not each component contains grid wire or not.
+        -- Maybe get_grid_component() should be separate from get_connected_components().
+        if is_grid_component(component) then -- if this component is connected to the grid; there's only ever 1 grid component
+            for x, y in pairs(components[Transformers.ent_left]) do
+                powered_transformers:set(x, y)
+                powered_transformers:set(x+1, y)
+            end
+            for x, y in pairs(components[Transformers.ent_right]) do
+                powered_transformers:set(x, y)
+                powered_transformers:set(x-1, y)
+            end
+        end
+    end
+    return powered_transformers
 end
 
 function get_connected_components()
     local components = {}
 
     local visited = BooleanGrid:new()
-    local current_component = table_with_default_val(0)
+    local current_component = {}
 
     function visit(x, y)
         if visited:is_set(x, y) then
             -- Already visited this location
             return
         end
-        visited:set(x, y)
         -- What entity type are we?
         local ent_id = Locations.entity_at(x, y)
         if ent_id != nil then
             if Attributes.get_attr(ent_id, "connectable") then
                 -- If it's connectable, add it to the list of connected entities for this component
-                current_component[ent_id] += 1
+                if(not current_component[ent_id]) current_component[ent_id] = {}
+                if(not current_component[ent_id][x]) current_component[ent_id][x] = {}
+                add(current_component[ent_id][x], y)
             elseif ent_id == Wire.ent_id or ent_id == GridWire.ent_id then
-                -- If it's wire or gridwire, visit all our neighbors
+                -- If it's wire or gridwire, continue recursing
+                visited:set(x, y)
                 visit(x-1, y)
                 visit(x+1, y)
                 visit(x,y-1)
@@ -71,7 +92,7 @@ function get_connected_components()
             if next(current_component) != nil then -- if it's not empty
                 add(components, current_component)
             end
-            current_component = table_with_default_val(0)
+            current_component = {}
         end
     end
 
