@@ -64,13 +64,22 @@ function Circuits.mark_powered_panels(components)
                 end
             end
 
-            if num_powered_transformers >= num_panels / 8 then -- TODO put the 8 in a settings place
+            if num_panels / num_powered_transformers <= Settings.max_panels_per_transformer then
                 for x, ys in pairs(component[Panels.ent_id]) do
                     for y in all(ys) do
-                        Panels.mark_powered(x, y)
-                        total_powered_panels += 1
+                        if not Panels.is_powered(x, y) then
+                            Panels.mark_powered(x, y)
+                            total_powered_panels += 1
+                        end
                     end
-                end    
+                end
+            else
+                -- Transformers are overloaded
+                for x, ys in pairs(component[Transformers.ent_left]) do
+                    for y in all(ys) do
+                        Transformers.mark_overloaded(x, y)
+                    end
+                end
             end
         end
     end
@@ -115,7 +124,9 @@ function Circuits.get_connected_components()
                 -- If it's a circuit component, add it to the list of connected entities for this graph component
                 if(not current_component[ent_id]) current_component[ent_id] = {}
                 if(not current_component[ent_id][x]) current_component[ent_id][x] = {}
-                add(current_component[ent_id][x], y)
+                if not contains(current_component[ent_id][x], y) then
+                    add(current_component[ent_id][x], y)
+                end
             elseif ent_id == Wire.ent_id or ent_id == GridWire.ent_id then
                 -- If it's wire or gridwire, continue recursing
                 visited:set(x, y)

@@ -33,6 +33,10 @@ function Panels.mark_powered(x, y)
     Panels.powered_panels:set(x, y)
 end
 
+function Panels.is_powered(x, y)
+    return Panels.powered_panels:is_set(x, y)
+end
+
 function Panels.draw_panels(char_x, char_y)
     local overlays=table_with_default_table_inserted()
     for t in Locations.getVisibleLocationsOfEntity(Panels.ent_id, char_x, char_y) do

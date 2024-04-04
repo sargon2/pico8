@@ -2,6 +2,7 @@ Transformers = {
     ent_left = nil,
     ent_right = nil,
     powered_transformers = nil,
+    overloaded_transformers = nil,
 }
 
 function Transformers.init()
@@ -41,6 +42,7 @@ end
 
 function Transformers.clear_powered()
     Transformers.powered_transformers = BooleanGrid:new()
+    Transformers.overloaded_transformers = BooleanGrid:new()
 end
 
 function Transformers.mark_powered(x, y)
@@ -49,8 +51,18 @@ function Transformers.mark_powered(x, y)
     Transformers.powered_transformers:set(x+1, y)
 end
 
+function Transformers.mark_overloaded(x, y)
+    -- Pass in location of left side
+    Transformers.overloaded_transformers:set(x, y)
+    Transformers.overloaded_transformers:set(x+1, y)
+end
+
 function Transformers.is_powered(x, y)
     return Transformers.powered_transformers:is_set(x, y)
+end
+
+function Transformers.is_overloaded(x, y)
+    return Transformers.overloaded_transformers:is_set(x, y)
 end
 
 function Transformers.place(x, y)
@@ -80,7 +92,9 @@ end
 function Transformers.draw_at(x, y)
     Sprites.draw_spr("transformer_left", x, y)
     Sprites.draw_spr("transformer_right", x+1, y)
-    if Transformers.is_powered(x, y) then
+    if Transformers.is_overloaded(x, y) then
+        Sprites.set_pixel(x,y,5,5,8)
+    elseif Transformers.is_powered(x, y) then
         Sprites.set_pixel(x,y,5,5,11)
         -- Sprites.rect(x,y,5,4,4,5,11)
     end

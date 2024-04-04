@@ -5,6 +5,7 @@ __lua__
 #include ../lua_extensions.lua
 #include ../vector_utils.lua
 #include types/BooleanGrid.lua
+#include indexes/Settings.lua
 #include indexes/Sprites.lua
 #include indexes/ZValues.lua
 #include components/Entities.lua
