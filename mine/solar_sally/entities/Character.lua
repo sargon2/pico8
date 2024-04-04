@@ -12,7 +12,7 @@ Character = {
 
 function Character.init()
     Character.ent_id = Entities.create_entity()
-    Drawable.add_aggregate_draw_fn(ZValues["Character"], Character.drawChar)
+    Drawable.add_aggregate_draw_fn(ZValues["Character"], Character.ent_id, Character.drawChar)
 end
 
 function Character.update(elapsed)

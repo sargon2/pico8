@@ -8,8 +8,13 @@ ZValues = {
     Transformers = 2,
     Wire = 2,
     GridWire = 2,
-    Trees = 3, -- things can be behind the top of trees
-    Character = 4,
-    Placement = 5,
-    PanelCalculator = 5
+    Trees = 2,
+    Character = 2,
+    Placement = 3,
+    PanelCalculator = 3
 }
+
+function ZValues.get_max()
+    -- TODO actually calculate it
+    return 3
+end

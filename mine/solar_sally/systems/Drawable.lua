@@ -1,32 +1,26 @@
 Drawable = {
-    drawable_data = {}, -- drawable_data[z][type] = data
+    draw_fns = {}, -- draw_fns[z][ent_id] = fn
+    aggregate_draw_fns = {}, -- aggregate_draw_fns[z][ent_id] = fn
 }
 
-function Drawable.add_aggregate_draw_fn(z, aggregate_draw_fn)
-    if not Drawable.drawable_data[z] then
-        Drawable.drawable_data[z] = {}
+function Drawable.init()
+    -- make sure we have enough room in our z arrays
+    for i=1,ZValues.get_max() do
+        Drawable.draw_fns[i] = {}
+        Drawable.aggregate_draw_fns[i] = {}
     end
-    Drawable.drawable_data[z]["aggregate"] = aggregate_draw_fn
+end
+
+function Drawable.add_aggregate_draw_fn(z, ent_id, aggregate_draw_fn)
+    Drawable.aggregate_draw_fns[z][ent_id] = aggregate_draw_fn
 end
 
 function Drawable.add_tile_draw_fn(z, entity_id, tile_draw_fn)
-    if not Drawable.drawable_data[z] then
-        Drawable.drawable_data[z] = {}
-    end
-    if not Drawable.drawable_data[z]["tile_draw_fn"] then
-        Drawable.drawable_data[z]["tile_draw_fn"] = {}
-    end
-    Drawable.drawable_data[z]["tile_draw_fn"][entity_id] = tile_draw_fn
+    Drawable.draw_fns[z][entity_id] = tile_draw_fn
 end
 
 function Drawable.add_tile_sprite(z, entity_id, sprite)
-    if not Drawable.drawable_data[z] then
-        Drawable.drawable_data[z] = {}
-    end
-    if not Drawable.drawable_data[z]["tile_sprite"] then
-        Drawable.drawable_data[z]["tile_sprite"] = {}
-    end
-    Drawable.drawable_data[z]["tile_sprite"][entity_id] = sprite
+    Drawable.add_tile_draw_fn(z, entity_id, function (x, y) Sprites.draw_spr(sprite, x, y) end)
 end
 
 function Drawable.draw()
@@ -34,24 +28,15 @@ function Drawable.draw()
 end
 
 function Drawable.draw_all(char_x, char_y)
-    for z, typedata in pairs(Drawable.drawable_data) do
-        for type, data in pairs(typedata) do
-            if type == "tile_sprite" then
-                for ent_id, sprite in pairs(data) do
-                    Drawable.draw_entity(
-                        ent_id, 
-                        function (x, y)
-                            Sprites.draw_spr(sprite, x, y)
-                        end,
-                        char_x, char_y)
-                end
-            elseif type == "tile_draw_fn" then
-                for ent_id, fn in pairs(data) do
-                    Drawable.draw_entity(ent_id, fn, char_x, char_y)
-                end
-            elseif type == "aggregate" then
-                data(char_x, char_y)
-            end
+    for z=1,ZValues.get_max() do
+        -- Location-based draw fns
+        for ent_id, fn in pairs(Drawable.draw_fns[z]) do
+            Drawable.draw_entity(ent_id, fn, char_x, char_y)
+        end
+
+        -- Aggregate draw fns
+        for ent_id, fn in pairs(Drawable.aggregate_draw_fns[z]) do
+            fn(char_x, char_y)
         end
     end
 end

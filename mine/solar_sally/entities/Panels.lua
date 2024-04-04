@@ -17,7 +17,7 @@ function Panels.init()
             pluggable = true,
         }
     )
-    Drawable.add_aggregate_draw_fn(ZValues["Panels"], Panels.draw_panels)
+    Drawable.add_tile_draw_fn(ZValues["Panels"], Panels.ent_id, Panels.draw_panel)
 end
 
 function Panels._panel_at(x, y)
@@ -37,13 +37,9 @@ function Panels.is_powered(x, y)
     return Panels.powered_panels:is_set(x, y)
 end
 
-function Panels.draw_panels(char_x, char_y)
-    for t in Locations.getVisibleLocationsOfEntity(Panels.ent_id, char_x, char_y) do
-        local x = t[1]
-        local y = t[2]
-        Sprites.draw_spr("solar_panel",x,y)
-        if Panels.powered_panels:is_set(x, y) then
-            Sprites.set_pixel(x,y,4,4,11)
-        end
+function Panels.draw_panel(x, y)
+    Sprites.draw_spr("solar_panel",x,y)
+    if Panels.powered_panels:is_set(x, y) then
+        Sprites.set_pixel(x,y,4,4,11)
     end
 end

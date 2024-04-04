@@ -1,4 +1,5 @@
 Placement = {
+    ent_id = nil,
     -- selected square
     sel_x_p=0, -- "precise" (sub-integer)
     sel_y_p=0,
@@ -16,10 +17,11 @@ Placement = {
 }
 
 function Placement.init()
+    Placement.ent_id = Entities.create_entity()
     -- Add placeable entities in the same order they'll show up to the user
     Placement.placeable_entities = {Panels.ent_id, Wire.ent_id, Transformers.ent_left}
     Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
-    Drawable.add_aggregate_draw_fn(ZValues["Placement"], Placement.draw_selection)
+    Drawable.add_aggregate_draw_fn(ZValues["Placement"], Placement.ent_id, Placement.draw_selection)
 end
 
 function Placement.update(elapsed)
