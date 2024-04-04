@@ -10,8 +10,8 @@ function Trees.init()
     Drawable.add_tile_draw_fn(ZValues["Trees"], Trees.ent_id, Trees.draw_tree)
 
     for i=1,1000 do
-        local x = flr(rnd(100))
-        local y = flr(rnd(100))
+        local x = flr(rnd(100))-50
+        local y = flr(rnd(100))-50
         Locations.place_entity(Trees.ent_id, x, y)
     end
 end
