@@ -17,8 +17,7 @@ function Panels.init()
             pluggable = true,
         }
     )
-    Sprites.add(Panels.ent_id, "solar_panel")
-    TileDrawFns.add(Panels.ent_id, Panels.overlay_power_light)
+    TileDrawFns.add(Panels.ent_id, Panels.draw_panel)
 end
 
 function Panels._panel_at(x, y)
@@ -38,7 +37,8 @@ function Panels.is_powered(x, y)
     return Panels.powered_panels:is_set(x, y)
 end
 
-function Panels.overlay_power_light(x, y)
+function Panels.draw_panel(x, y)
+    Sprites.draw_spr(Sprite_ids["solar_panel"], x, y)
     if Panels.powered_panels:is_set(x, y) then
         Sprites.set_pixel(x,y,4,4,11)
     end

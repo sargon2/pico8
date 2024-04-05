@@ -1,19 +1,11 @@
-Sprites = {
-    sprites = {}, -- sprites[ent_id] = spritenum
-    widths = {}, -- widths[ent_id] = width
-    heights = {}, -- heights[ent_id] = height
-    yoffsets = {}, -- yoffsets[ent_id] = yoffset
-}
+Sprites = {}
 
 Sprite_ids = {
     solar_panel = 17,
     transformer_left = 18,
     transformer_right = 19,
-    solar_panel_overlay_ul = 21,
-    solar_panel_overlay_ur = 22,
-    solar_panel_overlay_ll = 37,
-    solar_panel_overlay_lr = 38,
-    solar_panel_overlay_ll_short_leg = 53,
+    cow_side = 22,
+    cow_lookin = 23,
     selection_box = 32,
     pick_up = 34,
     no_action = 35,
@@ -30,34 +22,45 @@ Sprite_ids = {
     tree_bottom = 37,
 }
 
-function Sprites.add(ent_id, sprite, width, height, yoffset) -- TODO width, height of sprite
-    Sprites.sprites[ent_id] = Sprite_ids[sprite]
-    if width then
-        Sprites.widths[ent_id] = width
+function Sprites.add(ent_id, sprite, width, height, yoffset)
+    -- Sprite just forwards to TileDrawFns
+
+    sprite = Sprite_ids[sprite]
+    if(not width) width = 1
+    if(not height) height = 1
+    if(not yoffset) yoffset = 0
+
+    function d(x, y)
+        Sprites.draw_spr(sprite, x, y + yoffset, width, height)
     end
-    if height then
-        Sprites.heights[ent_id] = height
-    end
-    if yoffset then
-        Sprites.yoffsets[ent_id] = yoffset
-    end
+
+    TileDrawFns.add(ent_id, d)
 end
 
-function Sprites.drawSpriteAt(x, y)
-    local ent_id = Locations.entity_at(x, y)
+-- function Sprites.add(ent_id, sprite, width, height, yoffset)
+--     Sprites.sprites[ent_id] = Sprite_ids[sprite]
+--     if width then
+--         Sprites.widths[ent_id] = width
+--     end
+--     if height then
+--         Sprites.heights[ent_id] = height
+--     end
+--     if yoffset then
+--         Sprites.yoffsets[ent_id] = yoffset
+--     end
+-- end
 
-    if(not ent_id) return
+-- function Sprites.drawSpriteAt(ent_id, x, y)
+--     local sprite = Sprites.sprites[ent_id]
 
-    local sprite = Sprites.sprites[ent_id]
+--     if(not sprite) return
 
-    if(not sprite) return
+--     local yoffset = Sprites.yoffsets[ent_id] or 0
+--     local width = Sprites.widths[ent_id] or 1
+--     local height = Sprites.heights[ent_id] or 1
 
-    local yoffset = Sprites.yoffsets[ent_id] or 0
-    local width = Sprites.widths[ent_id] or 1
-    local height = Sprites.heights[ent_id] or 1
-
-    Sprites.draw_spr(sprite, x, y + yoffset, width, height)
-end
+--     Sprites.draw_spr(sprite, x, y + yoffset, width, height)
+-- end
 
 function Sprites.draw_spr(s,x,y,width,height)
     if(not width) width = 1

@@ -6,10 +6,7 @@ function TileDrawFns.add(ent_id, fn)
     TileDrawFns.fns[ent_id] = fn
 end
 
-function TileDrawFns.drawTileAt(x, y)
-    local ent_id = Locations.entity_at(x, y)
-
-    if(not ent_id) return
+function TileDrawFns.drawTileAt(ent_id, x, y)
     if(not TileDrawFns.fns[ent_id]) return
 
     TileDrawFns.fns[ent_id](x, y)
