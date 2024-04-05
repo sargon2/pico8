@@ -30,7 +30,8 @@ function Transformers.init()
         }
     )
 
-    TileDrawFns.add(Transformers.ent_left, Transformers.draw_at)
+    Sprites.add(Transformers.ent_left, "transformer_left", 2, 1)
+    TileDrawFns.add(Transformers.ent_left, Transformers.overlay_power)
 
     Placement.set_placement_fn(Transformers.ent_left, Transformers.place)
 
@@ -89,9 +90,7 @@ function Transformers.placement_obstructed(x, y)
     return false
 end
 
-function Transformers.draw_at(x, y)
-    Sprites.draw_spr(Sprite_ids["transformer_left"], x, y)
-    Sprites.draw_spr(Sprite_ids["transformer_right"], x+1, y)
+function Transformers.overlay_power(x, y)
     if Transformers.is_overloaded(x, y) then
         Sprites.set_pixel(x,y,5,5,8)
     elseif Transformers.is_powered(x, y) then

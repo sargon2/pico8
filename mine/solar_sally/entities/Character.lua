@@ -113,8 +113,8 @@ function Character.handle_player_movement(elapsed)
     char_x, char_y = normalize(char_x, char_y, Character.speed*elapsed)
     Placement.sel_x = flr(Placement.sel_x_p)
     Placement.sel_y = flr(Placement.sel_y_p)
-    -- The player can't walk through panels
-    if not Character._obstructed(flr(Character.x+char_x+.6), flr(Character.y+1)) then
+    -- The player can't walk through some things
+    if not Character._obstructed(flr(Character.x+char_x+.6), flr(Character.y+1)) then -- TODO let the player walk a bit vertically into the next tile
         Character.x += char_x
     end
     if not Character._obstructed(flr(Character.x+.6), flr(Character.y+char_y+1)) then

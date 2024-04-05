@@ -1,5 +1,7 @@
 Sprites = {
     sprites = {}, -- sprites[ent_id] = spritenum
+    widths = {}, -- widths[ent_id] = width
+    heights = {}, -- heights[ent_id] = height
     yoffsets = {}, -- yoffsets[ent_id] = yoffset
 }
 
@@ -28,8 +30,14 @@ Sprite_ids = {
     tree_bottom = 37,
 }
 
-function Sprites.add(ent_id, sprite, yoffset)
+function Sprites.add(ent_id, sprite, width, height, yoffset) -- TODO width, height of sprite
     Sprites.sprites[ent_id] = Sprite_ids[sprite]
+    if width then
+        Sprites.widths[ent_id] = width
+    end
+    if height then
+        Sprites.heights[ent_id] = height
+    end
     if yoffset then
         Sprites.yoffsets[ent_id] = yoffset
     end
@@ -45,11 +53,15 @@ function Sprites.drawSpriteAt(x, y)
     if(not sprite) return
 
     local yoffset = Sprites.yoffsets[ent_id] or 0
+    local width = Sprites.widths[ent_id] or 1
+    local height = Sprites.heights[ent_id] or 1
 
-    Sprites.draw_spr(sprite, x, y + yoffset)
+    Sprites.draw_spr(sprite, x, y + yoffset, width, height)
 end
 
-function Sprites.draw_spr(s,x,y)
+function Sprites.draw_spr(s,x,y,width,height)
+    if(not width) width = 1
+    if(not height) height = 1
     -- s = Sprites[s]
     local changed_transparency = false
     if fget(s, 0) then
@@ -64,7 +76,9 @@ function Sprites.draw_spr(s,x,y)
     spr(
         s,
         (8+x-Character.x)*8,
-        (8+y-Character.y)*8
+        (8+y-Character.y)*8,
+        width,
+        height
     )
     if changed_transparency then
         palt()
