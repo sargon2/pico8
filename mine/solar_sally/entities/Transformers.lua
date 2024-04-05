@@ -90,8 +90,8 @@ function Transformers.placement_obstructed(x, y)
 end
 
 function Transformers.draw_at(x, y)
-    Sprites.draw_spr("transformer_left", x, y)
-    Sprites.draw_spr("transformer_right", x+1, y)
+    Sprites.draw_spr(Sprite_ids["transformer_left"], x, y)
+    Sprites.draw_spr(Sprite_ids["transformer_right"], x+1, y)
     if Transformers.is_overloaded(x, y) then
         Sprites.set_pixel(x,y,5,5,8)
     elseif Transformers.is_powered(x, y) then

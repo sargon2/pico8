@@ -27,27 +27,27 @@ function Wire.draw_wire_tile(x, y)
 
     -- straight has a couple of special cases (0 or 1 connections)
     if not up and not down then
-        Sprites.draw_spr("wire_left", x, y)
-        Sprites.draw_spr("wire_right", x, y)
+        Sprites.draw_spr(Sprite_ids["wire_left"], x, y)
+        Sprites.draw_spr(Sprite_ids["wire_right"], x, y)
         return
     end
     if not left and not right then
-        Sprites.draw_spr("wire_up", x, y)
-        Sprites.draw_spr("wire_down", x, y)
+        Sprites.draw_spr(Sprite_ids["wire_up"], x, y)
+        Sprites.draw_spr(Sprite_ids["wire_down"], x, y)
         return
     end
 
     -- the other cases are all straightforward.  The order here matters for wire overlap.
     if up then
-        Sprites.draw_spr("wire_up", x, y)
+        Sprites.draw_spr(Sprite_ids["wire_up"], x, y)
     end
     if left then
-        Sprites.draw_spr("wire_left", x, y)
+        Sprites.draw_spr(Sprite_ids["wire_left"], x, y)
     end
     if right then
-        Sprites.draw_spr("wire_right", x, y)
+        Sprites.draw_spr(Sprite_ids["wire_right"], x, y)
     end
     if down then
-        Sprites.draw_spr("wire_down", x, y)
+        Sprites.draw_spr(Sprite_ids["wire_down"], x, y)
     end
 end

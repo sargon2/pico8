@@ -14,7 +14,7 @@ __lua__
 #include systems/PerfTimer.lua
 #include systems/FrameTimer.lua
 #include systems/Placement.lua
-#include systems/Renderer.lua
+#include systems/World.lua
 #include systems/Map.lua
 #include systems/PanelCalculator.lua
 #include systems/Circuits.lua

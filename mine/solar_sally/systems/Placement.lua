@@ -44,7 +44,7 @@ function Placement.set_placement_obstruction_fn(ent_id, fn)
     Placement.obstructed_fns[ent_id] = fn
 end
 
-function Placement.draw_selection()
+function Placement.draw()
     Sprites.draw_spr(Sprite_ids["selection_box"],Placement.sel_x,Placement.sel_y)
     Sprites.draw_spr(Sprite_ids[Placement.sel_sprite],Placement.sel_x,Placement.sel_y-1)
 end

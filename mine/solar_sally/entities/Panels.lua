@@ -38,7 +38,7 @@ function Panels.is_powered(x, y)
 end
 
 function Panels.draw_panel(x, y)
-    Sprites.draw_spr("solar_panel",x,y)
+    Sprites.draw_spr(Sprite_ids["solar_panel"],x,y)
     if Panels.powered_panels:is_set(x, y) then
         Sprites.set_pixel(x,y,4,4,11)
     end
