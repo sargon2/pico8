@@ -4,7 +4,6 @@ Map = {
 
 function Map.init()
     Map.ent_id = Entities.create_entity()
-    Drawable.add_aggregate_draw_fn(ZValues["Map"], Map.ent_id, Map.drawMap)
 end
 
 function Map.get_name()

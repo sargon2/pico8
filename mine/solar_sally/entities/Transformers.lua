@@ -30,7 +30,7 @@ function Transformers.init()
         }
     )
 
-    Drawable.add_tile_draw_fn(ZValues["Transformers"], Transformers.ent_left, Transformers.draw_at)
+    TileDrawFns.add(Transformers.ent_left, Transformers.draw_at)
 
     Placement.set_placement_fn(Transformers.ent_left, Transformers.place)
 

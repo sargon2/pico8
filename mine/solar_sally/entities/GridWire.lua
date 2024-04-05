@@ -10,7 +10,7 @@ function GridWire.init()
             pluggable = true,
         }
     )
-    Drawable.add_tile_sprite(ZValues["GridWire"], GridWire.ent_id, "grid_wire")
+    Sprites.add(GridWire.ent_id, "grid_wire")
 
     for i=-100,100 do
         Locations.place_entity(GridWire.ent_id, i, 10)

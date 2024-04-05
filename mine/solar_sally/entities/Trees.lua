@@ -7,8 +7,7 @@ function Trees.init()
 
     Attributes.set_attr(Trees.ent_id, "WalkingObstruction", true)
 
-    Drawable.add_tile_draw_fn(ZValues["TreeBottoms"], Trees.ent_id, Trees.draw_tree)
-    Drawable.add_tile_draw_fn(ZValues["TreeTops"], Trees.ent_id, Trees.draw_tree_top)
+    TileDrawFns.add(Trees.ent_id, Trees.draw_tree)
 
     for i=1,500 do
         local x = flr(rnd(100))-50
@@ -18,9 +17,6 @@ function Trees.init()
 end
 
 function Trees.draw_tree(x, y)
-    Sprites.draw_spr("tree_bottom", x, y)
-end
-
-function Trees.draw_tree_top(x, y)
-    Sprites.draw_spr("tree_top", x, y-1)
+    Sprites.draw_spr(Sprite_ids["tree_bottom"], x, y)
+    Sprites.draw_spr(Sprite_ids["tree_top"], x, y-1)
 end

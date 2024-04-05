@@ -1,4 +1,9 @@
 Sprites = {
+    sprites = {}, -- sprites[ent_id] = spritenum
+    yoffsets = {}, -- yoffsets[ent_id] = yoffset
+}
+
+Sprite_ids = {
     solar_panel = 17,
     transformer_left = 18,
     transformer_right = 19,
@@ -23,8 +28,29 @@ Sprites = {
     tree_bottom = 37,
 }
 
+function Sprites.add(ent_id, sprite, yoffset)
+    Sprites.sprites[ent_id] = Sprite_ids[sprite]
+    if yoffset then
+        Sprites.yoffsets[ent_id] = yoffset
+    end
+end
+
+function Sprites.draw(x, y)
+    local ent_id = Locations.entity_at(x, y)
+
+    if(not ent_id) return
+
+    local sprite = Sprites.sprites[ent_id]
+
+    if(not sprite) return
+
+    local yoffset = Sprites.yoffsets[ent_id] or 0
+
+    Sprites.draw_spr(sprite, x, y + yoffset)
+end
+
 function Sprites.draw_spr(s,x,y)
-    s = Sprites[s]
+    -- s = Sprites[s]
     local changed_transparency = false
     if fget(s, 0) then
         -- flag 0 means "use purple as transparent"

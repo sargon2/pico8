@@ -17,7 +17,7 @@ function Panels.init()
             pluggable = true,
         }
     )
-    Drawable.add_tile_draw_fn(ZValues["Panels"], Panels.ent_id, Panels.draw_panel)
+    TileDrawFns.add(Panels.ent_id, Panels.draw_panel)
 end
 
 function Panels._panel_at(x, y)

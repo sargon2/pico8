@@ -12,7 +12,7 @@ function Wire.init()
             pluggable = true,
         }
     )
-    Drawable.add_tile_draw_fn(ZValues["Wire"], Wire.ent_id, Wire.draw_wire_tile)
+    TileDrawFns.add(Wire.ent_id, Wire.draw_wire_tile)
 end
 
 function Wire.is_pluggable(x, y)

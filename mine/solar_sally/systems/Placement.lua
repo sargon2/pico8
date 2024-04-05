@@ -21,7 +21,6 @@ function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
     Placement.placeable_entities = {Panels.ent_id, Wire.ent_id, Transformers.ent_left}
     Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
-    Drawable.add_aggregate_draw_fn(ZValues["Placement"], Placement.ent_id, Placement.draw_selection)
 end
 
 function Placement.get_name()
@@ -46,8 +45,8 @@ function Placement.set_placement_obstruction_fn(ent_id, fn)
 end
 
 function Placement.draw_selection()
-    Sprites.draw_spr("selection_box",Placement.sel_x,Placement.sel_y)
-    Sprites.draw_spr(Placement.sel_sprite,Placement.sel_x,Placement.sel_y-1)
+    Sprites.draw_spr(Sprite_ids["selection_box"],Placement.sel_x,Placement.sel_y)
+    Sprites.draw_spr(Sprite_ids[Placement.sel_sprite],Placement.sel_x,Placement.sel_y-1)
 end
 
 function Placement.rotate_place_ent_id()

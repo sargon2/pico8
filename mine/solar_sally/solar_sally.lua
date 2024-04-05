@@ -12,7 +12,7 @@
 solar_sally = {
     -- The order here is important (think dep injection dependency graph)
     -- Includes entities as well as systems; anything that needs to be init'd
-    systems = {Drawable, Rocks, Trees, Panels, Wire, GridWire, Transformers, Placement, Character, Map, FrameTimer, PanelCalculator}
+    systems = {Renderer, Rocks, Trees, Panels, Wire, GridWire, Transformers, Placement, Character, Map, FrameTimer, PanelCalculator}
 }
 
 function _init()
@@ -32,7 +32,7 @@ function _draw()
 
     if(Settings.debug_timing) printh("Drawing; start "..tostr(PerfTimer.get_and_advance()))
     for system in all(solar_sally.systems) do
-        if system.draw then
+        if system.draw then -- TODO some name collision with draw() on various things
             system.draw()
             if(Settings.debug_timing) printh(system.get_name()..".draw(): "..tostr(PerfTimer.get_and_advance()))
         end
