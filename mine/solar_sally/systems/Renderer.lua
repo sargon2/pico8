@@ -16,7 +16,7 @@ function Renderer.draw()
             Sprites.draw(x,y,2)
             TileDrawFns.draw(x,y,2)
         end
-        if y == flr(Character.y) then
+        if y == flr(Character.y+.4) then
             Character.drawChar()
         end
     end
