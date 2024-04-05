@@ -7,7 +7,8 @@ function Trees.init()
 
     Attributes.set_attr(Trees.ent_id, "WalkingObstruction", true)
 
-    TileDrawFns.add(Trees.ent_id, Trees.draw_tree)
+    Sprites.add(Trees.ent_id, "tree_bottom")
+    TileDrawFns.add(Trees.ent_id, Trees.overlay_tree_top)
 
     for i=1,500 do
         local x = flr(rnd(100))-50
@@ -16,7 +17,6 @@ function Trees.init()
     end
 end
 
-function Trees.draw_tree(x, y)
-    Sprites.draw_spr(Sprite_ids["tree_bottom"], x, y)
+function Trees.overlay_tree_top(x, y)
     Sprites.draw_spr(Sprite_ids["tree_top"], x, y-1)
 end
