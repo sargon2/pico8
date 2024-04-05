@@ -35,7 +35,7 @@ function Sprites.add(ent_id, sprite, yoffset)
     end
 end
 
-function Sprites.draw(x, y)
+function Sprites.drawSpriteAt(x, y)
     local ent_id = Locations.entity_at(x, y)
 
     if(not ent_id) return
