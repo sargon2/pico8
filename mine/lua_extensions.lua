@@ -63,8 +63,8 @@ function _quicksort(arr, low, high, compare)
     if low < high then
         local pi = partition(arr, low, high, compare)
 
-        quicksort(arr, low, pi - 1, compare)
-        quicksort(arr, pi + 1, high, compare)
+        _quicksort(arr, low, pi - 1, compare)
+        _quicksort(arr, pi + 1, high, compare)
     end
 end
 

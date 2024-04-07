@@ -24,7 +24,7 @@ end
 function SmoothLocations.get_all_visible(xmin, xmax, ymin, ymax)
     -- ret = {{ent_id, x, y}, {ent_id2, x2, y2}, ...}
     local ret = {}
-    for ent_id, x in pairs(xs) do
+    for ent_id, x in pairs(SmoothLocations.xs) do
         if xmin <= x and x <= xmax then
             local y = SmoothLocations.ys[ent_id]
             if ymin <= y and y <= ymax then

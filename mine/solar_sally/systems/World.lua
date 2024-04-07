@@ -35,7 +35,7 @@ function World.draw()
             Character.drawChar()
         end
         if next(smooth_ents) then -- TODO is this needed once character is using smooth ents?
-            while y >= flr(smooth_ents[curr_pos][3]+.4) do
+            while smooth_ents[curr_pos] and y >= flr(smooth_ents[curr_pos][3]+.4) do
                 TileDrawFns.drawTileAt(smooth_ents[curr_pos][1], smooth_ents[curr_pos][2], smooth_ents[curr_pos][3]) -- TODO if we're using it this way it's no longer a "tile draw fn"
                 curr_pos += 1
             end
