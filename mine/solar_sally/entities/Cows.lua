@@ -20,11 +20,8 @@ function Cows.draw_cow(x, y)
 end
 
 function Cows.update(elapsed)
-    -- For each cow,
     for ent_id in all(Cows.cow_ent_ids) do
-        local cow_x, cow_y = SmoothLocations.get_location(ent_id)
         -- TODO choose a movement vector
-        SmoothLocations.move_x_by(ent_id, 0.01)
-        SmoothLocations.move_y_by(ent_id, 0.01)
+        SmoothLocations.move_by_if_not_obstructed(ent_id, .01, .01)
     end
 end

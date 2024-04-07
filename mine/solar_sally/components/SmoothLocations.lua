@@ -13,12 +13,20 @@ function SmoothLocations.get_location(ent_id)
     return SmoothLocations.xs[ent_id], SmoothLocations.ys[ent_id]
 end
 
-function SmoothLocations.move_y_by(ent_id, y_delta)
-    SmoothLocations.ys[ent_id] += y_delta
-end
+function SmoothLocations.move_by_if_not_obstructed(ent_id, x, y)
+    local old_x = SmoothLocations.xs[ent_id]
+    local old_y = SmoothLocations.ys[ent_id]
+    local new_x = old_x + x
+    local new_y = old_y + y
 
-function SmoothLocations.move_x_by(ent_id, x_delta)
-    SmoothLocations.xs[ent_id] += x_delta
+    -- We have to move x and y separately to allow sliding along an obstruction
+    if not World.is_obstructed(new_x, old_y) then
+        SmoothLocations.xs[ent_id] = new_x
+        old_x = new_x
+    end
+    if not World.is_obstructed(old_x, new_y) then
+        SmoothLocations.ys[ent_id] = new_y
+    end
 end
 
 function SmoothLocations.get_all_visible(xmin, xmax, ymin, ymax)

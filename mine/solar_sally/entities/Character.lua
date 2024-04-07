@@ -28,10 +28,6 @@ function Character.drawChar()
     spr(f,64,64,1,1,Character.flip_x)
 end
 
-function Character._obstructed(x, y)
-    return Attributes.get_attr_by_location(x, y, "WalkingObstruction")
-end
-
 function Character.handle_player_movement(elapsed)
 
     -- Check for player movement
@@ -110,16 +106,10 @@ function Character.handle_player_movement(elapsed)
         char_new_y = -1
         Placement.sel_y_p = char_y - max_sel_range + .5
     end
-    char_new_x, char_new_y = normalize(char_new_x, char_new_y, Character.speed*elapsed)
     Placement.sel_x = flr(Placement.sel_x_p)
     Placement.sel_y = flr(Placement.sel_y_p)
-    -- The player can't walk through some things
-    if not Character._obstructed(flr(char_x+char_new_x+.6), flr(char_y+1)) then -- TODO let the player walk a bit vertically into the next tile
-        SmoothLocations.move_x_by(Character.ent_id, char_new_x)
-    end
-    if not Character._obstructed(flr(char_x+.6), flr(char_y+char_new_y+1)) then
-        SmoothLocations.move_y_by(Character.ent_id, char_new_y)
-    end
+    char_new_x, char_new_y = normalize(char_new_x, char_new_y, Character.speed*elapsed) -- TODO should this normalize be part of move_by?
+    SmoothLocations.move_by_if_not_obstructed(Character.ent_id, char_new_x, char_new_y) -- TODO let the player walk a bit vertically into the next tile
     -- Animate walking
     if char_new_x!=0 or char_new_y!=0 then
         Character.frame += Character.anim_speed*elapsed

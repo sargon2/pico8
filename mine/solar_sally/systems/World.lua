@@ -50,3 +50,7 @@ function World._sort_by_y(smooth_ents)
 
     quicksort(smooth_ents, compare_by_y)
 end
+
+function World.is_obstructed(x, y)
+    return Attributes.get_attr_by_location(flr(x+.6), flr(y+1), "WalkingObstruction")
+end
