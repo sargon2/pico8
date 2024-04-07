@@ -13,31 +13,6 @@ function dump(o)
     end
 end
 
-function table_with_default_table_inserted() -- TODO name
-    -- TODO this is filling the table with empty tables on every get that returns nil
-    local ret = {}
-    local mt = {
-        __index = function(t, k)
-            local val = {}
-            t[k] = val
-            return val
-        end
-    }
-    setmetatable(ret, mt)
-    return ret
-end
-
-function table_with_default_val(default) -- TODO name
-    local ret = {}
-    local mt = {
-        __index = function(t, k)
-            return default
-        end
-    }
-    setmetatable(ret, mt)
-    return ret
-end
-
 function bound(val, min, max)
     if val < min then
         return min
@@ -77,3 +52,37 @@ function contains(haystack, needle)
     end
     return false
 end
+
+function quicksort(arr, compare)
+    _quicksort(arr, 1, #arr, compare)
+end
+
+-- Generic QuickSort implementation for PICO-8
+-- Takes a comparison function as an argument to determine the sorting order.
+function _quicksort(arr, low, high, compare)
+    if low < high then
+        local pi = partition(arr, low, high, compare)
+
+        quicksort(arr, low, pi - 1, compare)
+        quicksort(arr, pi + 1, high, compare)
+    end
+end
+
+function partition(arr, low, high, compare)
+    local pivot = arr[high]
+    local i = low - 1
+
+    for j = low, high - 1 do
+        if compare(arr[j], pivot) then
+            i = i + 1
+            swap(arr, i, j)
+        end
+    end
+    swap(arr, i + 1, high)
+    return i + 1
+end
+
+function swap(arr, i, j)
+    arr[i], arr[j] = arr[j], arr[i]
+end
+    

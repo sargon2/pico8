@@ -16,9 +16,6 @@ function Cows.init()
 end
 
 function Cows.draw_cow(x, y)
-    local sprite = Sprite_ids["cow_side"]
-    if rnd() < 0.1 then
-        sprite = Sprite_ids["cow_looking"]
-    end
+    local sprite = Sprite_ids["cow_looking"]
     Sprites.draw_spr(sprite, x, y)
 end

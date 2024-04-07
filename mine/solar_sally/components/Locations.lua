@@ -1,17 +1,25 @@
 Locations = {
-    locations = table_with_default_table_inserted(), -- locations[x][y] = ent_id
+    locations = {}, -- locations[x][y] = ent_id
 }
 
 function Locations.place_entity(ent_id, x, y)
     -- pass nil for ent_id to remove entity at location
-    Locations.locations[x][y] = ent_id
+    if not ent_id then
+        if(not Locations.locations[x]) return
+        Locations.locations[x][y] = nil
+        if(not next(Locations.locations[x])) Locations.locations[x] = nil
+    else
+        if(not Locations.locations[x]) Locations.locations[x] = {}
+        Locations.locations[x][y] = ent_id
+    end
 end
 
-function Locations.remove_entity(x, y)
+function Locations.remove_entity(x, y) -- TODO make sure we're only calling this once per removal; I saw it being called 3 times
     Locations.place_entity(nil, x, y)
 end
 
 function Locations.entity_at(x, y)
+    if(not Locations.locations[x]) return nil
     return Locations.locations[x][y]
 end
 

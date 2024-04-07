@@ -18,8 +18,8 @@ end
 
 function BooleanGrid:unset(x, y)
     if(not self.values[x]) return
-    del(self.values[x][y])
-    if(not next(self.values[x])) del(self.values[x])
+    self.values[x][y] = nil
+    if(not next(self.values[x])) self.values[x] = nil
 end
 
 function BooleanGrid:is_set(x, y)

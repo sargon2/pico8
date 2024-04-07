@@ -5,7 +5,7 @@ Sprite_ids = {
     transformer_left = 18,
     transformer_right = 19,
     cow_side = 22,
-    cow_lookin = 23,
+    cow_looking = 23,
     selection_box = 32,
     pick_up = 34,
     no_action = 35,
@@ -63,6 +63,7 @@ end
 -- end
 
 function Sprites.draw_spr(s,x,y,width,height)
+    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
     if(not width) width = 1
     if(not height) height = 1
     -- s = Sprites[s]
@@ -78,8 +79,8 @@ function Sprites.draw_spr(s,x,y,width,height)
     end
     spr(
         s,
-        (8+x-Character.x)*8,
-        (8+y-Character.y)*8,
+        (8+x-char_x)*8,
+        (8+y-char_y)*8,
         width,
         height
     )
@@ -89,19 +90,21 @@ function Sprites.draw_spr(s,x,y,width,height)
 end
 
 function Sprites.set_pixel(x,y,xoffset,yoffset,c) -- TODO where should this live?
+    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
     pset(
-        (8+x-Character.x)*8+xoffset,
-        (8+y-Character.y)*8+yoffset,
+        (8+x-char_x)*8+xoffset,
+        (8+y-char_y)*8+yoffset,
         c
     )
 end
 
 function Sprites.rect(x,y,xmin,ymin,xmax,ymax,c) -- TODO where should this live?
+    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
     rect(
-        (8+x-Character.x)*8+xmin,
-        (8+y-Character.y)*8+ymin,
-        (8+x-Character.x)*8+xmax,
-        (8+y-Character.y)*8+ymax,
+        (8+x-char_x)*8+xmin,
+        (8+y-char_y)*8+ymin,
+        (8+x-char_x)*8+xmax,
+        (8+y-char_y)*8+ymax,
         c
     )
 end

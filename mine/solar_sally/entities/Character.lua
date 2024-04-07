@@ -1,7 +1,5 @@
 Character = {
     ent_id = nil,
-    x=0,
-    y=0,
     frame=1,
     speed=6,
     anim_speed=8,
@@ -12,6 +10,7 @@ Character = {
 
 function Character.init()
     Character.ent_id = Entities.create_entity()
+    SmoothLocations.set_or_update_location(Character.ent_id, 0, 0)
 end
 
 function Character.get_name()
@@ -69,7 +68,7 @@ function Character.handle_player_movement(elapsed)
     end
 
     -- Calculate if it's the first movement frame or not
-    is_first_movement_frame = false
+    local is_first_movement_frame = false
     if is_moving and not Character.is_moving then
         is_first_movement_frame = true
     end
@@ -77,8 +76,8 @@ function Character.handle_player_movement(elapsed)
 
     -- Process player movement
 
-    max_sel_range=2
-    sel_speed = 12
+    local max_sel_range=2 -- TODO move these things to settings
+    local sel_speed = 12
 
     -- Is it the first movement frame?
     if is_first_movement_frame then
@@ -94,34 +93,35 @@ function Character.handle_player_movement(elapsed)
     Placement.sel_y_p += y
 
     -- If we're at the max selection range, move the character
-    char_x = 0
-    char_y = 0
-    if Placement.sel_x_p > Character.x + max_sel_range + .5 then
-        char_x = 1
-        Placement.sel_x_p = Character.x + max_sel_range + .5
-    elseif Placement.sel_x_p < Character.x - max_sel_range + .5 then
-        char_x = -1
-        Placement.sel_x_p = Character.x - max_sel_range + .5
+    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
+    local char_new_x = 0
+    local char_new_y = 0
+    if Placement.sel_x_p > char_x + max_sel_range + .5 then
+        char_new_x = 1
+        Placement.sel_x_p = char_x + max_sel_range + .5
+    elseif Placement.sel_x_p < char_x - max_sel_range + .5 then
+        char_new_x = -1
+        Placement.sel_x_p = char_x - max_sel_range + .5
     end
-    if Placement.sel_y_p > Character.y + max_sel_range + .5 then
-        char_y = 1
-        Placement.sel_y_p = Character.y + max_sel_range + .5
-    elseif Placement.sel_y_p < Character.y - max_sel_range + .5 then
-        char_y = -1
-        Placement.sel_y_p = Character.y - max_sel_range + .5
+    if Placement.sel_y_p > char_y + max_sel_range + .5 then
+        char_new_y = 1
+        Placement.sel_y_p = char_y + max_sel_range + .5
+    elseif Placement.sel_y_p < char_y - max_sel_range + .5 then
+        char_new_y = -1
+        Placement.sel_y_p = char_y - max_sel_range + .5
     end
-    char_x, char_y = normalize(char_x, char_y, Character.speed*elapsed)
+    char_new_x, char_new_y = normalize(char_new_x, char_new_y, Character.speed*elapsed)
     Placement.sel_x = flr(Placement.sel_x_p)
     Placement.sel_y = flr(Placement.sel_y_p)
     -- The player can't walk through some things
-    if not Character._obstructed(flr(Character.x+char_x+.6), flr(Character.y+1)) then -- TODO let the player walk a bit vertically into the next tile
-        Character.x += char_x
+    if not Character._obstructed(flr(char_x+char_new_x+.6), flr(char_y+1)) then -- TODO let the player walk a bit vertically into the next tile
+        SmoothLocations.move_x_by(Character.ent_id, char_new_x)
     end
-    if not Character._obstructed(flr(Character.x+.6), flr(Character.y+char_y+1)) then
-        Character.y += char_y
+    if not Character._obstructed(flr(char_x+.6), flr(char_y+char_new_y+1)) then
+        SmoothLocations.move_y_by(Character.ent_id, char_new_y)
     end
     -- Animate walking
-    if char_x!=0 or char_y!=0 then
+    if char_new_x!=0 or char_new_y!=0 then
         Character.frame += Character.anim_speed*elapsed
     else
         Character.frame = 0.99 -- Very close to the next frame to increase responsivenes

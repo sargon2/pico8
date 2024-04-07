@@ -10,6 +10,7 @@ __lua__
 #include components/TileDrawFns.lua
 #include components/Entities.lua
 #include components/Locations.lua
+#include components/SmoothLocations.lua
 #include components/Attributes.lua
 #include systems/PerfTimer.lua
 #include systems/FrameTimer.lua
