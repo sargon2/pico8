@@ -17,7 +17,7 @@ function Panels.init()
             pluggable = true,
         }
     )
-    TileDrawFns.add(Panels.ent_id, Panels.draw_panel)
+    DrawFns.add(Panels.ent_id, Panels.draw_panel)
 end
 
 function Panels._panel_at(x, y)

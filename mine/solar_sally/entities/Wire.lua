@@ -12,7 +12,7 @@ function Wire.init()
             pluggable = true,
         }
     )
-    TileDrawFns.add(Wire.ent_id, Wire.draw_wire_tile)
+    DrawFns.add(Wire.ent_id, Wire.draw_wire_tile)
 end
 
 function Wire.is_pluggable(x, y)

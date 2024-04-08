@@ -11,7 +11,7 @@ function Cows.init()
     for i=1,100 do
         local ent_id = Entities.create_entity()
         add(Cows.cow_ent_ids, ent_id)
-        TileDrawFns.add(ent_id, Cows.draw_cow)
+        DrawFns.add(ent_id, Cows.draw_cow)
         local x = flr(rnd(100))-50
         local y = flr(rnd(100))-50
         SmoothLocations.set_or_update_location(ent_id, x, y)

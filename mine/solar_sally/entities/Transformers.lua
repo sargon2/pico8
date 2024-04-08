@@ -30,7 +30,7 @@ function Transformers.init()
         }
     )
 
-    TileDrawFns.add(Transformers.ent_left, Transformers.draw_transformer)
+    DrawFns.add(Transformers.ent_left, Transformers.draw_transformer)
 
     Placement.set_placement_fn(Transformers.ent_left, Transformers.place)
 

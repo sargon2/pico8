@@ -28,7 +28,7 @@ function World.draw()
         for x = xmin, xmax do
             local ent_id = Locations.entity_at(x, y)
             if ent_id then
-                TileDrawFns.drawTileAt(ent_id, x, y)
+                DrawFns.drawTileAt(ent_id, x, y)
             end
         end
         if y == flr(char_y+.4) then
@@ -36,7 +36,7 @@ function World.draw()
         end
         if next(smooth_ents) then -- TODO is this needed once character is using smooth ents?
             while smooth_ents[curr_pos] and y >= flr(smooth_ents[curr_pos][3]+.4) do
-                TileDrawFns.drawTileAt(smooth_ents[curr_pos][1], smooth_ents[curr_pos][2], smooth_ents[curr_pos][3]) -- TODO if we're using it this way it's no longer a "tile draw fn"
+                DrawFns.drawTileAt(smooth_ents[curr_pos][1], smooth_ents[curr_pos][2], smooth_ents[curr_pos][3]) -- TODO if we're using it this way it's no longer a "tile draw fn"
                 curr_pos += 1
             end
         end

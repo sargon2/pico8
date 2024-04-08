@@ -23,7 +23,7 @@ Sprite_ids = {
 }
 
 function Sprites.add(ent_id, sprite, width, height, yoffset)
-    -- Sprite just forwards to TileDrawFns
+    -- Sprite just forwards to DrawFns
 
     sprite = Sprite_ids[sprite]
     if(not width) width = 1
@@ -34,7 +34,7 @@ function Sprites.add(ent_id, sprite, width, height, yoffset)
         Sprites.draw_spr(sprite, x, y + yoffset, width, height)
     end
 
-    TileDrawFns.add(ent_id, d)
+    DrawFns.add(ent_id, d)
 end
 
 -- function Sprites.add(ent_id, sprite, width, height, yoffset)
