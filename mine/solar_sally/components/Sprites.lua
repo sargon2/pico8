@@ -62,7 +62,15 @@ end
 --     Sprites.draw_spr(sprite, x, y + yoffset, width, height)
 -- end
 
-function Sprites.draw_spr(s,x,y,width,height)
+function round_to_nearest_pixel(num)
+    return flr(num * 8) / 8
+end
+
+function Sprites.draw_spr(s,x,y,width,height,flip_x)
+    -- Round location to the nearest pixel to prevent vibration when the player is moving
+    x = round_to_nearest_pixel(x)
+    y = round_to_nearest_pixel(y)
+
     local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
     if(not width) width = 1
     if(not height) height = 1
@@ -82,7 +90,8 @@ function Sprites.draw_spr(s,x,y,width,height)
         (8+x-char_x)*8,
         (8+y-char_y)*8,
         width,
-        height
+        height,
+        flip_x
     )
     if changed_transparency then
         palt()

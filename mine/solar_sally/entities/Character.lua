@@ -108,8 +108,7 @@ function Character.handle_player_movement(elapsed)
     end
     Placement.sel_x = flr(Placement.sel_x_p)
     Placement.sel_y = flr(Placement.sel_y_p)
-    char_new_x, char_new_y = normalize(char_new_x, char_new_y, Character.speed*elapsed) -- TODO should this normalize be part of move_by?
-    SmoothLocations.move_by_if_not_obstructed(Character.ent_id, char_new_x, char_new_y) -- TODO let the player walk a bit vertically into the next tile
+    SmoothLocations.move_by_if_not_obstructed(Character.ent_id, char_new_x, char_new_y, Character.speed*elapsed) -- TODO let the player walk a bit vertically into the next tile
     -- Animate walking
     if char_new_x!=0 or char_new_y!=0 then
         Character.frame += Character.anim_speed*elapsed

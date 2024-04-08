@@ -9,5 +9,5 @@ end
 function TileDrawFns.drawTileAt(ent_id, x, y)
     if(not TileDrawFns.fns[ent_id]) return
 
-    TileDrawFns.fns[ent_id](x, y)
+    TileDrawFns.fns[ent_id](x, y, ent_id)
 end

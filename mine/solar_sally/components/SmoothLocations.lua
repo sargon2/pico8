@@ -13,7 +13,8 @@ function SmoothLocations.get_location(ent_id)
     return SmoothLocations.xs[ent_id], SmoothLocations.ys[ent_id]
 end
 
-function SmoothLocations.move_by_if_not_obstructed(ent_id, x, y)
+function SmoothLocations.move_by_if_not_obstructed(ent_id, x, y, dist)
+    x, y = normalize(x, y, dist)
     local old_x = SmoothLocations.xs[ent_id]
     local old_y = SmoothLocations.ys[ent_id]
     local new_x = old_x + x
