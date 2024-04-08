@@ -1,10 +1,4 @@
-Map = {
-    ent_id = nil,
-}
-
-function Map.init()
-    Map.ent_id = Entities.create_entity()
-end
+Map = {}
 
 function Map.get_name()
     return "Map"
