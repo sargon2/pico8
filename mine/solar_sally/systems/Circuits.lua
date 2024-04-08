@@ -68,8 +68,8 @@ function Circuits.mark_powered_panels(components)
 
         if component[Panels.ent_id] then
             -- count panels
-            for x, ys in pairs(component[Panels.ent_id]) do
-                for y, t in pairs(ys) do
+            for _, ys in pairs(component[Panels.ent_id]) do
+                for _, t in pairs(ys) do
                     if t then
                         num_panels += 1
                     end
@@ -133,7 +133,7 @@ function Circuits.get_connected_components()
     local visited = BooleanGrid:new()
     local current_component = {}
 
-    function visit(x, y)
+    local function visit(x, y)
         if visited:is_set(x, y) then
             -- Already visited this location
             return
@@ -158,7 +158,7 @@ function Circuits.get_connected_components()
         end
     end
 
-    function collect_components(target, ent_ids)
+    local function collect_components(target, ent_ids)
         for t in Locations.iterate_all_entity_locations(ent_ids) do
             local x = t[1]
             local y = t[2]

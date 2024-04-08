@@ -9,7 +9,7 @@ function Trees.init()
 
     Sprites.add(Trees.ent_id, "tree_top", 1, 2, -1)
 
-    for i=1,500 do
+    for _=1,500 do
         local x = flr(rnd(100))-50
         local y = flr(rnd(100))-50
         Locations.place_entity(Trees.ent_id, x, y)

@@ -26,7 +26,7 @@ function Placement.get_name()
 end
 
 function Placement.update(elapsed)
-    Placement.handle_selection_and_placement()
+    Placement.handle_selection_and_placement(elapsed)
 end
 
 -- TODO these set_fn methods are weird and only needed since not all entities are exactly 1 tile

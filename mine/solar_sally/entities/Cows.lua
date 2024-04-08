@@ -8,7 +8,7 @@ Cows = {
 
 function Cows.init()
 
-    for i=1,100 do
+    for _=1,100 do
         local ent_id = Entities.create_entity()
         add(Cows.cow_ent_ids, ent_id)
         DrawFns.add(ent_id, Cows.draw_cow)

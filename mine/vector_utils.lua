@@ -7,7 +7,7 @@ function normalize(x, y, scale)
     if scale == nil then
         scale = 1
     end
-    dist=sqrt(x*x + y*y)
+    local dist=sqrt(x*x + y*y)
     return x*scale/dist, y*scale/dist
 end
    

@@ -108,7 +108,7 @@ function df_tostr(val)
 	
 	if df_is_finite(val) then
 		local coefficient,exponent=val[2],val[3]
-		local adj_exp=exponent+#coefficient-1
+		-- local adj_exp=exponent+#coefficient-1
 		
 		--character form
 		-- if exponent<=0 and adj_exp>=-6 then
@@ -200,7 +200,7 @@ function df_compare(val1,val2)
 	
 	if df_sign(v1,true)!=df_sign(v2,true)
 	then
-		v1_s,v2_s=df_sign(v1,true),df_sign(v2,true)
+		local v1_s,v2_s=df_sign(v1,true),df_sign(v2,true)
 		v1,v2=df_val({subc("-++",v1_s+2),tostr(v1_s),0},v1),df_val({subc("-++",v2_s+2),tostr(v2_s),0},v2)
 	end
 	
@@ -241,7 +241,7 @@ function df_add(val1,val2)
 		return df_val({val2_s,"0","inf"},val2)
 	end
 	
-	for i=1,abs(val1_e-val2_e) do
+	for _=1,abs(val1_e-val2_e) do
 		if val1_e>val2_e then
 			val1_c..="0"
 		else
@@ -267,8 +267,8 @@ function df_add(val1,val2)
 	until i>max(#val1_c,#val2_c) and carry<=0
 	
 	local res_s,res_zero="+",true
-	for i=1,#res_c do
-		if (subc(res_c,i)!="0") res_zero=false break
+	for j=1,#res_c do
+		if (subc(res_c,j)!="0") res_zero=false break
 	end
 	if res_zero then
 		if (val1_s=="-" and val2_s=="-") res_s="-"
@@ -409,7 +409,7 @@ function df_divide(val1,val2,int)
 	local res=df_limit(df_val({res_s,res_c,res_e-adjust},val1,val2))
 	
 	if int then
-		for i=2,#res_c do
+		for _=2,#res_c do
 			if (subc(val1_c,-1)!="0") break
 			val1_c=sub(val1_c,1,-2)
 			val1_e+=1
@@ -706,7 +706,7 @@ end
 
 --parse string into abstract
 function df_parse(str)
-	local invalid,sign,exponent,i={"+","0","qnan"},"+",0,1
+	local invalid,sign,i={"+","0","qnan"},"+",1
 	--process sign, if any
 	if str_here("+",str) then
 		sign="+"

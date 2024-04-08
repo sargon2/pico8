@@ -44,7 +44,7 @@ function World.draw()
 end
 
 function World._sort_by_y(smooth_ents)
-    function compare_by_y(a, b)
+    local function compare_by_y(a, b)
         return a[3] < b[3]
     end
 

@@ -30,7 +30,7 @@ function Sprites.add(ent_id, sprite, width, height, yoffset)
     if(not height) height = 1
     if(not yoffset) yoffset = 0
 
-    function d(x, y)
+    local function d(x, y)
         Sprites.draw_spr(sprite, x, y + yoffset, width, height)
     end
 
