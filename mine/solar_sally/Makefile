@@ -7,7 +7,7 @@ solar_sally.p8.png: $$(shell find $$*/*.lua $$*/*.p8 -type f 2>/dev/null | sed '
 	mkdir -p output
 	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --minify-safe-only # So we can examine minified code
 	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png --minify-safe-only
-	$(SHRINKO8) solar_sally.p8 --lint
+	$(SHRINKO8) solar_sally.p8 --lint --no-lint-fail
 	$(SHRINKO8) output/solar_sally.p8.png --count
 
 

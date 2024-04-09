@@ -37,9 +37,10 @@ function _draw()
             if(Settings.debug_timing) printh(system.get_name()..".draw(): "..tostr(PerfTimer.get_and_advance()))
         end
     end
+    if(Settings.debug_window) db_window()
 end
 
-function _update60()
+function do_update()
     local elapsed = FrameTimer.calculate_elapsed()
 
     if Settings.debug_timing then
@@ -52,5 +53,16 @@ function _update60()
             system.update(elapsed)
             if(Settings.debug_timing) printh(system.get_name()..".update(): "..tostr(PerfTimer.get_and_advance()))
         end
+    end
+end
+
+-- The debug tree window scroll wheel doesn't work at 60 fps, so if that's enabled, drop to 30.
+if Settings.debug_window then
+    function _update()
+        do_update()
+    end
+else
+    function _update60()
+        do_update()
     end
 end

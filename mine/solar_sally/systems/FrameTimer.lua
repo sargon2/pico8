@@ -21,7 +21,7 @@ function FrameTimer.calculate_elapsed()
     -- end
 
     -- So, until that's fixed, we just return the intended time, and let the game slow down.
-    local elapsed = 1 / 60
+    local elapsed = 1 / stat(8)
 
     return elapsed
 end

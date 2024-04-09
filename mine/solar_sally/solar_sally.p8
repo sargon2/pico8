@@ -4,6 +4,7 @@ __lua__
 #include ../floating_point.lua
 #include ../lua_extensions.lua
 #include ../vector_utils.lua
+#include ../podtree_debugger.lua
 #include types/BooleanGrid.lua
 #include indexes/Settings.lua
 #include components/Sprites.lua
