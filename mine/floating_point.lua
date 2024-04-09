@@ -2,6 +2,7 @@
 --for pico-8
 --
 -- from https://www.lexaloffle.com/bbs/?tid=39319
+-- 2549 tokens (31%)
 
 function clone(t)
 	local n={}
