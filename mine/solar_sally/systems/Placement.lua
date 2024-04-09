@@ -6,7 +6,8 @@ Placement = {
     sel_y=0,
     sel_sprite = "no_action",
     is_placing = nil, -- ent id of what we're placing
-    is_removing = nil, --ent id of what we're removing
+    is_removing = nil, -- ent id of what we're removing
+    is_acting = nil, -- ent id if what we're acting on
     placeable_entities = nil,
     placeable_index = 1,
     place_ent_id = nil, -- technically redundant, but it's simpler and faster to cache it
@@ -94,8 +95,17 @@ function Placement.handle_selection_and_placement()
     Placement.sel_sprite = sprite
 
     if btn(❎) then
-        if action == "no_action" then
+        if action == "no_action" then -- TODO passing around these strings as enums is weird
             -- pass
+            if type(Placement.is_acting) == "number" then
+                Actions.release(Placement.is_acting)
+                Placement.is_acting = true
+            end
+        elseif action == "custom" then
+            if not Placement.is_acting then
+                Actions.trigger(action_ent)
+                Placement.is_acting = action_ent
+            end
         elseif action == "pick_up" then
             Placement.remove(action_ent, Placement.sel_x, Placement.sel_y)
         elseif action == "place" then
@@ -106,41 +116,60 @@ function Placement.handle_selection_and_placement()
     else
         Placement.is_placing = nil
         Placement.is_removing = nil
+        if Placement.is_acting then
+            if type(Placement.is_acting) == "number" then -- TODO checking type here and above is a bit weird
+                Actions.release(Placement.is_acting)
+            end
+            Placement.is_acting = nil
+        end
     end
 end
 
 function Placement.determine_action_and_sprite(entity_at_sel)
     if entity_at_sel == nil then
-        if Placement.is_removing then
-            -- If we have nothing selected, but we're removing, we take no action but retain the pick_up sprite.
-            return "no_action", nil, "pick_up"
-        else
-            local fn = Placement.obstructed_fns[Placement.place_ent_id]
-            if fn and fn(Placement.sel_x, Placement.sel_y) then
-                return "no_action", nil, "no_action" -- TODO should this be a custom sprite?
+        if not Placement.is_acting then
+            if Placement.is_removing then
+                -- If we have nothing selected, but we're removing, we take no action but retain the pick_up sprite.
+                return "no_action", nil, "pick_up"
+            else
+                local fn = Placement.obstructed_fns[Placement.place_ent_id]
+                if fn and fn(Placement.sel_x, Placement.sel_y) then
+                    return "no_action", nil, "no_action" -- TODO should this be a custom sprite?
+                end
+                -- We're not removing and we have nothing selected, so we're placing the user's selected item.
+                return "place", Placement.place_ent_id, Attributes.get_attr(Placement.place_ent_id, "placement_sprite")
             end
-            -- We're not removing and we have nothing selected, so we're placing the user's selected item.
-            return "place", Placement.place_ent_id, Attributes.get_attr(Placement.place_ent_id, "placement_sprite")
         end
     end
 
     -- We have something selected
 
-    -- If we're placing the currently selected item
-    if entity_at_sel == Placement.is_placing then
-        -- We can't re-place an item, but we let the user know we're still placing.
-        return "no_action", nil, Attributes.get_attr(entity_at_sel, "placement_sprite")
+    -- Is it an actionable entity?
+    if not Placement.is_placing and not Placement.is_removing then
+        local act_sprite = Actions.get_sprite(entity_at_sel)
+        if act_sprite then
+            return "custom", entity_at_sel, act_sprite
+        end
     end
 
-    -- If we're removing the currently selected item, pick it up.
-    -- Note this will only happen for 1 frame because the item will be removed this frame
-    if entity_at_sel == Placement.is_removing then
-        return "pick_up", entity_at_sel, "pick_up"
-    end
+    if not Placement.is_acting then
 
-    -- If we're not placing or removing, and we have something pick-uppable selected, pick it up.
-    if not Placement.is_placing and not Placement.is_removing and Attributes.get_attr(entity_at_sel, "removable") then
-        return "pick_up", entity_at_sel, "pick_up"
+        -- If we're placing the currently selected item
+        if entity_at_sel == Placement.is_placing then
+            -- We can't re-place an item, but we let the user know we're still placing.
+            return "no_action", nil, Attributes.get_attr(entity_at_sel, "placement_sprite")
+        end
+
+        -- If we're removing the currently selected item, pick it up.
+        -- Note this will only happen for 1 frame because the item will be removed this frame
+        if entity_at_sel == Placement.is_removing then
+            return "pick_up", entity_at_sel, "pick_up"
+        end
+
+        -- If we're not placing or removing, and we have something pick-uppable selected, pick it up.
+        if not Placement.is_placing and not Placement.is_removing and Attributes.get_attr(entity_at_sel, "removable") then
+            return "pick_up", entity_at_sel, "pick_up"
+        end
     end
 
     -- No valid action was found.

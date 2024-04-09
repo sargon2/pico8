@@ -1,5 +1,6 @@
 Sprites = {}
 
+-- TODO is there a clever way I can erase this at build time?
 Sprite_ids = {
     solar_panel = 17,
     transformer_left = 18,
@@ -20,6 +21,9 @@ Sprite_ids = {
     grid_wire = 54,
     tree_top = 21,
     tree_bottom = 37,
+    button = 24,
+    button_mini = 40,
+    button_pressed = 25,
 }
 
 function Sprites.add(ent_id, sprite, width, height, yoffset)
