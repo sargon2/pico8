@@ -23,6 +23,10 @@ run-windows:
 copy-to-windows: solar_sally.p8.png
 	cd ../.. && ./push-to-windows.sh
 
+.PHONY: pull-from-windows
+pull-from-windows:
+	cd ../.. && ./pull-from-windows.sh
+
 .PHONY: copy-and-run
 copy-and-run: copy-to-windows run-windows
 
