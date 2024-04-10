@@ -36,7 +36,9 @@ function World.draw()
         end
         if next(smooth_ents) then -- TODO is this needed once character is using smooth ents?
             while smooth_ents[curr_pos] and y >= flr(smooth_ents[curr_pos][3]+.4) do
-                DrawFns.drawTileAt(smooth_ents[curr_pos][1], smooth_ents[curr_pos][2], smooth_ents[curr_pos][3]) -- TODO if we're using it this way it's no longer a "tile draw fn"
+                -- TODO cows are drawn in front of Sally?? Why?
+                -- TODO wire should always be behind Sally
+                DrawFns.drawTileAt(smooth_ents[curr_pos][1], smooth_ents[curr_pos][2], smooth_ents[curr_pos][3])
                 curr_pos += 1
             end
         end
