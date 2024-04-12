@@ -24,6 +24,15 @@ Sprite_ids = {
     button = 24,
     button_mini = 40,
     button_pressed = 25,
+    window_ul = 13,
+    window_u = 14,
+    window_ur = 15,
+    window_l = 29,
+    window_m = 30,
+    window_r = 31,
+    window_bl = 45,
+    window_b = 46,
+    window_br = 47,
 }
 
 function Sprites.add(ent_id, sprite, width, height, yoffset)
@@ -41,41 +50,15 @@ function Sprites.add(ent_id, sprite, width, height, yoffset)
     DrawFns.add(ent_id, d)
 end
 
--- function Sprites.add(ent_id, sprite, width, height, yoffset)
---     Sprites.sprites[ent_id] = Sprite_ids[sprite]
---     if width then
---         Sprites.widths[ent_id] = width
---     end
---     if height then
---         Sprites.heights[ent_id] = height
---     end
---     if yoffset then
---         Sprites.yoffsets[ent_id] = yoffset
---     end
--- end
-
--- function Sprites.drawSpriteAt(ent_id, x, y)
---     local sprite = Sprites.sprites[ent_id]
-
---     if(not sprite) return
-
---     local yoffset = Sprites.yoffsets[ent_id] or 0
---     local width = Sprites.widths[ent_id] or 1
---     local height = Sprites.heights[ent_id] or 1
-
---     Sprites.draw_spr(sprite, x, y + yoffset, width, height)
--- end
-
 function round_to_nearest_pixel(num)
     return flr(num * 8) / 8
 end
 
-function Sprites.draw_spr(s,x,y,width,height,flip_x)
+function Sprites.draw_relative_to_screen(s,x,y,width,height,flip_x)
     -- Round location to the nearest pixel to prevent vibration when the player is moving
     x = round_to_nearest_pixel(x)
     y = round_to_nearest_pixel(y)
 
-    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
     if(not width) width = 1
     if(not height) height = 1
     -- s = Sprites[s]
@@ -91,8 +74,8 @@ function Sprites.draw_spr(s,x,y,width,height,flip_x)
     end
     spr(
         s,
-        (8+x-char_x)*8,
-        (8+y-char_y)*8,
+        x*8,
+        y*8,
         width,
         height,
         flip_x
@@ -100,6 +83,11 @@ function Sprites.draw_spr(s,x,y,width,height,flip_x)
     if changed_transparency then
         palt()
     end
+end
+
+function Sprites.draw_spr(s,x,y,width,height,flip_x)
+    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
+    Sprites.draw_relative_to_screen(s,8+x-char_x,8+y-char_y,width,height,flip_x)
 end
 
 function Sprites.set_pixel(x,y,xoffset,yoffset,c) -- TODO where should this live?

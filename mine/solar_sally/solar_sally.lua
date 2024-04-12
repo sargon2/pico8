@@ -12,7 +12,7 @@
 solar_sally = {
     -- The order here is important (think dep injection dependency graph)
     -- Includes entities as well as systems; anything that needs to be init'd
-    systems = {Rocks, Trees, Panels, Wire, GridWire, Transformers, Button, Map, World, Cows, Placement, Character, FrameTimer, PanelCalculator}
+    systems = {Rocks, Trees, Panels, Wire, GridWire, Transformers, Button, Map, World, Cows, Placement, Character, FrameTimer, PanelCalculator, Inventory}
 }
 
 function _init()
