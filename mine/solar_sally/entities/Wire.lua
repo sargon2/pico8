@@ -19,7 +19,13 @@ function Wire.is_pluggable(x, y)
     return Attributes.get_attr_by_location(x, y, "pluggable")
 end
 
-function Wire.draw_wire_tile(x, y)
+function Wire.draw_wire_tile(x, y, ent_id, relative_to_screen)
+    if relative_to_screen then
+        -- For icons and such, we just draw it horizontal.
+        Sprites.draw_spr(Sprite_ids["wire_left"], x, y, 1, 1, false, true)
+        Sprites.draw_spr(Sprite_ids["wire_right"], x, y, 1, 1, false, true)
+        return
+    end
     local left = Wire.is_pluggable(x-1,y)
     local right = Wire.is_pluggable(x+1,y)
     local up = Wire.is_pluggable(x,y-1)

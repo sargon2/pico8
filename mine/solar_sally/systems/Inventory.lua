@@ -31,30 +31,35 @@ function Inventory.check_and_remove(ent_id)
     return nil
 end
 
+
 function draw_window(x, y, width, height) -- TODO where should this live?
-    Sprites.draw_relative_to_screen(Sprite_ids["window_ul"], x, y)
-    for i = x+1,x+width-2 do
-        Sprites.draw_relative_to_screen(Sprite_ids["window_u"], i, y)
+    local function _draw_spr(sprite_name, x, y)
+        Sprites.draw_relative_to_screen(Sprite_ids[sprite_name], x, y)
     end
-    Sprites.draw_relative_to_screen(Sprite_ids["window_ur"], x+width-1, y)
+
+    _draw_spr("window_ul", x, y)
+    for i = x+1,x+width-2 do
+        _draw_spr("window_u", i, y)
+    end
+    _draw_spr("window_ur", x+width-1, y)
 
     for j = y+1,y+height-2 do
-        Sprites.draw_relative_to_screen(Sprite_ids["window_l"], x, j)
+        _draw_spr("window_l", x, j)
         for i = x+1,x+width-2 do
-            Sprites.draw_relative_to_screen(Sprite_ids["window_m"], i, j)
+            _draw_spr("window_m", i, j)
         end
-        Sprites.draw_relative_to_screen(Sprite_ids["window_r"], x+width-1, j)
+        _draw_spr("window_r", x+width-1, j)
     end
 
-    Sprites.draw_relative_to_screen(Sprite_ids["window_bl"], x, y+height-1)
+    _draw_spr("window_bl", x, y+height-1)
     for i = x+1,x+width-2 do
-        Sprites.draw_relative_to_screen(Sprite_ids["window_b"], i, y+height-1)
+        _draw_spr("window_b", i, y+height-1)
     end
-    Sprites.draw_relative_to_screen(Sprite_ids["window_br"], x+width-1, y+height-1)
+    _draw_spr("window_br", x+width-1, y+height-1)
 end
 
-function print_text(text, x, y) -- TODO where should this live?
-    print(text, x*8, y*8)
+function print_text(text, x, y, xoffset, yoffset) -- TODO where should this live?
+    print(text, x*8+xoffset, y*8+yoffset)
 end
 
 function Inventory.draw()
@@ -62,10 +67,17 @@ function Inventory.draw()
     -- TODO ui paper prototyping to tell where this window should go
     draw_window(12, 3, 4, num_items + 2)
     local row = 0
-    -- TODO draw the sprite for each ent_id
     for ent_id, count in pairs(Inventory.items) do
+        DrawFns.drawTileAt(ent_id, 13, 4+row, true)
         color(4)
-        print_text(count, 13, 4+row)
+        print_text(count, 14, 4+row, 2, 2)
         row += 1
     end
+    -- What order should we display them in?
+    -- - A hardcoded order
+    -- - Alphabetical
+    -- - Should this code even be generic enough to handle any inventory items? Or should it just be fully hardcoded?
+    -- - Why not have a hardcoded list, then "other" which is alphabetical?
+    -- - If the player doesn't have a certain item, should it display it with a 0? Or just leave it off the list?
+
 end

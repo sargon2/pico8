@@ -54,7 +54,15 @@ function round_to_nearest_pixel(num)
     return flr(num * 8) / 8
 end
 
-function Sprites.draw_relative_to_screen(s,x,y,width,height,flip_x)
+function Sprites.draw_relative_to_screen(s,x,y,width,height,flip_x) -- convenience
+    Sprites.draw_spr(s,x,y,width,height,flip_x,true)
+end
+
+function Sprites.draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
+    if not relative_to_screen then
+        x, y = Sprites.convert_map_to_screen(x, y)
+    end
+
     -- Round location to the nearest pixel to prevent vibration when the player is moving
     x = round_to_nearest_pixel(x)
     y = round_to_nearest_pixel(y)
@@ -85,18 +93,24 @@ function Sprites.draw_relative_to_screen(s,x,y,width,height,flip_x)
     end
 end
 
-function Sprites.draw_spr(s,x,y,width,height,flip_x)
+function Sprites.convert_map_to_screen(x, y)
     local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
-    Sprites.draw_relative_to_screen(s,8+x-char_x,8+y-char_y,width,height,flip_x)
+    return 8+x-char_x, 8+y-char_y
 end
 
-function Sprites.set_pixel(x,y,xoffset,yoffset,c) -- TODO where should this live?
-    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
+function Sprites.set_pixel(x,y,xoffset,yoffset,c, relative_to_screen) -- TODO where should this live?
+    if not relative_to_screen then
+        x, y = Sprites.convert_map_to_screen(x, y)
+    end
     pset(
-        (8+x-char_x)*8+xoffset,
-        (8+y-char_y)*8+yoffset,
+        x*8+xoffset,
+        y*8+yoffset,
         c
     )
+end
+
+function Sprites.set_pixel_relative_to_screen(x,y,xoffset,yoffset,c) -- convenience -- TODO where should this live?
+    Sprites.set_pixel(x, y, xoffset, yoffset, c, true)
 end
 
 function Sprites.rect(x,y,xmin,ymin,xmax,ymax,c) -- TODO where should this live?
