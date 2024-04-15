@@ -1,29 +1,27 @@
 Inventory = {
-    -- TODO this needs to be ordered
     items = {}, -- items[ent_id] = count
+    order = {}, -- order[] = ent_id -- just for display order
 }
 
 function Inventory.init()
     -- Since we haven't implemented buying yet, just start with some core components.
-    Inventory.items[Panels.ent_id] = Settings.start_panels
-    Inventory.items[Transformers.ent_left] = Settings.start_transformers
-    Inventory.items[Wire.ent_id] = Settings.start_wire -- TODO should wire be infinite?
+    -- Order here is display order
+    Inventory.add(Panels.ent_id, Settings.start_panels)
+    Inventory.add(Transformers.ent_left, Settings.start_transformers)
+    Inventory.add(Wire.ent_id, Settings.start_wire) -- TODO should wire be infinite?
 end
 
-function Inventory.add(ent_id)
-    Inventory.items[ent_id] += 1
+function Inventory.add(ent_id, num)
+    if(not num) num = 1
+    if not Inventory.items[ent_id] then
+        Inventory.items[ent_id] = 0 -- TODO is this needed?
+        add(Inventory.order, ent_id)
+    end
+    Inventory.items[ent_id] += num
 end
 
 function Inventory.get(ent_id)
     return Inventory.items[ent_id]
-end
-
-function Inventory.num_items() -- Lua is dumb
-    local count = 0
-    for _, _ in pairs(Inventory.items) do
-        count += 1
-    end
-    return count
 end
 
 function Inventory.check_and_remove(ent_id)
@@ -34,7 +32,6 @@ function Inventory.check_and_remove(ent_id)
     end
     return nil
 end
-
 
 function draw_window(x, y, width, height) -- TODO where should this live?
     local function _draw_spr(sprite_name, x, y)
@@ -67,21 +64,14 @@ function print_text(text, x, y, xoffset, yoffset) -- TODO where should this live
 end
 
 function Inventory.draw()
-    local num_items = Inventory.num_items()
     -- TODO ui paper prototyping to tell where this window should go
-    draw_window(12, 3, 4, num_items + 2)
+    draw_window(12, 3, 4, #Inventory.order + 2)
     local row = 0
-    for ent_id, count in pairs(Inventory.items) do
+    for ent_id in all(Inventory.order) do
+        local count = Inventory.items[ent_id]
         DrawFns.drawTileAt(ent_id, 13, 4+row, true)
         color(4)
         print_text(count, 14, 4+row, 2, 2)
         row += 1
     end
-    -- What order should we display them in?
-    -- - A hardcoded order
-    -- - Alphabetical
-    -- - Should this code even be generic enough to handle any inventory items? Or should it just be fully hardcoded?
-    -- - Why not have a hardcoded list, then "other" which is alphabetical?
-    -- - If the player doesn't have a certain item, should it display it with a 0? Or just leave it off the list?
-
 end
