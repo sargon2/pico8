@@ -91,13 +91,16 @@ function Transformers.placement_obstructed(x, y)
 end
 
 function Transformers.draw_transformer(x, y, ent_id, relative_to_screen)
-    Sprites.draw_spr(Sprite_ids["transformer_left"], x, y, 2, 1, false, relative_to_screen)
-    if not relative_to_screen then
-        if Transformers.is_overloaded(x, y) then
-            Sprites.set_pixel(x,y,5,5,8)
-        elseif Transformers.is_powered(x, y) then
-            Sprites.set_pixel(x,y,5,5,11)
-            -- Sprites.rect(x,y,5,4,4,5,11)
-        end
+    if relative_to_screen then
+        -- The regular sprite is too wide to fit in inventory, so just use the placement one, but scoot it up and left a bit
+        Sprites.draw_spr(Sprite_ids["place_transformer"], x-.125, y-.25, 1, 1, false, true)
+        return
+    end
+    Sprites.draw_spr(Sprite_ids["transformer_left"], x, y, 2, 1, false)
+    if Transformers.is_overloaded(x, y) then
+        Sprites.set_pixel(x,y,5,5,8)
+    elseif Transformers.is_powered(x, y) then
+        Sprites.set_pixel(x,y,5,5,11)
+        -- Sprites.rect(x,y,5,4,4,5,11)
     end
 end
