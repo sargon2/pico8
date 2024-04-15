@@ -5,13 +5,17 @@ Inventory = {
 
 function Inventory.init()
     -- Since we haven't implemented buying yet, just start with some core components.
-    Inventory.items[Panels.ent_id] = 50
-    Inventory.items[Transformers.ent_left] = 1
-    Inventory.items[Wire.ent_id] = 100 -- TODO should wire be infinite?
+    Inventory.items[Panels.ent_id] = Settings.start_panels
+    Inventory.items[Transformers.ent_left] = Settings.start_transformers
+    Inventory.items[Wire.ent_id] = Settings.start_wire -- TODO should wire be infinite?
 end
 
 function Inventory.add(ent_id)
     Inventory.items[ent_id] += 1
+end
+
+function Inventory.get(ent_id)
+    return Inventory.items[ent_id]
 end
 
 function Inventory.num_items() -- Lua is dumb

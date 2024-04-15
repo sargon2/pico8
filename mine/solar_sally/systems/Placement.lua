@@ -55,6 +55,22 @@ function Placement.rotate_place_ent_id()
     Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
 end
 
+function Placement.rotate_with_inventory_check()
+    local start_index = Placement.placeable_index
+    Placement.rotate_place_ent_id()
+
+    -- Does the player have one to place?
+    while Inventory.get(Placement.place_ent_id) <= 0 do
+        if Placement.placeable_index == start_index then
+            -- Nothing to place
+            Placement.place_ent_id = nil
+            return
+        end
+        -- Rotate again
+        Placement.rotate_place_ent_id()
+    end
+end
+
 function Placement.remove(ent_id, x, y)
     local fn = Placement.removal_fns[ent_id]
     if fn then
@@ -69,9 +85,13 @@ function Placement.remove(ent_id, x, y)
     Placement.place_ent_id = ent_id
 
     Circuits.recalculate() -- TODO this probably shouldn't live here
+    Inventory.add(ent_id)
 end
 
 function Placement.place(ent_id, x, y)
+    if not Inventory.check_and_remove(ent_id) then
+        assert(false) -- Place failed inventory check
+    end
     Placement.is_placing = ent_id
     Placement.place_ent_id = ent_id
     local fn = Placement.placement_fns[ent_id]
@@ -82,11 +102,15 @@ function Placement.place(ent_id, x, y)
     end
 
     Circuits.recalculate() -- TODO this probably shouldn't live here
+    if Inventory.get(ent_id) == 0 then
+        -- That was our last one, rotate off it
+        Placement.rotate_with_inventory_check()
+    end
 end
 
 function Placement.handle_selection_and_placement()
     if btnp(🅾️) then
-        Placement.rotate_place_ent_id()
+        Placement.rotate_with_inventory_check()
     end
 
     local entity_at_sel = Locations.entity_at(Placement.sel_x, Placement.sel_y) -- may be nil
@@ -137,6 +161,10 @@ function Placement.determine_action_and_sprite(entity_at_sel)
                     return "no_action", nil, "no_action" -- TODO should this be a custom sprite?
                 end
                 -- We're not removing and we have nothing selected, so we're placing the user's selected item.
+                if not Placement.place_ent_id then
+                    -- Nothing to place
+                    return "no_action", nil, "no_action"
+                end
                 return "place", Placement.place_ent_id, Attributes.get_attr(Placement.place_ent_id, "placement_sprite")
             end
         end
