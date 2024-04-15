@@ -11,6 +11,7 @@ Character = {
 function Character.init()
     Character.ent_id = Entities.create_entity()
     SmoothLocations.set_or_update_location(Character.ent_id, 0, 0)
+    DrawFns.add(Character.ent_id, Character.drawChar)
 end
 
 function Character.get_name()

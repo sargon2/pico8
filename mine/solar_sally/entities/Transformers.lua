@@ -31,6 +31,7 @@ function Transformers.init()
     )
 
     DrawFns.add(Transformers.ent_left, Transformers.draw_transformer)
+    DrawFns.add(Transformers.ent_right, function () end) -- Drawn by ent_left
 
     Placement.set_placement_fn(Transformers.ent_left, Transformers.place)
 
