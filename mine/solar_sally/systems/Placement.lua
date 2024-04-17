@@ -156,6 +156,12 @@ function Placement.determine_action_and_sprite(entity_at_sel)
                 -- If we have nothing selected, but we're removing, we take no action but retain the pick_up sprite.
                 return "no_action", nil, "pick_up"
             else
+                -- Are there any smooth entities in the way?
+                -- This is not World.is_obstructed because we already know there isn't a Locations entity obstructing
+                if SmoothLocations.is_obstructed(Placement.sel_x, Placement.sel_y) then
+                    return "no_action", nil, "no_action"
+                end
+                -- Does the thing we're placing think this location is obstructed?
                 local fn = Placement.obstructed_fns[Placement.place_ent_id]
                 if fn and fn(Placement.sel_x, Placement.sel_y) then
                     return "no_action", nil, "no_action" -- TODO should this be a custom sprite?

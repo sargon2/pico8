@@ -31,7 +31,7 @@ function World.draw()
                 DrawFns.drawTileAt(ent_id, x, y)
             end
         end
-        if next(smooth_ents) then -- TODO is this needed once character is using smooth ents?
+        if next(smooth_ents) then
             while smooth_ents[curr_pos] and y >= flr(smooth_ents[curr_pos][3]+.4) do
                 DrawFns.drawTileAt(smooth_ents[curr_pos][1], smooth_ents[curr_pos][2], smooth_ents[curr_pos][3])
                 curr_pos += 1

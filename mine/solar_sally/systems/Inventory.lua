@@ -34,8 +34,8 @@ function Inventory.check_and_remove(ent_id)
 end
 
 function draw_window(x, y, width, height) -- TODO where should this live?
-    local function _draw_spr(sprite_name, x, y)
-        Sprites.draw_relative_to_screen(Sprite_ids[sprite_name], x, y)
+    local function _draw_spr(sprite_name, spr_x, spr_y)
+        Sprites.draw_relative_to_screen(Sprite_ids[sprite_name], spr_x, spr_y)
     end
 
     _draw_spr("window_ul", x, y)

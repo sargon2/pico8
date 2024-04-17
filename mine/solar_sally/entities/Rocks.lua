@@ -10,6 +10,8 @@ function Rocks.init()
     for _=1,500 do
         local x = flr(rnd(100))-50
         local y = flr(rnd(100))-50
-        Locations.place_entity(Rocks.ent_id, x, y)
+        if x != 0 or y != 0 then -- Don't want a rock starting right over Sally
+            Locations.place_entity(Rocks.ent_id, x, y)
+        end
     end
 end

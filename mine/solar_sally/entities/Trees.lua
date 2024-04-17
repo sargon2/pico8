@@ -12,6 +12,8 @@ function Trees.init()
     for _=1,500 do
         local x = flr(rnd(100))-50
         local y = flr(rnd(100))-50
-        Locations.place_entity(Trees.ent_id, x, y)
+        if x != 0 or y != 1 then -- Don't want a tree starting right over Sally
+            Locations.place_entity(Trees.ent_id, x, y)
+        end
     end
 end

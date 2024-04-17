@@ -13,6 +13,22 @@ function SmoothLocations.get_location(ent_id)
     return SmoothLocations.xs[ent_id], SmoothLocations.ys[ent_id]
 end
 
+function SmoothLocations.is_obstructed(x, y)
+    -- Returns if a smooth entity is obstructing the given coordinates
+    for ent_id, ent_x in pairs(SmoothLocations.xs) do
+        local ent_y = SmoothLocations.ys[ent_id]
+
+        -- Not sure what's up with these weird values.
+        -- The goal of the values is if Sally places a panel, then walks up to it, she can remove and place it again.
+        -- But if she picks it up and moves 1 pixel closer, she can't replace it.
+        -- TODO this could use a unit test.
+        if abs(x-.08-ent_x) <= .49 and abs(y-.55-ent_y) <= .49 then
+            return true
+        end
+    end
+    return false
+end
+
 function SmoothLocations.move_by_if_not_obstructed(ent_id, x, y, dist)
     x, y = normalize(x, y, dist)
     local old_x = SmoothLocations.xs[ent_id]
