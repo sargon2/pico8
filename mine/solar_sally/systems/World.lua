@@ -31,13 +31,24 @@ function World.draw()
                 DrawFns.drawTileAt(ent_id, x, y)
             end
         end
-        if next(smooth_ents) then
-            while smooth_ents[curr_pos] and y >= flr(smooth_ents[curr_pos][3]+.4) do
-                DrawFns.drawTileAt(smooth_ents[curr_pos][1], smooth_ents[curr_pos][2], smooth_ents[curr_pos][3])
-                curr_pos += 1
-            end
+        -- Character is a smooth ent so we always assume there's at least one
+        while smooth_ents[curr_pos] and y >= flr(smooth_ents[curr_pos][3]+.4) do
+            DrawFns.drawTileAt(smooth_ents[curr_pos][1], smooth_ents[curr_pos][2], smooth_ents[curr_pos][3])
+            curr_pos += 1
         end
     end
+
+    -- Check for smooth entity collisions.  TODO extract & move this to SmoothLocations or wherever
+    curr_pos = 1
+    while smooth_ents[curr_pos+1] do
+        local ent1, x1, y1 = unpack(smooth_ents[curr_pos]) -- TODO refer by number instead of unpacking to save tokens
+        local ent2, x2, y2 = unpack(smooth_ents[curr_pos+1])
+        if abs(x1-x2) < 1 and abs(y1-y2) < 1 then
+            -- Collision detected
+        end
+        curr_pos += 1
+    end
+
 end
 
 function World._sort_by_y(smooth_ents)

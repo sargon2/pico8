@@ -61,14 +61,14 @@ end
 -- Takes a comparison function as an argument to determine the sorting order.
 function _quicksort(arr, low, high, compare)
     if low < high then
-        local pi = partition(arr, low, high, compare)
+        local pi = _partition(arr, low, high, compare)
 
         _quicksort(arr, low, pi - 1, compare)
         _quicksort(arr, pi + 1, high, compare)
     end
 end
 
-function partition(arr, low, high, compare)
+function _partition(arr, low, high, compare)
     local pivot = arr[high]
     local i = low - 1
 
