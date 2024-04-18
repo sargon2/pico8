@@ -6,6 +6,10 @@ Cows = {
     looking = {}, -- looking[ent_id] = true, whether or not the cow is looking at the player
 }
 
+function Cows.get_name()
+    return "Cows"
+end
+
 function Cows.init()
 
     for _=1,100 do

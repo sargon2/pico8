@@ -30,7 +30,7 @@ end
 function _draw()
     cls()
 
-    if(Settings.debug_timing) printh("Drawing; start "..tostr(PerfTimer.get_and_advance()))
+    if(Settings.debug_timing) printh("\n\nDrawing; start "..tostr(PerfTimer.get_and_advance()))
     for system in all(solar_sally.systems) do
         if system.draw then
             system.draw()
@@ -45,8 +45,7 @@ function do_update()
 
     if Settings.debug_timing then
         PerfTimer.reset()
-        printh("")
-        printh("Updating; start "..tostr(PerfTimer.get_and_advance()))
+        printh("\n\n\nUpdating; start "..tostr(PerfTimer.get_and_advance()))
     end
     for system in all(solar_sally.systems) do
         if system.update then

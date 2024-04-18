@@ -3,6 +3,10 @@ Inventory = {
     order = {}, -- order[] = ent_id -- just for display order
 }
 
+function Inventory.get_name()
+    return "Inventory"
+end
+
 function Inventory.init()
     -- Since we haven't implemented buying yet, just start with some core components.
     -- Order here is display order
