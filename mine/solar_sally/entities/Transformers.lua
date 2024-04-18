@@ -34,8 +34,8 @@ function Transformers.init()
 end
 
 function Transformers.clear_powered()
-    Transformers.powered_transformers = BooleanGrid:new()
-    Transformers.overloaded_transformers = BooleanGrid:new()
+    Transformers.powered_transformers = NewObj(BooleanGrid)
+    Transformers.overloaded_transformers = NewObj(BooleanGrid)
 end
 
 function Transformers.mark_powered(x, y)

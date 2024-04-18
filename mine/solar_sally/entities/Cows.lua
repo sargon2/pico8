@@ -23,8 +23,6 @@ function Cows.init()
 end
 
 function Cows.draw_cow(x, y, ent_id)
-    -- TODO somehow when the player is moving the cow positions don't look quite right? like the player's movement is causing the cow to vibrate
-    -- maybe we need to round the cow's location to the nearest pixel when drawing? a pixel is 1/8 of a tile
     local sprite = Sprite_id_cow_side
     if Cows.looking[ent_id] then
         sprite = Sprite_id_cow_looking

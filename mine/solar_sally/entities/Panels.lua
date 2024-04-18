@@ -23,7 +23,7 @@ end
 
 -- TODO these powered functions are duplicated with Transformers
 function Panels.clear_powered()
-    Panels.powered_panels = BooleanGrid:new()
+    Panels.powered_panels = NewObj(BooleanGrid)
 end
 
 function Panels.mark_powered(x, y)

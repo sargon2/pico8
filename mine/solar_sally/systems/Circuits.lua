@@ -130,7 +130,7 @@ function Circuits.get_connected_components()
     local grid_components = {}
     local components = {}
 
-    local visited = BooleanGrid:new()
+    local visited = NewObj(BooleanGrid)
     local current_component = {}
 
     local function visit(x, y)

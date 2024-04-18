@@ -1,14 +1,8 @@
 
 BooleanGrid = {}
 
-function BooleanGrid:new()
-    local o = {}
-    setmetatable(o, self)
-    self.__index = self
-
-    o.values = {}
-
-    return o
+function BooleanGrid:construct()
+    self.values = {}
 end
 
 function BooleanGrid:set(x, y)

@@ -13,22 +13,6 @@ function dump(o)
     end
 end
 
-function bound(val, min, max)
-    if val < min then
-        return min
-    elseif val > max then
-        return max
-    end
-    return val
-end
-
-function get_only_element(tbl)
-    assert(#tbl == 1)
-    for x in all(tbl) do
-        return x
-    end
-end
-
 -- Turn the given function (coroutine) into an iterator.  It should call 'yield' to return each value.
 function make_iter(f, ...)
     local cor = cocreate(f)
@@ -85,4 +69,14 @@ end
 function swap(arr, i, j)
     arr[i], arr[j] = arr[j], arr[i]
 end
-    
+
+-- This allows us to deduplicate constructor functions for simulated objects.
+function NewObj(type)
+    local o = {}
+    setmetatable(o, type)
+    type.__index = type
+
+    if(o.construct) o:construct()
+
+    return o
+end
