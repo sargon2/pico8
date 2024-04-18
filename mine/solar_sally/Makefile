@@ -1,6 +1,8 @@
 all: output/solar_sally.p8.png
 
 SHRINKO8=python3 ../../shrinko8/shrinko8.py
+COUNTER=../../get_counts.sh
+LUA_FILES:=$(shell cat solar_sally.p8 | grep include | cut -c 10-)
 
 .SECONDEXPANSION: # needed for the wildcard stuff
 output/solar_sally.p8.png: $$(shell find $$* -type f \( -name "*.lua" -o -name "*.p8" \) ! -path "./output/*" 2>/dev/null | sed 's/ /\\ /g')
@@ -14,6 +16,10 @@ output/solar_sally.p8.png: $$(shell find $$* -type f \( -name "*.lua" -o -name "
 .PHONY: lint
 lint:
 	$(SHRINKO8) solar_sally.p8 --lint
+
+.PHONY: counts
+counts: output/solar_sally.p8.png
+	@$(COUNTER) $(LUA_FILES) solar_sally.p8 output/solar_sally.p8.png
 
 .PHONY: run-windows
 run-windows:
