@@ -8,15 +8,12 @@ function Panels.init()
 
     Panels.clear_powered()
 
-    Attributes.set_attrs(Panels.ent_id,
-        {
-            WalkingObstruction = true,
-            removable = true,
-            is_circuit_component = true,
-            placement_sprite = "place_panel",
-            pluggable = true,
-        }
-    )
+    Attributes_set_attr(Panels.ent_id, Attr_WalkingObstruction)
+    Attributes_set_attr(Panels.ent_id, Attr_removable)
+    Attributes_set_attr(Panels.ent_id, Attr_is_circuit_component)
+    Attributes_set_attr(Panels.ent_id, Attr_pluggable)
+    Attributes_set_attr(Panels.ent_id, Attr_placement_sprite, Sprite_id_place_panel)
+
     DrawFns.add(Panels.ent_id, Panels._draw)
 end
 
@@ -38,7 +35,7 @@ function Panels.is_powered(x, y)
 end
 
 function Panels._draw(x, y, is_powered, relative_to_screen)
-    Sprites.draw_spr(Sprite_ids["solar_panel"], x, y, 1, 1, false, relative_to_screen)
+    Sprites.draw_spr(Sprite_id_solar_panel, x, y, 1, 1, false, relative_to_screen)
     if relative_to_screen or Panels.powered_panels:is_set(x, y) then
         Sprites.set_pixel(x,y,4,4,11, relative_to_screen)
     end

@@ -7,8 +7,8 @@ LUA_FILES:=$(shell cat solar_sally.p8 | grep include | cut -c 10-)
 .SECONDEXPANSION: # needed for the wildcard stuff
 output/solar_sally.p8.png: $$(shell find $$* -type f \( -name "*.lua" -o -name "*.p8" \) ! -path "./output/*" 2>/dev/null | sed 's/ /\\ /g')
 	mkdir -p output
-	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --minify-safe-only # So we can examine minified code
-	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png --minify-safe-only
+	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --minify --focus-tokens # So we can examine minified code
+	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png --minify --focus-tokens
 	$(SHRINKO8) solar_sally.p8 --lint --no-lint-fail
 	$(SHRINKO8) output/solar_sally.p8.png --count
 

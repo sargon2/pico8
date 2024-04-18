@@ -4,8 +4,8 @@ Rocks = {
 
 function Rocks.init()
     Rocks.ent_id = Entities.create_entity()
-    Attributes.set_attr(Rocks.ent_id, "WalkingObstruction", true)
-    Sprites.add(Rocks.ent_id, "rock")
+    Attributes_set_attr(Rocks.ent_id, Attr_WalkingObstruction, true)
+    Sprites.add(Rocks.ent_id, Sprite_id_rock)
 
     for _=1,500 do
         local x = flr(rnd(100))-50

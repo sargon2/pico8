@@ -34,29 +34,29 @@ function Inventory.check_and_remove(ent_id)
 end
 
 function draw_window(x, y, width, height) -- TODO where should this live?
-    local function _draw_spr(sprite_name, spr_x, spr_y)
-        Sprites.draw_relative_to_screen(Sprite_ids[sprite_name], spr_x, spr_y)
+    local function _draw_spr(sprite_id, spr_x, spr_y)
+        Sprites.draw_relative_to_screen(sprite_id, spr_x, spr_y)
     end
 
-    _draw_spr("window_ul", x, y)
+    _draw_spr(Sprite_id_window_ul, x, y)
     for i = x+1,x+width-2 do
-        _draw_spr("window_u", i, y)
+        _draw_spr(Sprite_id_window_u, i, y)
     end
-    _draw_spr("window_ur", x+width-1, y)
+    _draw_spr(Sprite_id_window_ur, x+width-1, y)
 
     for j = y+1,y+height-2 do
-        _draw_spr("window_l", x, j)
+        _draw_spr(Sprite_id_window_l, x, j)
         for i = x+1,x+width-2 do
-            _draw_spr("window_m", i, j)
+            _draw_spr(Sprite_id_window_m, i, j)
         end
-        _draw_spr("window_r", x+width-1, j)
+        _draw_spr(Sprite_id_window_r, x+width-1, j)
     end
 
-    _draw_spr("window_bl", x, y+height-1)
+    _draw_spr(Sprite_id_window_bl, x, y+height-1)
     for i = x+1,x+width-2 do
-        _draw_spr("window_b", i, y+height-1)
+        _draw_spr(Sprite_id_window_b, i, y+height-1)
     end
-    _draw_spr("window_br", x+width-1, y+height-1)
+    _draw_spr(Sprite_id_window_br, x+width-1, y+height-1)
 end
 
 function print_text(text, x, y, xoffset, yoffset) -- TODO where should this live?

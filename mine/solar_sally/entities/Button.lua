@@ -5,19 +5,19 @@ Button = {
 
 function Button.init()
     Button.ent_id = Entities.create_entity()
-    Attributes.set_attr(Button.ent_id, "WalkingObstruction", true)
+    Attributes_set_attr(Button.ent_id, Attr_WalkingObstruction, true)
     DrawFns.add(Button.ent_id, Button.draw_button)
 
-    Actions.set_action(Button.ent_id, "button_mini", Button.press, Button.release)
+    Actions_set_action(Button.ent_id, Sprite_id_button_mini, Button.press, Button.release)
 
     Locations.place_entity(Button.ent_id, -5, 0)
 end
 
 function Button.draw_button(x, y)
     if Button.is_being_pressed then
-        Sprites.draw_spr(Sprite_ids["button_pressed"], x, y)
+        Sprites.draw_spr(Sprite_id_button_pressed, x, y)
     else
-        Sprites.draw_spr(Sprite_ids["button"], x, y)
+        Sprites.draw_spr(Sprite_id_button, x, y)
     end
 end
 

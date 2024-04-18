@@ -11,24 +11,16 @@ function Transformers.init()
 
     Transformers.clear_powered()
 
-    Attributes.set_attrs(Transformers.ent_left, 
-        {
-            WalkingObstruction = true,
-            placement_sprite = "place_transformer",
-            removable = true,
-            is_circuit_component = true,
-            pluggable = true,
-        }
-    )
+    Attributes_set_attr(Transformers.ent_left, Attr_WalkingObstruction)
+    Attributes_set_attr(Transformers.ent_left, Attr_removable)
+    Attributes_set_attr(Transformers.ent_left, Attr_is_circuit_component)
+    Attributes_set_attr(Transformers.ent_left, Attr_pluggable)
+    Attributes_set_attr(Transformers.ent_left, Attr_placement_sprite, Sprite_id_place_transformer)
 
-    Attributes.set_attrs(Transformers.ent_right, 
-        {
-            WalkingObstruction = true,
-            removable = true,
-            is_circuit_component = true,
-            pluggable = true,
-        }
-    )
+    Attributes_set_attr(Transformers.ent_right, Attr_WalkingObstruction)
+    Attributes_set_attr(Transformers.ent_right, Attr_removable)
+    Attributes_set_attr(Transformers.ent_right, Attr_is_circuit_component)
+    Attributes_set_attr(Transformers.ent_right, Attr_pluggable)
 
     DrawFns.add(Transformers.ent_left, Transformers.draw_transformer)
     DrawFns.add(Transformers.ent_right, function () end) -- Drawn by ent_left
@@ -93,10 +85,10 @@ end
 function Transformers.draw_transformer(x, y, ent_id, relative_to_screen)
     if relative_to_screen then
         -- The regular sprite is too wide to fit in inventory, so just use the placement one, but scoot it up and left a bit
-        Sprites.draw_spr(Sprite_ids["place_transformer"], x-.125, y-.25, 1, 1, false, true)
+        Sprites.draw_spr(Sprite_id_place_transformer, x-.125, y-.25, 1, 1, false, true)
         return
     end
-    Sprites.draw_spr(Sprite_ids["transformer_left"], x, y, 2, 1, false)
+    Sprites.draw_spr(Sprite_id_transformer_left, x, y, 2, 1, false)
     if Transformers.is_overloaded(x, y) then
         Sprites.set_pixel(x,y,5,5,8)
     elseif Transformers.is_powered(x, y) then

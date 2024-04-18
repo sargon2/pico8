@@ -60,5 +60,5 @@ function World._sort_by_y(smooth_ents)
 end
 
 function World.is_obstructed(x, y)
-    return Attributes.get_attr_by_location(flr(x+.6), flr(y+1), "WalkingObstruction")
+    return Attributes_get_attr_by_location(flr(x+.6), flr(y+1), Attr_WalkingObstruction)
 end

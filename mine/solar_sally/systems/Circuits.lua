@@ -141,7 +141,7 @@ function Circuits.get_connected_components()
         -- What entity type are we?
         local ent_id = Locations.entity_at(x, y)
         if ent_id != nil then
-            if Attributes.get_attr(ent_id, "is_circuit_component") then
+            if Attributes_get_attr(ent_id, Attr_is_circuit_component) then
                 -- If it's a circuit component, add it to the list of connected entities for this graph component
                 if(not current_component[ent_id]) current_component[ent_id] = {}
                 if(not current_component[ent_id][x]) current_component[ent_id][x] = {}

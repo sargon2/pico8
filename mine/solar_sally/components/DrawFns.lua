@@ -1,3 +1,4 @@
+-- TODO this could just be an attribute
 DrawFns = {
     fns = {}, -- fns[ent_id] = fn
 }

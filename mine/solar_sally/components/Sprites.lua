@@ -1,44 +1,40 @@
 Sprites = {}
 
--- TODO is there a clever way I can erase this at build time?
-Sprite_ids = {
-    solar_panel = 17,
-    transformer_left = 18,
-    transformer_right = 19,
-    cow_side = 22,
-    cow_looking = 23,
-    selection_box = 32,
-    pick_up = 34,
-    no_action = 35,
-    place_panel = 33,
-    place_wire = 36,
-    place_transformer = 20,
-    rock = 48,
-    wire_left = 49,
-    wire_right = 50,
-    wire_up = 51,
-    wire_down = 52,
-    grid_wire = 54,
-    tree_top = 21,
-    tree_bottom = 37,
-    button = 24,
-    button_mini = 40,
-    button_pressed = 25,
-    window_ul = 13,
-    window_u = 14,
-    window_ur = 15,
-    window_l = 29,
-    window_m = 30,
-    window_r = 31,
-    window_bl = 45,
-    window_b = 46,
-    window_br = 47,
-}
+--[[const]] Sprite_id_solar_panel = 17
+--[[const]] Sprite_id_transformer_left = 18
+--[[const]] Sprite_id_transformer_right = 19
+--[[const]] Sprite_id_cow_side = 22
+--[[const]] Sprite_id_cow_looking = 23
+--[[const]] Sprite_id_selection_box = 32
+--[[const]] Sprite_id_pick_up = 34
+--[[const]] Sprite_id_no_action = 35
+--[[const]] Sprite_id_place_panel = 33
+--[[const]] Sprite_id_place_wire = 36
+--[[const]] Sprite_id_place_transformer = 20
+--[[const]] Sprite_id_rock = 48
+--[[const]] Sprite_id_wire_left = 49
+--[[const]] Sprite_id_wire_right = 50
+--[[const]] Sprite_id_wire_up = 51
+--[[const]] Sprite_id_wire_down = 52
+--[[const]] Sprite_id_grid_wire = 54
+--[[const]] Sprite_id_tree_top = 21
+--[[const]] Sprite_id_tree_bottom = 37
+--[[const]] Sprite_id_button = 24
+--[[const]] Sprite_id_button_mini = 40
+--[[const]] Sprite_id_button_pressed = 25
+--[[const]] Sprite_id_window_ul = 13
+--[[const]] Sprite_id_window_u = 14
+--[[const]] Sprite_id_window_ur = 15
+--[[const]] Sprite_id_window_l = 29
+--[[const]] Sprite_id_window_m = 30
+--[[const]] Sprite_id_window_r = 31
+--[[const]] Sprite_id_window_bl = 45
+--[[const]] Sprite_id_window_b = 46
+--[[const]] Sprite_id_window_br = 47
 
 function Sprites.add(ent_id, sprite, width, height, yoffset)
     -- Sprite just forwards to DrawFns
 
-    sprite = Sprite_ids[sprite]
     if(not width) width = 1
     if(not height) height = 1
     if(not yoffset) yoffset = 0
