@@ -1,12 +1,17 @@
+--[[const]] Entities_Button = 1
+--[[const]] Entities_Character = 2
+--[[const]] Entities_GridWire = 3
+--[[const]] Entities_Panels = 4
+--[[const]] Entities_Rocks = 5
+--[[const]] Entities_Transformers_left = 6
+--[[const]] Entities_Transformers_right = 7
+--[[const]] Entities_Trees = 8
+--[[const]] Entities_Wire = 9
 
--- TODO I could do like --[[const]] Entity_panel = 3 in this file, then panel doesn't have to call create_entity, to save on tokens
+Entities_current_entity_id = 10
 
-Entities = {
-    current_entity_id = 0
-}
-
-function Entities.create_entity()
+function Entities_create_entity()
     -- returns an integer id
-    Entities.current_entity_id += 1
-    return Entities.current_entity_id
+    Entities_current_entity_id += 1
+    return Entities_current_entity_id
 end

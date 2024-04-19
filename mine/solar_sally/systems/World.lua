@@ -5,29 +5,19 @@ function World.get_name()
 end
 
 function World.draw()
-    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
+    local char_x, char_y = SmoothLocations_get_location(Entities_Character)
 
-    local xmin = flr(char_x - 10)
-    local xmax = flr(char_x + 8)
-    local ymin = flr(char_y - 9)
-    local ymax = flr(char_y + 9)
+    local xmin, xmax, ymin, ymax = flr(char_x - 10), flr(char_x + 8), flr(char_y - 9), flr(char_y + 9)
 
-    -- TODO
-    -- 1. (done) Create a new SmoothLocations to track non-integer stuff (it can't have entity_at() like Locations has so they're separate)
-    -- 2. (done) Get all visible SmoothLocation entities
-    local smooth_ents = SmoothLocations.get_all_visible(xmin, xmax, ymin, ymax)
-    -- 3. (done) Sort them by y
+    local smooth_ents = SmoothLocations_get_all_visible(xmin, xmax, ymin, ymax)
     World._sort_by_y(smooth_ents)
-    -- 4. (done) Render them at the appropriate time in the loop below
-    -- 4. (done) Update Character to use SmoothLocations instead of storing its own x/y
-    -- 5. Update cow to use SmoothLocations
-    -- 6. Evaluate if we can speed up SmoothLocations by storing things sorted and doing binary searches or whatever
 
+    -- Draw entities
     local curr_pos = 1
     for y = ymin, ymax do
-        local row = Locations.get_row(y)
+        local row = Locations_get_row(y)
         for x = xmin, xmax do
-            local ent_id = row[x] -- Locations.entity_at(x, y)
+            local ent_id = row[x] -- Locations_entity_at(x, y)
             if ent_id then
                 Attr_DrawFn[ent_id](x, y, ent_id)
             end

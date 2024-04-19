@@ -6,7 +6,7 @@ __lua__
 #include ../vector_utils.lua
 #include ../podtree_debugger.lua
 #include types/BooleanGrid.lua
-#include indexes/Settings.lua
+#include components/Settings.lua
 #include components/Sprites.lua
 #include components/Entities.lua
 #include components/Locations.lua

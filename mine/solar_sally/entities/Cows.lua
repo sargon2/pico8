@@ -13,13 +13,13 @@ end
 function Cows.init()
 
     for _=1,100 do
-        local ent_id = Entities.create_entity()
+        local ent_id = Entities_create_entity()
         add(Cows.cow_ent_ids, ent_id)
         Attributes_set_attr(ent_id, Attr_DrawFn, Cows.draw_cow)
 
         local x = flr(rnd(100))-50
         local y = flr(rnd(100))-50
-        SmoothLocations.set_or_update_location(ent_id, x, y)
+        SmoothLocations_set_or_update_location(ent_id, x, y)
         Cows.vector_x[ent_id] = 0
         Cows.vector_y[ent_id] = 0
         Cows.flip_x[ent_id] = rnd() > .5
@@ -32,7 +32,7 @@ function Cows.draw_cow(x, y, ent_id)
     if Cows.looking[ent_id] then
         sprite = Sprite_id_cow_looking
     end
-    Sprites.draw_spr(sprite, x, y, 1, 1, Cows.flip_x[ent_id])
+    Sprites_draw_spr(sprite, x, y, 1, 1, Cows.flip_x[ent_id])
 end
 
 function Cows.update(elapsed)
@@ -65,6 +65,6 @@ function Cows.update(elapsed)
             Cows.vector_x[ent_id] = vx
             Cows.vector_y[ent_id] = rnd(2) - 1
         end
-        SmoothLocations.move_by_if_not_obstructed(ent_id, Cows.vector_x[ent_id], Cows.vector_y[ent_id], Settings.cow_speed*elapsed)
+        SmoothLocations_move_by_if_not_obstructed(ent_id, Cows.vector_x[ent_id], Cows.vector_y[ent_id], Settings_cow_speed*elapsed)
     end
 end

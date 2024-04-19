@@ -14,7 +14,7 @@ function Attributes_set_attr(ent_id, key, val) -- TODO finish inlining this ever
 end
 
 function Attributes_get_attr_by_location(x, y, key)
-    local ent = Locations.entity_at(x, y)
+    local ent = Locations_entity_at(x, y)
     if(not ent) return nil
     return key[ent]
 end

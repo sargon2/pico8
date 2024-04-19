@@ -1,5 +1,4 @@
 Character = {
-    ent_id = nil,
     frame=1,
     speed=6,
     anim_speed=8,
@@ -9,9 +8,8 @@ Character = {
 }
 
 function Character.init()
-    Character.ent_id = Entities.create_entity()
-    SmoothLocations.set_or_update_location(Character.ent_id, 0, 0)
-    Attributes_set_attr(Character.ent_id, Attr_DrawFn, Character.drawChar)
+    SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
+    Attributes_set_attr(Entities_Character, Attr_DrawFn, Character.drawChar)
 end
 
 function Character.get_name()
@@ -90,7 +88,7 @@ function Character.handle_player_movement(elapsed)
     Placement.sel_y_p += y
 
     -- If we're at the max selection range, move the character
-    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
+    local char_x, char_y = SmoothLocations_get_location(Entities_Character)
     local char_new_x = 0
     local char_new_y = 0
     if Placement.sel_x_p > char_x + max_sel_range + .5 then
@@ -109,7 +107,7 @@ function Character.handle_player_movement(elapsed)
     end
     Placement.sel_x = flr(Placement.sel_x_p)
     Placement.sel_y = flr(Placement.sel_y_p)
-    SmoothLocations.move_by_if_not_obstructed(Character.ent_id, char_new_x, char_new_y, Character.speed*elapsed) -- TODO let the player walk a bit vertically into the next tile
+    SmoothLocations_move_by_if_not_obstructed(Entities_Character, char_new_x, char_new_y, Character.speed*elapsed) -- TODO let the player walk a bit vertically into the next tile
     -- Animate walking
     if char_new_x!=0 or char_new_y!=0 then
         Character.frame += Character.anim_speed*elapsed

@@ -32,7 +32,7 @@ Sprites = {}
 --[[const]] Sprite_id_window_b = 46
 --[[const]] Sprite_id_window_br = 47
 
-function Sprites.add(ent_id, sprite, width, height, yoffset)
+function Sprites_add(ent_id, sprite, width, height, yoffset)
     -- Sprite just forwards to the DrawFn attribute
 
     if(not width) width = 1
@@ -40,7 +40,7 @@ function Sprites.add(ent_id, sprite, width, height, yoffset)
     if(not yoffset) yoffset = 0
 
     local function d(x, y)
-        Sprites.draw_spr(sprite, x, y + yoffset, width, height)
+        Sprites_draw_spr(sprite, x, y + yoffset, width, height)
     end
 
     Attr_DrawFn[ent_id] = d
@@ -50,13 +50,13 @@ function round_to_nearest_pixel(num)
     return flr(num * 8) / 8
 end
 
-function Sprites.draw_relative_to_screen(s,x,y,width,height,flip_x) -- convenience
-    Sprites.draw_spr(s,x,y,width,height,flip_x,true)
+function Sprites_draw_relative_to_screen(s,x,y,width,height,flip_x) -- convenience
+    Sprites_draw_spr(s,x,y,width,height,flip_x,true)
 end
 
-function Sprites.draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
+function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
     if not relative_to_screen then
-        x, y = Sprites.convert_map_to_screen(x, y)
+        x, y = Sprites_convert_map_to_screen(x, y)
     end
 
     -- Round location to the nearest pixel to prevent vibration when the player is moving
@@ -89,14 +89,14 @@ function Sprites.draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
     end
 end
 
-function Sprites.convert_map_to_screen(x, y)
-    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
+function Sprites_convert_map_to_screen(x, y)
+    local char_x, char_y = SmoothLocations_get_location(Entities_Character)
     return 8+x-char_x, 8+y-char_y
 end
 
-function Sprites.set_pixel(x,y,xoffset,yoffset,c, relative_to_screen) -- TODO where should this live?
+function Sprites_set_pixel(x,y,xoffset,yoffset,c, relative_to_screen) -- TODO where should this live?
     if not relative_to_screen then
-        x, y = Sprites.convert_map_to_screen(x, y)
+        x, y = Sprites_convert_map_to_screen(x, y)
     end
     pset(
         x*8+xoffset,
@@ -105,12 +105,12 @@ function Sprites.set_pixel(x,y,xoffset,yoffset,c, relative_to_screen) -- TODO wh
     )
 end
 
-function Sprites.set_pixel_relative_to_screen(x,y,xoffset,yoffset,c) -- convenience -- TODO where should this live?
-    Sprites.set_pixel(x, y, xoffset, yoffset, c, true)
+function Sprites_set_pixel_relative_to_screen(x,y,xoffset,yoffset,c) -- convenience -- TODO where should this live?
+    Sprites_set_pixel(x, y, xoffset, yoffset, c, true)
 end
 
-function Sprites.rect(x,y,xmin,ymin,xmax,ymax,c) -- TODO where should this live?
-    local char_x, char_y = SmoothLocations.get_location(Character.ent_id)
+function Sprites_rect(x,y,xmin,ymin,xmax,ymax,c) -- TODO where should this live?
+    local char_x, char_y = SmoothLocations_get_location(Entities_Character)
     rect(
         (8+x-char_x)*8+xmin,
         (8+y-char_y)*8+ymin,

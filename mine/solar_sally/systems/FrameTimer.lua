@@ -1,8 +1,4 @@
-FrameTimer = {
-    last_t=0,
-}
-
-function FrameTimer.calculate_elapsed()
+function FrameTimer_calculate_elapsed()
     -- Handle physics advancement timing
 
     -- t(), time(), and stat(7) seem to return the _intended_ time per frame, not the actual, regardless of if they're called from _draw or _update60.  It doesn't appear possible to get the actual frame time.
@@ -21,7 +17,5 @@ function FrameTimer.calculate_elapsed()
     -- end
 
     -- So, until that's fixed, we just return the intended time, and let the game slow down.
-    local elapsed = 1 / stat(8)
-
-    return elapsed
+    return 1 / stat(8)
 end

@@ -30,33 +30,33 @@ end
 function _draw()
     cls()
 
-    if(Settings.debug_timing) printh("\n\nDrawing; start "..tostr(PerfTimer.get_and_advance()))
+    if(Settings_debug_timing) printh("\n\nDrawing; start "..tostr(PerfTimer.get_and_advance()))
     for system in all(solar_sally.systems) do
         if system.draw then
             system.draw()
-            if(Settings.debug_timing) printh(system.get_name()..".draw(): "..tostr(PerfTimer.get_and_advance()))
+            if(Settings_debug_timing) printh(system.get_name()..".draw(): "..tostr(PerfTimer.get_and_advance()))
         end
     end
-    if(Settings.debug_window) db_window()
+    if(Settings_debug_window) db_window()
 end
 
 function do_update()
-    local elapsed = FrameTimer.calculate_elapsed()
+    local elapsed = FrameTimer_calculate_elapsed()
 
-    if Settings.debug_timing then
+    if Settings_debug_timing then
         PerfTimer.reset()
         printh("\n\n\nUpdating; start "..tostr(PerfTimer.get_and_advance()))
     end
     for system in all(solar_sally.systems) do
         if system.update then
             system.update(elapsed)
-            if(Settings.debug_timing) printh(system.get_name()..".update(): "..tostr(PerfTimer.get_and_advance()))
+            if(Settings_debug_timing) printh(system.get_name()..".update(): "..tostr(PerfTimer.get_and_advance()))
         end
     end
 end
 
 -- The debug tree window scroll wheel doesn't work at 60 fps, so if that's enabled, drop to 30.
-if Settings.debug_window then
+if Settings_debug_window then
     function _update()
         do_update()
     end

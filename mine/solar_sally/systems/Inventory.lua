@@ -10,9 +10,9 @@ end
 function Inventory.init()
     -- Since we haven't implemented buying yet, just start with some core components.
     -- Order here is display order
-    Inventory.add(Panels.ent_id, Settings.start_panels)
-    Inventory.add(Transformers.ent_left, Settings.start_transformers)
-    Inventory.add(Wire.ent_id, Settings.start_wire) -- TODO should wire be infinite?
+    Inventory.add(Entities_Panels, Settings_start_panels)
+    Inventory.add(Entities_Transformers_left, Settings_start_transformers)
+    Inventory.add(Entities_Wire, Settings_start_wire) -- TODO should wire be infinite?
 end
 
 function Inventory.add(ent_id, num)
@@ -39,7 +39,7 @@ end
 
 function draw_window(x, y, width, height) -- TODO where should this live?
     local function _draw_spr(sprite_id, spr_x, spr_y)
-        Sprites.draw_relative_to_screen(sprite_id, spr_x, spr_y)
+        Sprites_draw_relative_to_screen(sprite_id, spr_x, spr_y)
     end
 
     _draw_spr(Sprite_id_window_ul, x, y)

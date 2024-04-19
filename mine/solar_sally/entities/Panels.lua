@@ -1,23 +1,20 @@
 Panels = {
-    ent_id = nil,
     powered_panels = nil,
 }
 
 function Panels.init()
-    Panels.ent_id = Entities.create_entity()
-
     Panels.clear_powered()
 
-    Attributes_set_attr(Panels.ent_id, Attr_WalkingObstruction)
-    Attributes_set_attr(Panels.ent_id, Attr_removable)
-    Attributes_set_attr(Panels.ent_id, Attr_is_circuit_component)
-    Attributes_set_attr(Panels.ent_id, Attr_pluggable)
-    Attributes_set_attr(Panels.ent_id, Attr_placement_sprite, Sprite_id_place_panel)
-    Attributes_set_attr(Panels.ent_id, Attr_DrawFn, Panels._draw)
+    Attributes_set_attr(Entities_Panels, Attr_WalkingObstruction)
+    Attributes_set_attr(Entities_Panels, Attr_removable)
+    Attributes_set_attr(Entities_Panels, Attr_is_circuit_component)
+    Attributes_set_attr(Entities_Panels, Attr_pluggable)
+    Attributes_set_attr(Entities_Panels, Attr_placement_sprite, Sprite_id_place_panel)
+    Attributes_set_attr(Entities_Panels, Attr_DrawFn, Panels._draw)
 end
 
 function Panels._panel_at(x, y)
-    return Locations.entity_at(x, y) == Panels.ent_id
+    return Locations_entity_at(x, y) == Entities_Panels
 end
 
 -- TODO these powered functions are duplicated with Transformers
@@ -34,8 +31,8 @@ function Panels.is_powered(x, y)
 end
 
 function Panels._draw(x, y, ent_id, relative_to_screen)
-    Sprites.draw_spr(Sprite_id_solar_panel, x, y, 1, 1, false, relative_to_screen)
+    Sprites_draw_spr(Sprite_id_solar_panel, x, y, 1, 1, false, relative_to_screen)
     if relative_to_screen or Panels.powered_panels:is_set(x, y) then
-        Sprites.set_pixel(x,y,4,4,11, relative_to_screen)
+        Sprites_set_pixel(x,y,4,4,11, relative_to_screen)
     end
 end

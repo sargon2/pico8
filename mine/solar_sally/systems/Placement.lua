@@ -18,7 +18,7 @@ Placement = {
 
 function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
-    Placement.placeable_entities = {Panels.ent_id, Wire.ent_id, Transformers.ent_left}
+    Placement.placeable_entities = {Entities_Panels, Entities_Wire, Entities_Transformers_left}
     Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
 end
 
@@ -44,8 +44,8 @@ function Placement.set_placement_obstruction_fn(ent_id, fn)
 end
 
 function Placement.draw()
-    Sprites.draw_spr(Sprite_id_selection_box,Placement.sel_x,Placement.sel_y)
-    Sprites.draw_spr(Placement.sel_sprite,Placement.sel_x,Placement.sel_y-1)
+    Sprites_draw_spr(Sprite_id_selection_box,Placement.sel_x,Placement.sel_y)
+    Sprites_draw_spr(Placement.sel_sprite,Placement.sel_x,Placement.sel_y-1)
 end
 
 function Placement.rotate_place_ent_id()
@@ -79,7 +79,7 @@ function Placement.remove(ent_id, x, y)
             ent_id = e
         end
     else
-        Locations.remove_entity(x, y)
+        Locations_remove_entity(x, y)
     end
     Placement.is_removing = ent_id
     Placement.place_ent_id = ent_id
@@ -98,7 +98,7 @@ function Placement.place(ent_id, x, y)
     if fn then
         fn(x, y)
     else
-        Locations.place_entity(ent_id, x, y)
+        Locations_place_entity(ent_id, x, y)
     end
 
     Circuits.recalculate() -- TODO this probably shouldn't live here
@@ -113,7 +113,7 @@ function Placement.handle_selection_and_placement()
         Placement.rotate_with_inventory_check()
     end
 
-    local entity_at_sel = Locations.entity_at(Placement.sel_x, Placement.sel_y) -- may be nil
+    local entity_at_sel = Locations_entity_at(Placement.sel_x, Placement.sel_y) -- may be nil
 
     local action, action_ent, sprite = Placement.determine_action_and_sprite(entity_at_sel)
     Placement.sel_sprite = sprite
@@ -159,7 +159,7 @@ function Placement.determine_action_and_sprite(entity_at_sel)
             else
                 -- Are there any smooth entities in the way?
                 -- This is not World.is_obstructed because we already know there isn't a Locations entity obstructing
-                if SmoothLocations.is_obstructed(Placement.sel_x, Placement.sel_y) then
+                if SmoothLocations_is_obstructed(Placement.sel_x, Placement.sel_y) then
                     return "no_action", nil, Sprite_id_no_action
                 end
                 -- Does the thing we're placing think this location is obstructed?
