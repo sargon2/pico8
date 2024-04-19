@@ -13,8 +13,7 @@ function Panels.init()
     Attributes_set_attr(Panels.ent_id, Attr_is_circuit_component)
     Attributes_set_attr(Panels.ent_id, Attr_pluggable)
     Attributes_set_attr(Panels.ent_id, Attr_placement_sprite, Sprite_id_place_panel)
-
-    DrawFns.add(Panels.ent_id, Panels._draw)
+    Attributes_set_attr(Panels.ent_id, Attr_DrawFn, Panels._draw)
 end
 
 function Panels._panel_at(x, y)

@@ -1,23 +1,20 @@
-Attributes__attr = {}
 
---[[const]] Attr_WalkingObstruction = 1
---[[const]] Attr_pluggable = 2
---[[const]] Attr_removable = 3
---[[const]] Attr_is_circuit_component = 4
---[[const]] Attr_placement_sprite = 5
+Attr_WalkingObstruction = {}
+Attr_pluggable = {}
+Attr_removable = {}
+Attr_is_circuit_component = {}
+Attr_placement_sprite = {}
+Attr_action_sprite = {}
+Attr_action_fn = {}
+Attr_action_release_fn = {}
+Attr_DrawFn = {}
 
-function Attributes_set_attr(ent_id, key, value)
-    if(not Attributes__attr[ent_id]) Attributes__attr[ent_id] = {}
-    Attributes__attr[ent_id][key] = value or true -- this looks strange but allows us to set boolean attributes easily
-end
-
-function Attributes_get_attr(ent_id, key)
-    if(not Attributes__attr[ent_id]) return nil
-    return Attributes__attr[ent_id][key]
+function Attributes_set_attr(ent_id, key, val) -- TODO finish inlining this everywhere
+    key[ent_id] = val or true
 end
 
 function Attributes_get_attr_by_location(x, y, key)
     local ent = Locations.entity_at(x, y)
     if(not ent) return nil
-    return Attributes_get_attr(ent, key)
+    return key[ent]
 end

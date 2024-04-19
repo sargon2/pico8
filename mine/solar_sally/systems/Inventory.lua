@@ -73,7 +73,7 @@ function Inventory.draw()
     local row = 0
     for ent_id in all(Inventory.order) do
         local count = Inventory.items[ent_id]
-        DrawFns.drawTileAt(ent_id, 13, 4+row, true)
+        Attr_DrawFn[ent_id](13, 4+row, true)
         color(4)
         print_text(count, 14, 4+row, 2, 2)
         row += 1

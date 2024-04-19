@@ -33,7 +33,7 @@ Sprites = {}
 --[[const]] Sprite_id_window_br = 47
 
 function Sprites.add(ent_id, sprite, width, height, yoffset)
-    -- Sprite just forwards to DrawFns
+    -- Sprite just forwards to the DrawFn attribute
 
     if(not width) width = 1
     if(not height) height = 1
@@ -43,7 +43,7 @@ function Sprites.add(ent_id, sprite, width, height, yoffset)
         Sprites.draw_spr(sprite, x, y + yoffset, width, height)
     end
 
-    DrawFns.add(ent_id, d)
+    Attr_DrawFn[ent_id] = d
 end
 
 function round_to_nearest_pixel(num)

@@ -28,12 +28,12 @@ function World.draw()
         for x = xmin, xmax do
             local ent_id = Locations.entity_at(x, y)
             if ent_id then
-                DrawFns.drawTileAt(ent_id, x, y)
+                Attr_DrawFn[ent_id](x, y)
             end
         end
         -- Character is a smooth ent so we always assume there's at least one
         while smooth_ents[curr_pos] and y >= flr(smooth_ents[curr_pos][3]+.4) do
-            DrawFns.drawTileAt(smooth_ents[curr_pos][1], smooth_ents[curr_pos][2], smooth_ents[curr_pos][3])
+            Attr_DrawFn[smooth_ents[curr_pos][1]](smooth_ents[curr_pos][2], smooth_ents[curr_pos][3])
             curr_pos += 1
         end
     end

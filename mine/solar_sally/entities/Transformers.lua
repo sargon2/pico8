@@ -22,8 +22,8 @@ function Transformers.init()
     Attributes_set_attr(Transformers.ent_right, Attr_is_circuit_component)
     Attributes_set_attr(Transformers.ent_right, Attr_pluggable)
 
-    DrawFns.add(Transformers.ent_left, Transformers.draw_transformer)
-    DrawFns.add(Transformers.ent_right, function () end) -- Drawn by ent_left
+    Attributes_set_attr(Transformers.ent_left, Attr_DrawFn, Transformers.draw_transformer)
+    Attributes_set_attr(Transformers.ent_right, Attr_DrawFn, function () end) -- right is drawn by the left fn
 
     Placement.set_placement_fn(Transformers.ent_left, Transformers.place)
 

@@ -15,7 +15,8 @@ function Cows.init()
     for _=1,100 do
         local ent_id = Entities.create_entity()
         add(Cows.cow_ent_ids, ent_id)
-        DrawFns.add(ent_id, Cows.draw_cow)
+        Attributes_set_attr(ent_id, Attr_DrawFn, Cows.draw_cow)
+
         local x = flr(rnd(100))-50
         local y = flr(rnd(100))-50
         SmoothLocations.set_or_update_location(ent_id, x, y)

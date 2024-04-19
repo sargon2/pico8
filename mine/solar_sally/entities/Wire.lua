@@ -8,8 +8,7 @@ function Wire.init()
     Attributes_set_attr(Wire.ent_id, Attr_removable)
     Attributes_set_attr(Wire.ent_id, Attr_pluggable)
     Attributes_set_attr(Wire.ent_id, Attr_placement_sprite, Sprite_id_place_wire)
-
-    DrawFns.add(Wire.ent_id, Wire.draw_wire_tile)
+    Attributes_set_attr(Wire.ent_id, Attr_DrawFn, Wire.draw_wire_tile)
 end
 
 
