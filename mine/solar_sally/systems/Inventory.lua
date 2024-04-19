@@ -18,7 +18,7 @@ end
 function Inventory.add(ent_id, num)
     if(not num) num = 1
     if not Inventory.items[ent_id] then
-        Inventory.items[ent_id] = 0 -- TODO is this needed?
+        Inventory.items[ent_id] = 0
         add(Inventory.order, ent_id)
     end
     Inventory.items[ent_id] += num
@@ -73,7 +73,7 @@ function Inventory.draw()
     local row = 0
     for ent_id in all(Inventory.order) do
         local count = Inventory.items[ent_id]
-        Attr_DrawFn[ent_id](13, 4+row, true)
+        Attr_DrawFn[ent_id](13, 4+row, ent_id, true)
         color(4)
         print_text(count, 14, 4+row, 2, 2)
         row += 1

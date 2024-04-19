@@ -13,7 +13,7 @@ end
 
 
 function Wire.draw_wire_tile(x, y, ent_id, relative_to_screen)
-    function is_pluggable(x, y)
+    local function is_pluggable(x, y)
         return Attributes_get_attr_by_location(x, y, Attr_pluggable)
     end
 

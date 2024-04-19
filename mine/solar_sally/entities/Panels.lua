@@ -33,7 +33,7 @@ function Panels.is_powered(x, y)
     return Panels.powered_panels:is_set(x, y)
 end
 
-function Panels._draw(x, y, is_powered, relative_to_screen)
+function Panels._draw(x, y, ent_id, relative_to_screen)
     Sprites.draw_spr(Sprite_id_solar_panel, x, y, 1, 1, false, relative_to_screen)
     if relative_to_screen or Panels.powered_panels:is_set(x, y) then
         Sprites.set_pixel(x,y,4,4,11, relative_to_screen)

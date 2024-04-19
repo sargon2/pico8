@@ -25,15 +25,17 @@ function World.draw()
 
     local curr_pos = 1
     for y = ymin, ymax do
+        local row = Locations.get_row(y)
         for x = xmin, xmax do
-            local ent_id = Locations.entity_at(x, y)
+            local ent_id = row[x] -- Locations.entity_at(x, y)
             if ent_id then
-                Attr_DrawFn[ent_id](x, y)
+                Attr_DrawFn[ent_id](x, y, ent_id)
             end
         end
         -- Character is a smooth ent so we always assume there's at least one
         while smooth_ents[curr_pos] and y >= flr(smooth_ents[curr_pos][3]+.4) do
-            Attr_DrawFn[smooth_ents[curr_pos][1]](smooth_ents[curr_pos][2], smooth_ents[curr_pos][3])
+            local ent_id = smooth_ents[curr_pos][1]
+            Attr_DrawFn[ent_id](smooth_ents[curr_pos][2], smooth_ents[curr_pos][3], ent_id)
             curr_pos += 1
         end
     end

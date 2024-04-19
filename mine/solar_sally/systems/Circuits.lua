@@ -131,6 +131,7 @@ function Circuits.get_connected_components()
     local components = {}
 
     local visited = NewObj(BooleanGrid)
+
     local current_component = {}
 
     local function visit(x, y)
@@ -139,7 +140,7 @@ function Circuits.get_connected_components()
             return
         end
         -- What entity type are we?
-        local ent_id = Locations.entity_at(x, y)
+        local ent_id = Locations.entity_at(x, y, true)
         if ent_id != nil then
             if Attr_is_circuit_component[ent_id] then
                 -- If it's a circuit component, add it to the list of connected entities for this graph component

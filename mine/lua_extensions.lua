@@ -80,3 +80,11 @@ function NewObj(type)
 
     return o
 end
+
+function printh_all(...)
+    local ret = ""
+    for i in all({...}) do
+        ret ..= tostr(i) .. ","
+    end
+    printh(ret)
+end
