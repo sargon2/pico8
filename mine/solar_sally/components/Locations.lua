@@ -19,7 +19,7 @@ function Locations_remove_entity(x, y)
     Locations_place_entity(nil, x, y)
 end
 
-function Locations_entity_at(x, y, debugging)
+function Locations_entity_at(x, y)
     if(not Locations_locations[y]) return nil
     return Locations_locations[y][x]
 end

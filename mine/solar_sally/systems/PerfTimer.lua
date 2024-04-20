@@ -1,14 +1,20 @@
 PerfTimer = {
-    last_cpu = 0
+    startTimes = {},
+    times = {},
 }
 
-function PerfTimer.reset()
-    PerfTimer.last_cpu = 0
+function PerfTimer.start(name)
+    PerfTimer.startTimes[name] = stat(1)
 end
 
-function PerfTimer.get_and_advance()
-    local cpu = stat(1)
-    local elapsed = cpu - PerfTimer.last_cpu
-    PerfTimer.last_cpu = cpu
-    return elapsed
+function PerfTimer.stop(name)
+    PerfTimer.times[name] = stat(1) - PerfTimer.startTimes[name]
+end
+
+function PerfTimer.reportTimes()
+    -- TODO sort by times desc
+    printh("")
+    for name, time in pairs(PerfTimer.times) do
+        printh(tostr(name)..": "..tostr(time*100).."%")
+    end
 end

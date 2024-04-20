@@ -12,7 +12,7 @@
 solar_sally = {
     -- The order here is important (think dep injection dependency graph)
     -- Includes entities as well as systems; anything that needs to be init'd
-    systems = {Rocks, Trees, Panels, Wire, GridWire, Transformers, Button, Map, World, Cows, Placement, Character, FrameTimer, PanelCalculator, Inventory}
+    systems = {Rocks, Trees, Panels, Wire, GridWire, Transformers, Button, Map, World, Cows, Placement, Character, PanelCalculator, Inventory}
 }
 
 function _init()
@@ -30,27 +30,25 @@ end
 function _draw()
     cls()
 
-    if(Settings_debug_timing) printh("\n\nDrawing; start "..tostr(PerfTimer.get_and_advance()))
     for system in all(solar_sally.systems) do
         if system.draw then
+            if(Settings_debug_timing) PerfTimer.start(system.get_name()..".draw()")
             system.draw()
-            if(Settings_debug_timing) printh(system.get_name()..".draw(): "..tostr(PerfTimer.get_and_advance()))
+            if(Settings_debug_timing) PerfTimer.stop(system.get_name()..".draw()")
         end
     end
     if(Settings_debug_window) db_window()
+    if(Settings_debug_timing) PerfTimer.reportTimes()
 end
 
 function do_update()
     local elapsed = FrameTimer_calculate_elapsed()
 
-    if Settings_debug_timing then
-        PerfTimer.reset()
-        printh("\n\n\nUpdating; start "..tostr(PerfTimer.get_and_advance()))
-    end
     for system in all(solar_sally.systems) do
         if system.update then
+            if(Settings_debug_timing) PerfTimer.start(system.get_name()..".update()")
             system.update(elapsed)
-            if(Settings_debug_timing) printh(system.get_name()..".update(): "..tostr(PerfTimer.get_and_advance()))
+            if(Settings_debug_timing) PerfTimer.stop(system.get_name()..".update()")
         end
     end
 end

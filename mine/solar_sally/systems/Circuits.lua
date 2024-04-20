@@ -18,11 +18,13 @@ function Circuits.recalculate()
     -- 1. (later) Sally's house should be connected to "the grid"
     -- 1. implement above phases
 
+    if(Settings_debug_timing) PerfTimer.start("Circuits.recalculate()")
     local grid_components, components = Circuits.get_connected_components()
 
     Circuits.mark_powered_transformers(grid_components)
 
     Circuits.mark_powered_panels(components)
+    if(Settings_debug_timing) PerfTimer.stop("Circuits.recalculate()")
 end
 
 function Circuits.get_name()
