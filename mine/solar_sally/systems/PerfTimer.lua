@@ -12,9 +12,19 @@ function PerfTimer.stop(name)
 end
 
 function PerfTimer.reportTimes()
-    -- TODO sort by times desc
-    printh("")
+    -- Sort by times
+
+    -- Quicksort requires an index-based array.
+    local to_sort = {}
     for name, time in pairs(PerfTimer.times) do
-        printh(tostr(name)..": "..tostr(time*100).."%")
+        add(to_sort, {name, time})
+    end
+
+    quicksort(to_sort, function (a, b) return a[2] > b[2] end)
+
+    -- Print results
+    printh("")
+    for item in all(to_sort) do
+        printh(tostr(item[1])..": "..tostr(item[2]*100).."%")
     end
 end

@@ -37,12 +37,14 @@ function contains(haystack, needle)
     return false
 end
 
+-- Sort the given array.
+-- Takes a comparison function as an argument to determine the sorting order.
+-- compare(a, b) should return true or false.
+-- Requires the array passed in to be index-based.
 function quicksort(arr, compare)
     _quicksort(arr, 1, #arr, compare)
 end
 
--- Generic QuickSort implementation for PICO-8
--- Takes a comparison function as an argument to determine the sorting order.
 function _quicksort(arr, low, high, compare)
     if low < high then
         local pi = _partition(arr, low, high, compare)
