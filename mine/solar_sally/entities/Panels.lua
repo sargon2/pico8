@@ -5,12 +5,12 @@ Panels = {
 function Panels.init()
     Panels.clear_powered()
 
-    Attributes_set_attr(Entities_Panels, Attr_WalkingObstruction)
-    Attributes_set_attr(Entities_Panels, Attr_removable)
-    Attributes_set_attr(Entities_Panels, Attr_is_circuit_component)
-    Attributes_set_attr(Entities_Panels, Attr_pluggable)
-    Attributes_set_attr(Entities_Panels, Attr_placement_sprite, Sprite_id_place_panel)
-    Attributes_set_attr(Entities_Panels, Attr_DrawFn, Panels._draw)
+    Attr_WalkingObstruction[Entities_Panels] = true
+    Attr_removable[Entities_Panels] = true
+    Attr_is_circuit_component[Entities_Panels] = true
+    Attr_pluggable[Entities_Panels] = true
+    Attr_placement_sprite[Entities_Panels] = Sprite_id_place_panel
+    Attr_DrawFn[Entities_Panels] = Panels._draw
 end
 
 function Panels._panel_at(x, y)

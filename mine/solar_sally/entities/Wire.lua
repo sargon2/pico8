@@ -1,10 +1,10 @@
 Wire = {}
 
 function Wire.init()
-    Attributes_set_attr(Entities_Wire, Attr_removable)
-    Attributes_set_attr(Entities_Wire, Attr_pluggable)
-    Attributes_set_attr(Entities_Wire, Attr_placement_sprite, Sprite_id_place_wire)
-    Attributes_set_attr(Entities_Wire, Attr_DrawFn, Wire.draw_wire_tile)
+    Attr_removable[Entities_Wire] = true
+    Attr_pluggable[Entities_Wire] = true
+    Attr_placement_sprite[Entities_Wire] = Sprite_id_place_wire
+    Attr_DrawFn[Entities_Wire] = Wire.draw_wire_tile
 end
 
 

@@ -3,11 +3,11 @@ Button = {
 }
 
 function Button.init()
-    Attributes_set_attr(Entities_Button, Attr_WalkingObstruction, true)
-    Attributes_set_attr(Entities_Button, Attr_DrawFn, Button.draw_button)
-    Attributes_set_attr(Entities_Button, Attr_action_sprite, Sprite_id_button_mini)
-    Attributes_set_attr(Entities_Button, Attr_action_fn, Button.press)
-    Attributes_set_attr(Entities_Button, Attr_action_release_fn, Button.release)
+    Attr_WalkingObstruction[Entities_Button] = true
+    Attr_DrawFn[Entities_Button] = Button.draw_button
+    Attr_action_sprite[Entities_Button] = Sprite_id_button_mini
+    Attr_action_fn[Entities_Button] = Button.press
+    Attr_action_release_fn[Entities_Button] = Button.release
 
     Locations_place_entity(Entities_Button, -5, 0)
 end

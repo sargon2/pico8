@@ -1,8 +1,8 @@
 GridWire = {}
 
 function GridWire.init()
-    Attributes_set_attr(Entities_GridWire, Attr_WalkingObstruction, true)
-    Attributes_set_attr(Entities_GridWire, Attr_pluggable, true)
+    Attr_WalkingObstruction[Entities_GridWire] = true
+    Attr_pluggable[Entities_GridWire] = true
     Sprites_add(Entities_GridWire, Sprite_id_grid_wire)
 
     for i=-100,100 do

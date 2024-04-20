@@ -1,7 +1,7 @@
 Rocks = {}
 
 function Rocks.init()
-    Attributes_set_attr(Entities_Rocks, Attr_WalkingObstruction, true)
+    Attr_WalkingObstruction[Entities_Rocks] = true
     Sprites_add(Entities_Rocks, Sprite_id_rock)
 
     for _=1,500 do

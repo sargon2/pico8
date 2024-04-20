@@ -9,7 +9,7 @@ Character = {
 
 function Character.init()
     SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
-    Attributes_set_attr(Entities_Character, Attr_DrawFn, Character.drawChar)
+    Attr_DrawFn[Entities_Character] = Character.drawChar
 end
 
 function Character.get_name()

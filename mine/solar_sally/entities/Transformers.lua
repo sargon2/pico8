@@ -6,19 +6,19 @@ Transformers = {
 function Transformers.init()
     Transformers.clear_powered()
 
-    Attributes_set_attr(Entities_Transformers_left, Attr_WalkingObstruction)
-    Attributes_set_attr(Entities_Transformers_left, Attr_removable)
-    Attributes_set_attr(Entities_Transformers_left, Attr_is_circuit_component)
-    Attributes_set_attr(Entities_Transformers_left, Attr_pluggable)
-    Attributes_set_attr(Entities_Transformers_left, Attr_placement_sprite, Sprite_id_place_transformer)
+    Attr_WalkingObstruction[Entities_Transformers_left] = true
+    Attr_removable[Entities_Transformers_left] = true
+    Attr_is_circuit_component[Entities_Transformers_left] = true
+    Attr_pluggable[Entities_Transformers_left] = true
+    Attr_placement_sprite[Entities_Transformers_left] = Sprite_id_place_transformer
 
-    Attributes_set_attr(Entities_Transformers_right, Attr_WalkingObstruction)
-    Attributes_set_attr(Entities_Transformers_right, Attr_removable)
-    Attributes_set_attr(Entities_Transformers_right, Attr_is_circuit_component)
-    Attributes_set_attr(Entities_Transformers_right, Attr_pluggable)
+    Attr_WalkingObstruction[Entities_Transformers_right] = true
+    Attr_removable[Entities_Transformers_right] = true
+    Attr_is_circuit_component[Entities_Transformers_right] = true
+    Attr_pluggable[Entities_Transformers_right] = true
 
-    Attributes_set_attr(Entities_Transformers_left, Attr_DrawFn, Transformers.draw_transformer)
-    Attributes_set_attr(Entities_Transformers_right, Attr_DrawFn, function () end) -- right is drawn by the left fn
+    Attr_DrawFn[Entities_Transformers_left] = Transformers.draw_transformer
+    Attr_DrawFn[Entities_Transformers_right] = function () end -- right is drawn by the left fn
 
     Placement.set_placement_fn(Entities_Transformers_left, Transformers.place)
 

@@ -1,7 +1,7 @@
 Trees = {}
 
 function Trees.init()
-    Attributes_set_attr(Entities_Trees, Attr_WalkingObstruction, true)
+    Attr_WalkingObstruction[Entities_Trees] = true
 
     Sprites_add(Entities_Trees, Sprite_id_tree_top, 1, 2, -1)
 
