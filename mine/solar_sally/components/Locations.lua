@@ -24,14 +24,14 @@ function Locations_entity_at(x, y)
     return Locations_locations[y][x]
 end
 
-function Locations_iterate_all_entity_locations(ent_ids)
-    return make_iter(Locations__iterate_all_entity_locations_co, ent_ids)
+function Locations_iterate_all_entity_locations(ent_id)
+    return make_iter(Locations__iterate_all_entity_locations_co, ent_id)
 end
 
-function Locations__iterate_all_entity_locations_co(ent_ids)
+function Locations__iterate_all_entity_locations_co(requested_ent_id)
     for y, xs in pairs(Locations_locations) do
         for x, ent_id in pairs(xs) do
-            if ent_ids == nil or contains(ent_ids, ent_id) then
+            if ent_id == requested_ent_id then
                 yield({x, y})
             end
         end

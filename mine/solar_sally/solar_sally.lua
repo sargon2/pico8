@@ -32,13 +32,13 @@ function _draw()
 
     for system in all(solar_sally.systems) do
         if system.draw then
-            if(Settings_debug_timing) PerfTimer.start(system.get_name()..".draw()")
-            system.draw()
-            if(Settings_debug_timing) PerfTimer.stop(system.get_name()..".draw()")
+            PerfTimer.time(system.get_name()..".draw()", function ()
+                system.draw()
+            end)
         end
     end
     if(Settings_debug_window) db_window()
-    if(Settings_debug_timing) PerfTimer.reportTimes()
+    PerfTimer.reportTimes()
 end
 
 function do_update()
@@ -46,9 +46,9 @@ function do_update()
 
     for system in all(solar_sally.systems) do
         if system.update then
-            if(Settings_debug_timing) PerfTimer.start(system.get_name()..".update()")
-            system.update(elapsed)
-            if(Settings_debug_timing) PerfTimer.stop(system.get_name()..".update()")
+            PerfTimer.time(system.get_name()..".update()", function ()
+                system.update(elapsed)
+            end)
         end
     end
 end

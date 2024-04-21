@@ -18,13 +18,13 @@ function Circuits.recalculate()
     -- 1. (later) Sally's house should be connected to "the grid"
     -- 1. implement above phases
 
-    if(Settings_debug_timing) PerfTimer.start("Circuits.recalculate()")
-    local grid_components, components = Circuits.get_connected_components()
+    PerfTimer.time("Circuits.recalculate() (only when editing)", function()
+        local grid_components, components = Circuits.get_connected_components()
 
-    Circuits.mark_powered_transformers(grid_components)
+        Circuits.mark_powered_transformers(grid_components) 
 
-    Circuits.mark_powered_panels(components)
-    if(Settings_debug_timing) PerfTimer.stop("Circuits.recalculate()")
+        Circuits.mark_powered_panels(components)
+    end)
 end
 
 function Circuits.get_name()
@@ -161,8 +161,8 @@ function Circuits.get_connected_components()
         end
     end
 
-    local function collect_components(target, ent_ids)
-        for t in Locations_iterate_all_entity_locations(ent_ids) do
+    local function collect_components(target, ent_id)
+        for t in Locations_iterate_all_entity_locations(ent_id) do
             local x = t[1]
             local y = t[2]
 
@@ -177,8 +177,8 @@ function Circuits.get_connected_components()
         end
     end
 
-    collect_components(grid_components, {Entities_GridWire})
-    collect_components(components, {Entities_Wire})
+    collect_components(grid_components, Entities_GridWire)
+    collect_components(components, Entities_Wire)
 
     return grid_components, components
 end

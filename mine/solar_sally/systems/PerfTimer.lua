@@ -4,14 +4,15 @@ PerfTimer = {
 }
 
 function PerfTimer.start(name)
-    PerfTimer.startTimes[name] = stat(1)
+    if(Settings_debug_timing) PerfTimer.startTimes[name] = stat(1)
 end
 
 function PerfTimer.stop(name)
-    PerfTimer.times[name] = stat(1) - PerfTimer.startTimes[name]
+    if(Settings_debug_timing) PerfTimer.times[name] = stat(1) - PerfTimer.startTimes[name]
 end
 
 function PerfTimer.reportTimes()
+    if(not Settings_debug_timing) return
     -- Sort by times
 
     -- Quicksort requires an index-based array.
@@ -27,4 +28,10 @@ function PerfTimer.reportTimes()
     for item in all(to_sort) do
         printh(tostr(item[1])..": "..tostr(item[2]*100).."%")
     end
+end
+
+function PerfTimer.time(name, fn)
+    if(Settings_debug_timing) PerfTimer.start(name)
+    fn()
+    if(Settings_debug_timing) PerfTimer.stop(name)
 end
