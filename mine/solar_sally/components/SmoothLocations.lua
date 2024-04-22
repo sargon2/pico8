@@ -74,10 +74,12 @@ function SmoothLocations_get_all_visible(xmin, xmax, ymin, ymax)
 
     for cellx = cellxmin, cellxmax do
         for celly = cellymin, cellymax do
-            for ent_id, loc in pairs(SmoothLocations_Grid[cellx][celly]) do
-                if xmin <= loc[1] and loc[1] <= xmax then
-                    if ymin <= loc[2] and loc[2] <= ymax then
-                        add(ret, {ent_id, loc[1], loc[2]})
+            if SmoothLocations_Grid[cellx] and SmoothLocations_Grid[cellx][celly] then
+                for ent_id, loc in pairs(SmoothLocations_Grid[cellx][celly]) do
+                    if xmin <= loc[1] and loc[1] <= xmax then
+                        if ymin <= loc[2] and loc[2] <= ymax then
+                            add(ret, {ent_id, loc[1], loc[2]})
+                        end
                     end
                 end
             end

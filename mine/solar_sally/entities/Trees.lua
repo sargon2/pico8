@@ -18,13 +18,18 @@ function Trees.init()
             end
         end
     end
+
+    -- De-homogenize by advancing a bit
+    for _=1,10000 do
+        Trees.update()
+    end
 end
 
 function Trees.get_name()
     return "Trees"
 end
 
-function Trees.update(elapsed)
+function Trees.update()
     local rnd_x = flr(rnd(100))-50 -- note same as placement formula
     local rnd_y = flr(rnd(100))-50
     local ent_id = Locations_entity_at(rnd_x, rnd_y)
@@ -35,8 +40,8 @@ function Trees.update(elapsed)
     elseif ent_id == Entities_Trees then
         -- Sometimes old trees reproduce
         if rnd(100) < 50 then
-            local nearby_x = rnd_x + flr(rnd(10))-5
-            local nearby_y = rnd_y + flr(rnd(10))-5
+            local nearby_x = rnd_x + flr(rnd(6))-3
+            local nearby_y = rnd_y + flr(rnd(6))-3
             if not Locations_entity_at(nearby_x, nearby_y) then
                 if not SmoothLocations_is_obstructed(nearby_x, nearby_y) then
                     Locations_place_entity(Entities_YoungTrees, nearby_x, nearby_y)
