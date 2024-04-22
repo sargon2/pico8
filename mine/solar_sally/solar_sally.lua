@@ -16,7 +16,7 @@ solar_sally = {
 }
 
 function _init()
-    srand(12345)
+    --srand(12345)
 
     for system in all(solar_sally.systems) do
         if system.init then

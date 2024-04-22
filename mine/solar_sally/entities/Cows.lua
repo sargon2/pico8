@@ -13,13 +13,13 @@ end
 
 function Cows.init()
 
-    for _=1,100 do
+    for _=1,5000 do
         local ent_id = Entities_create_entity()
         add(Cows.cow_ent_ids, ent_id)
         Attr_DrawFn[ent_id] = Cows.draw_cow
 
-        local x = flr(rnd(100))-50
-        local y = flr(rnd(100))-50
+        local x = flr(rnd(1000))-500
+        local y = flr(rnd(1000))-500
         SmoothLocations_set_or_update_location(ent_id, x, y)
         Cows.vector_x[ent_id] = 0
         Cows.vector_y[ent_id] = 0

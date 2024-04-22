@@ -11,6 +11,7 @@ Sprites = {}
 --[[const]] Sprite_id_no_action = 35
 --[[const]] Sprite_id_place_panel = 33
 --[[const]] Sprite_id_place_wire = 36
+--[[const]] Sprite_id_young_tree = 38
 --[[const]] Sprite_id_place_transformer = 20
 --[[const]] Sprite_id_rock = 48
 --[[const]] Sprite_id_wire_left = 49
