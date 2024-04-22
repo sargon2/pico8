@@ -1,9 +1,6 @@
 --[[const]] SmoothLocations_cell_size = 16
-SmoothLocations_GridX = {} -- Grid[cell_x][cell_y][ent_id] = x -- TODO would it be faster to have a single array that stores {x, y} rather than 2 arrays?
-SmoothLocations_GridY = {} -- Grid[cell_x][cell_y][ent_id] = y
-SmoothLocations_cell_x = {} -- cell_x[ent_id] = cell_x -- TODO same here
-SmoothLocations_cell_y = {} -- cell_y[ent_id] = cell_y
-
+SmoothLocations_Grid = {} -- Grid[cell_x][cell_y][ent_id] = {x, y}
+SmoothLocations_cell = {} -- cell[ent_id] = {cell_x, cell_y}
 
 function SmoothLocations__get_cell(x, y)
     return flr(x / SmoothLocations_cell_size), flr(y / SmoothLocations_cell_size)
@@ -13,35 +10,27 @@ end
 function SmoothLocations_set_or_update_location(ent_id, x, y)
     local cell_x, cell_y = SmoothLocations__get_cell(x, y)
 
-    local old_cellx = SmoothLocations_cell_x[ent_id]
-    if old_cellx then -- if not then it's a new ent_id
-        local old_celly = SmoothLocations_cell_y[ent_id]
+    local old_cell = SmoothLocations_cell[ent_id]
+    if old_cell then -- if not then it's a new ent_id
 
-        if old_cellx != cell_x or old_celly != cell_y then
-            SmoothLocations_GridX[old_cellx][old_celly][ent_id] = nil
-            SmoothLocations_GridY[old_cellx][old_celly][ent_id] = nil
+        if old_cell[1] != cell_x or old_cell[2] != cell_y then
+            SmoothLocations_Grid[old_cell[1]][old_cell[2]][ent_id] = nil
         end
     end
 
     -- TODO there's gotta be a better way to do this...
-    if(not SmoothLocations_GridX[cell_x]) SmoothLocations_GridX[cell_x] = {}
-    if(not SmoothLocations_GridX[cell_x][cell_y]) SmoothLocations_GridX[cell_x][cell_y] = {}
-    if(not SmoothLocations_GridY[cell_x]) SmoothLocations_GridY[cell_x] = {}
-    if(not SmoothLocations_GridY[cell_x][cell_y]) SmoothLocations_GridY[cell_x][cell_y] = {}
+    if(not SmoothLocations_Grid[cell_x]) SmoothLocations_Grid[cell_x] = {}
+    if(not SmoothLocations_Grid[cell_x][cell_y]) SmoothLocations_Grid[cell_x][cell_y] = {}
 
-    SmoothLocations_GridX[cell_x][cell_y][ent_id] = x
-    SmoothLocations_GridY[cell_x][cell_y][ent_id] = y
-    SmoothLocations_cell_x[ent_id] = cell_x
-    SmoothLocations_cell_y[ent_id] = cell_y
+    SmoothLocations_Grid[cell_x][cell_y][ent_id] = {x, y}
+    SmoothLocations_cell[ent_id] = {cell_x, cell_y}
 end
 
 function SmoothLocations_get_location(ent_id)
-    local x = SmoothLocations_cell_x[ent_id]
-    if(not x) return nil -- unknown entity
-    local y = SmoothLocations_cell_y[ent_id]
-    return
-        SmoothLocations_GridX[x][y][ent_id],
-        SmoothLocations_GridY[x][y][ent_id]
+    local cell = SmoothLocations_cell[ent_id]
+    if(not cell) return nil
+    local loc = SmoothLocations_Grid[cell[1]][cell[2]][ent_id]
+    return loc[1], loc[2]
 end
 
 function SmoothLocations_is_obstructed(x, y)
@@ -85,12 +74,10 @@ function SmoothLocations_get_all_visible(xmin, xmax, ymin, ymax)
 
     for cellx = cellxmin, cellxmax do
         for celly = cellymin, cellymax do
-            for ent_id, x in pairs(SmoothLocations_GridX[cellx][celly]) do
-                if xmin <= x and x <= xmax then
-                    local y = SmoothLocations_GridY[cellx][celly][ent_id]
-                    if ymin <= y and y <= ymax then
-                        local to_add = {ent_id, x, y}
-                        add(ret, to_add)
+            for ent_id, loc in pairs(SmoothLocations_Grid[cellx][celly]) do
+                if xmin <= loc[1] and loc[1] <= xmax then
+                    if ymin <= loc[2] and loc[2] <= ymax then
+                        add(ret, {ent_id, loc[1], loc[2]})
                     end
                 end
             end
