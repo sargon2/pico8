@@ -1,8 +1,6 @@
-World = {}
-
-function World.get_name()
-    return "World"
-end
+World = {
+    name = "World",
+}
 
 function World.draw()
     local char_x, char_y = SmoothLocations_get_location(Entities_Character)

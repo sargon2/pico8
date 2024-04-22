@@ -1,4 +1,5 @@
 Placement = {
+    name = "Placement",
     -- selected square
     sel_x_p=0, -- "precise" (sub-integer)
     sel_y_p=0,
@@ -20,10 +21,6 @@ function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
     Placement.placeable_entities = {Entities_Panels, Entities_Wire, Entities_Transformers_left}
     Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
-end
-
-function Placement.get_name()
-    return "Placement"
 end
 
 function Placement.update(elapsed)

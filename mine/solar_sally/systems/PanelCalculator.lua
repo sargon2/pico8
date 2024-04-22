@@ -6,6 +6,7 @@
 -- - Total earned ($)
 
 PanelCalculator = {
+    name = "PanelCalculator",
     powered_panel_count = 0,
     capacity = 0, -- watts
     total_generated = 0, -- watt-hours
@@ -18,10 +19,6 @@ function PanelCalculator.init()
     PanelCalculator.total_generated = df_double({"+", "0", 0})
     PanelCalculator.earning = df_double({"+", "0", 0})
     PanelCalculator.earned = df_double({"+", "0", 0})
-end
-
-function PanelCalculator.get_name()
-    return "PanelCalculator"
 end
 
 function df_and_trim(val, digits)

@@ -1,4 +1,6 @@
-Trees = {}
+Trees = {
+    name = "Trees",
+}
 
 function Trees.init()
     Attr_WalkingObstruction[Entities_Trees] = true
@@ -23,10 +25,6 @@ function Trees.init()
     for _=1,5000 do
         Trees.update()
     end
-end
-
-function Trees.get_name()
-    return "Trees"
 end
 
 function Trees.update()

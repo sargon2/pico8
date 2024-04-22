@@ -1,4 +1,6 @@
-Circuits = {}
+Circuits = {
+    name = "Circuits",
+}
 
 function Circuits.recalculate()
     -- Panels provide power so really anything hooked up to a panel & wire should be powered, but
@@ -25,10 +27,6 @@ function Circuits.recalculate()
 
         Circuits.mark_powered_panels(components)
     end)
-end
-
-function Circuits.get_name()
-    return "Circuits"
 end
 
 function Circuits.mark_powered_panels(components)

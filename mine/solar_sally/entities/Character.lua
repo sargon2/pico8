@@ -1,4 +1,5 @@
 Character = {
+    name = "Character",
     frame=1,
     speed=6,
     anim_speed=8,
@@ -10,10 +11,6 @@ Character = {
 function Character.init()
     SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
     Attr_DrawFn[Entities_Character] = Character.drawChar
-end
-
-function Character.get_name()
-    return "Character"
 end
 
 function Character.update(elapsed)

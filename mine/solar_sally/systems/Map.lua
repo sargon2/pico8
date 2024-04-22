@@ -1,8 +1,6 @@
-Map = {}
-
-function Map.get_name()
-    return "Map"
-end
+Map = {
+    name = "Map",
+}
 
 function Map.draw()
     local char_x, char_y = SmoothLocations_get_location(Entities_Character) -- TODO pass character location around instead of getting it globally all over the place?

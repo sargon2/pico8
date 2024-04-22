@@ -1,4 +1,5 @@
 Cows = {
+    name = "Cows",
     cow_ent_ids = {},
     vector_x = {}, -- vector_x[ent_id] = x
     vector_y = {}, -- vector_y[ent_id] = y
@@ -6,10 +7,6 @@ Cows = {
     looking = {}, -- looking[ent_id] = true, whether or not the cow is looking at the player
     is_cow = {}, -- is_cow[ent_id] = true -- to speed up updating. TODO should it be an attribute?
 }
-
-function Cows.get_name()
-    return "Cows"
-end
 
 function Cows.init()
 
