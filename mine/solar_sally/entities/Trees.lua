@@ -20,7 +20,7 @@ function Trees.init()
     end
 
     -- De-homogenize by advancing a bit
-    for _=1,10000 do
+    for _=1,5000 do
         Trees.update()
     end
 end
@@ -38,8 +38,9 @@ function Trees.update()
         -- Sometimes young trees grow up
         Locations_place_entity(Entities_Trees, rnd_x, rnd_y)
     elseif ent_id == Entities_Trees then
+        -- The split between reproducing and dying has to be carefully tuned to avoid overpopulation/extinction.
         -- Sometimes old trees reproduce
-        if rnd(100) < 50 then
+        if rnd(100) < 54 then
             local nearby_x = rnd_x + flr(rnd(6))-3
             local nearby_y = rnd_y + flr(rnd(6))-3
             if not Locations_entity_at(nearby_x, nearby_y) then
@@ -50,7 +51,7 @@ function Trees.update()
         end
 
         -- Sometimes old trees die
-        if rnd(100) < 50 then
+        if rnd(100) < 46 then
             Locations_place_entity(nil, rnd_x, rnd_y)
         end
     end
