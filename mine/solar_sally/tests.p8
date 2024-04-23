@@ -1,8 +1,10 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
-#include ../lua_extensions.lua
-#include tests/tests.lua
+#include tests/test_framework.lua
+#include tests/asserts.lua
+#include tests/framework_tests.lua
+reportResults() -- Defined by test_framework, must be after all test executions
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
