@@ -20,14 +20,10 @@ function runTests(name, test_class)
     printh("Running suite \""..tostr(name).."\"...")
     for k, v in pairs(test_class) do
         if type(v) == "function" then
-            printh("")
-            printh("Running test "..tostr(k).."()...")
+            printh("    Running test "..tostr(k).."()...")
             v()
         end
     end
-    printh("")
-    printh("Done running suite")
-    printh("")
 end
 
 function reportResults()

@@ -33,10 +33,11 @@ function bignum_tostr(num)
         if(i == #num) n = _strip_trailing_zeroes(n)
         ret ..= n
     end
+    if(ret == "") ret = "0"
     return ret
 end
 
-function bignum_fromstr(numstr)
+function bignum_fromstr(numstr) -- TODO can this be removed for the final cart? It may be only used for testing. I could move it to the test file.
     local dec = str_find_char(numstr, '.')
     if(not dec) dec = #numstr+1
 
@@ -64,5 +65,29 @@ function bignum_fromstr(numstr)
         add(ret, tonum(s))
     end
     add(ret, ip_size, 1)
+    return ret
+end
+
+function bignum_fromnum(n)
+    -- example: 20003.0004
+    local ip = flr(n) -- 20003
+    local fp = n-ip -- 0.0004
+
+    local one = flr(ip/10000) -- 2
+    local two = ip-(one*10000) -- 3
+    local three = flr((fp*10000)+0.5) -- 4
+
+    -- There is some accuracy past here, but we start to get into weird rounding errors.
+    -- So, we just truncate numbers to 4 digits past the decimal, same as print().
+
+    ret = {}
+    if one == 0 then
+        add(ret, 1)
+    else
+        add(ret, 2)
+        add(ret, one)
+    end
+    add(ret, two)
+    if(three != 0) add(ret, three)
     return ret
 end

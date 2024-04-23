@@ -15,6 +15,7 @@ function bignum_tests.test_strip_leading_zeroes()
 end
 
 function bignum_tests.test_basic_tostr()
+    assert.equals("0", bignum_tostr({1, 0}))
     assert.equals("1", bignum_tostr({1, 1}))
     assert.equals("2", bignum_tostr({1, 2}))
     assert.equals("10001", bignum_tostr({2, 1, 1}))
@@ -32,6 +33,7 @@ end
 
 function bignum_tests.test_fromstr()
     -- Test basic numbers without a decimal point
+    assert.dumpEquals({1, 0}, bignum_fromstr("0"))
     assert.dumpEquals({1, 1}, bignum_fromstr("1"))
     assert.dumpEquals({1, 1000}, bignum_fromstr("1000"))
     assert.dumpEquals({1, 0}, bignum_fromstr("0"))
@@ -58,6 +60,17 @@ function bignum_tests.test_fromstr()
     -- Edge case: Very large/small number
     assert.dumpEquals({5, 1, 0, 0, 0, 1}, bignum_fromstr("10000000000000001"))
     assert.dumpEquals({1, 0, 0, 0, 1}, bignum_fromstr("0.000000000001"))
+end
+
+function bignum_tests.test_fromnum()
+    assert.dumpEquals({1, 0}, bignum_fromnum(0))
+    assert.dumpEquals({1, 1}, bignum_fromnum(1))
+    assert.dumpEquals({1, 2}, bignum_fromnum(2))
+    assert.dumpEquals({1, 0, 1000}, bignum_fromnum(.1))
+    assert.dumpEquals({1, 0, 2000}, bignum_fromnum(.2))
+    assert.dumpEquals({2, 2, 0}, bignum_fromnum(20000))
+    assert.dumpEquals({1, 0, 1}, bignum_fromnum(.0001))
+    assert.dumpEquals({2, 2, 3, 4}, bignum_fromnum(20003.0004))
 end
 
 
