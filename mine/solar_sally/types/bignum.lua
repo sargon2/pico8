@@ -71,23 +71,23 @@ end
 function bignum_fromnum(n)
     -- example: 20003.0004
     local ip = flr(n) -- 20003
-    local fp = n-ip -- 0.0004
 
-    local one = flr(ip/10000) -- 2
-    local two = ip-(one*10000) -- 3
-    local three = flr((fp*10000)+0.5) -- 4
+    local tenthousands = flr(ip/10000) -- 2
 
     -- There is some accuracy past here, but we start to get into weird rounding errors.
     -- So, we just truncate numbers to 4 digits past the decimal, same as print().
 
     ret = {}
-    if one == 0 then
+    if tenthousands == 0 then
         add(ret, 1)
     else
         add(ret, 2)
-        add(ret, one)
+        add(ret, tenthousands)
     end
-    add(ret, two)
-    if(three != 0) add(ret, three)
+
+    add(ret, ip-(tenthousands*10000)) -- 3
+
+    local tenthousandths = flr(((n-ip)*10000)+0.5) -- 4
+    if(tenthousandths != 0) add(ret, tenthousandths)
     return ret
 end
