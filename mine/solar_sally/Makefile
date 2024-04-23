@@ -13,6 +13,13 @@ output/solar_sally.p8.png: $$(shell find $$* -type f \( -name "*.lua" -o -name "
 	$(SHRINKO8) output/solar_sally.p8.png --count
 
 
+.tested: output/solar_sally.p8.png
+	# cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -x root/mine/solar_sally/tests.p8
+	rm -f test_output.txt
+	../../../../pico8/pico-8/pico8 -x tests.p8 | tee test_output.txt
+	cat test_output.txt | tail -1 | grep "Pass"
+	touch .tested
+
 .PHONY: lint
 lint:
 	$(SHRINKO8) solar_sally.p8 --lint

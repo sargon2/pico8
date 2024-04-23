@@ -1,2 +1,4 @@
 *.png
 output/
+.tested
+test_output.txt
