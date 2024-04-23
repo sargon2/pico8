@@ -86,7 +86,22 @@ end
 function printh_all(...)
     local ret = ""
     for i in all({...}) do
-        ret ..= tostr(i) .. ","
+        ret ..= dump(i) .. ", "
     end
     printh(ret)
 end
+
+function str_find_char(haystack, needle)
+    -- Only works for finding single characters
+    for i=1,#haystack do
+        if(haystack[i] == needle) return i
+    end
+    return nil
+end
+
+function reverse_table(t)
+    for i=1,#t/2 do
+        t[i], t[#t-i+1] = t[#t-i+1], t[i]
+    end
+end
+
