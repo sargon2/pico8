@@ -87,6 +87,11 @@ function bignum_fromstr(numstr) -- TODO can this be removed for the final cart? 
 end
 
 function bignum_fromnum(n)
+    local negative = 1
+    if n < 0 then
+        negative = -1
+        n = -n
+    end
     -- example: 20003.0004
     local ip = flr(n) -- 20003
 
@@ -100,13 +105,13 @@ function bignum_fromnum(n)
         add(ret, 1)
     else
         add(ret, 2)
-        add(ret, tenthousands)
+        add(ret, tenthousands * negative)
     end
 
-    add(ret, ip-(tenthousands*10000)) -- 3
+    add(ret, negative*(ip-(tenthousands*10000))) -- 3
 
     local tenthousandths = flr(((n-ip)*10000)+0.5) -- 4
-    if(tenthousandths ~= 0) add(ret, tenthousandths)
+    if(tenthousandths ~= 0) add(ret, negative*tenthousandths)
     return ret
 end
 
@@ -132,7 +137,6 @@ function pad_end(num, size) -- modifies its arg
 end
 
 function bignum_add(num1, num2)
-    printh_all("Adding", bignum_tostr(num1), bignum_tostr(num2))
     -- Avoid modifying args
     num1, num2 = bignum_copy(num1), bignum_copy(num2)
     -- zero-pad beginning of smaller number to align decimals
@@ -142,34 +146,35 @@ function bignum_add(num1, num2)
     pad_end(num1, #num2)
     pad_end(num2, #num1)
 
-    local ret_size = num1[1]
-    local result_is_positive = (num1[2] + num2[2]) >= 0
+    local max, min
 
+    -- Check if the result is positive so we know which way to carry
+    for i=2,#num1 do
+        local c = num1[i] + num2[i]
+        if c > 0 then
+            max, min = 9999, 0
+            break
+        elseif c < 0 then
+            max, min = 0, -9999
+            break
+        end
+    end
+    if(not max) return {1, 0}
+
+    -- Do the addition right-to-left
     local ret = {}
     local carry = 0
     for i=#num1,2,-1 do
         local res = num1[i] + num2[i] + carry
         carry = 0
 
-        if result_is_positive then
-            if res >= 10000 then
-                carry += 1
-                res -= 10000
-            elseif res < 0 then
-                carry -= 1
-                res += 10000
-            end
-        else
-            if res > 0 then
-                carry += 1
-                res -= 10000
-            elseif res <= -10000 then
-                carry -= 1
-                res += 10000
-            end
-        end
+        if(res > max) carry = 1
+        if(res < min) carry = -1
+
+        if(carry ~= 0) res -= carry * 10000
         add(ret, res)
     end
+    local ret_size = num1[1]
     if carry ~= 0 then
         add(ret, carry)
         ret_size += 1

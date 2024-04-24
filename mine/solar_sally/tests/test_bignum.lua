@@ -77,6 +77,7 @@ end
 
 function bignum_tests.test_fromnum()
     assert.dumpEquals({1, 0}, bignum_fromnum(0))
+    assert.dumpEquals({1, -1}, bignum_fromnum(-1))
     assert.dumpEquals({1, 1}, bignum_fromnum(1))
     assert.dumpEquals({1, 2}, bignum_fromnum(2))
     assert.dumpEquals({1, 0, 1000}, bignum_fromnum(.1))
@@ -84,6 +85,7 @@ function bignum_tests.test_fromnum()
     assert.dumpEquals({2, 2, 0}, bignum_fromnum(20000))
     assert.dumpEquals({1, 0, 1}, bignum_fromnum(.0001))
     assert.dumpEquals({2, 2, 3, 4}, bignum_fromnum(20003.0004))
+    assert.dumpEquals({2, -1, -2679}, bignum_fromnum(-12679)) -- this one actually failed
 end
 
 function verify_add(expected, num1, num2)
@@ -100,6 +102,7 @@ function bignum_tests.test_add_copies_args()
 end
 
 function bignum_tests.test_add()
+    verify_add({1, 0}, {1, 0}, {1, 0})
     verify_add({1, 3}, {1, 1}, {1, 2})
     verify_add({1, 5}, {1, 2}, {1, 3})
     verify_add({2, 4, 6}, {2, 1, 2}, {2, 3, 4})
@@ -121,6 +124,9 @@ function bignum_tests.test_add()
     verify_add({1, 0}, {1, 1}, {1, -1})
     verify_add({1, 0}, {2, -1, 0}, {2, 1, 0}) -- must trim LHS
     verify_add({2, -1, -5}, {2, -1, -2}, {1, -3})
+
+    verify_add({1, 1}, {2, -1, 0}, {2, 1, 1}) -- trim LHS; result is positive
+    verify_add({1, -1}, {2, 1, 0}, {2, -1, -1}) -- trim LHS; result is negative
 
     verify_add({2, 2, 2}, {2, -1, -2}, {2, 3, 4})
     verify_add({2, -2, -2}, {2, 1, 2}, {2, -3, -4})
