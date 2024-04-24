@@ -7,7 +7,7 @@ end
 
 function _strip_trailing_zeroes(s)
     for i=#s,1,-1 do
-        if s[i] != '0' then
+        if s[i] ~= '0' then
             return sub(s, 0, i)
         end
     end
@@ -16,7 +16,7 @@ end
 
 function _strip_leading_zeroes(s)
     for i=1,#s do
-        if s[i] != '0' then
+        if s[i] ~= '0' then
             return sub(s, i)
         end
     end
@@ -106,7 +106,7 @@ function bignum_fromnum(n)
     add(ret, ip-(tenthousands*10000)) -- 3
 
     local tenthousandths = flr(((n-ip)*10000)+0.5) -- 4
-    if(tenthousandths != 0) add(ret, tenthousandths)
+    if(tenthousandths ~= 0) add(ret, tenthousandths)
     return ret
 end
 
@@ -132,6 +132,7 @@ function pad_end(num, size) -- modifies its arg
 end
 
 function bignum_add(num1, num2)
+    printh_all("Adding", bignum_tostr(num1), bignum_tostr(num2))
     -- Avoid modifying args
     num1, num2 = bignum_copy(num1), bignum_copy(num2)
     -- zero-pad beginning of smaller number to align decimals
@@ -140,23 +141,36 @@ function bignum_add(num1, num2)
     -- zero-pad end of shorter number to align sizes
     pad_end(num1, #num2)
     pad_end(num2, #num1)
+
     local ret_size = num1[1]
+    local result_is_positive = (num1[2] + num2[2]) >= 0
 
     local ret = {}
     local carry = 0
     for i=#num1,2,-1 do
         local res = num1[i] + num2[i] + carry
         carry = 0
-        if res >= 10000 then
-            carry += 1
-            res -= 10000
-        elseif res <= -10000 then
-            carry -= 1
-            res += 10000
+
+        if result_is_positive then
+            if res >= 10000 then
+                carry += 1
+                res -= 10000
+            elseif res < 0 then
+                carry -= 1
+                res += 10000
+            end
+        else
+            if res > 0 then
+                carry += 1
+                res -= 10000
+            elseif res <= -10000 then
+                carry -= 1
+                res += 10000
+            end
         end
         add(ret, res)
     end
-    if carry != 0 then
+    if carry ~= 0 then
         add(ret, carry)
         ret_size += 1
     end

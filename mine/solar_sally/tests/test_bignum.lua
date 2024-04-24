@@ -26,6 +26,12 @@ function bignum_tests.test_tostr()
     assert.equals("99990001", bignum_tostr({2, 9999, 1}))
     assert.equals("100010001", bignum_tostr({3, 1, 1, 1}))
 
+    -- ensure _pad_to_four works
+    assert.equals("10000", bignum_tostr({2, 1, 0}))
+    assert.equals("10010", bignum_tostr({2, 1, 10}))
+    assert.equals("10100", bignum_tostr({2, 1, 100}))
+    assert.equals("11000", bignum_tostr({2, 1, 1000}))
+
     -- negative
     assert.equals("-1", bignum_tostr({1, -1}))
     assert.equals("-10002", bignum_tostr({2, -1, -2}))
@@ -120,6 +126,17 @@ function bignum_tests.test_add()
     verify_add({2, -2, -2}, {2, 1, 2}, {2, -3, -4})
 
     verify_add({2, -1, 0}, {1, -4000}, {1, -6000}) -- Underflows
+
+    verify_add({2, 1, 0}, {1, 9999}, {1, 1})
+    verify_add({2, -1, 0}, {1, -9999}, {1, -1})
+    verify_add({1, 9999}, {2, 1, 0}, {1, -1}) -- Mixes positive and negative components
+    verify_add({1, -9999}, {2, -1, 0}, {1, 1}) -- Mixes positive and negative, the other way
+
+    -- Mix more
+    verify_add({4, 1, 0, 0, 0}, {3, 9999, 9999, 9999}, {1, 1})
+    verify_add({4, -1, 0, 0, 0}, {3, -9999, -9999, -9999}, {1, -1})
+    verify_add({3, 9999, 9999, 9999}, {4, 1, 0, 0, 0}, {1, -1})
+    verify_add({3, -9999, -9999, -9999}, {4, -1, 0, 0, 0}, {1, 1})
 end
 
 function verify__trim_bignum(expected, num)
