@@ -1,5 +1,6 @@
 
 failed = false
+num_failed = 0
 
 assert_runner = {}
 assert_runner.__index = function (tbl, key)
@@ -7,6 +8,7 @@ assert_runner.__index = function (tbl, key)
         local result, msg = asserts[key](...)
         if not result then
             failed = true
+            num_failed += 1
             printh(msg)
             printh(trace())
         end
@@ -28,7 +30,7 @@ end
 
 function reportResults()
     if failed then
-        printh("Fail")
+        printh("Fail; "..tostr(num_failed).." tests failed")
     else
         -- The Makefile recognizes success by whether or not the very last line of output includes the text "Pass".
         printh("Pass")

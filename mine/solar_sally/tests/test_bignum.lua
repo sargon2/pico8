@@ -143,6 +143,10 @@ function bignum_tests.test_add()
     verify_add({4, -1, 0, 0, 0}, {3, -9999, -9999, -9999}, {1, -1})
     verify_add({3, 9999, 9999, 9999}, {4, 1, 0, 0, 0}, {1, -1})
     verify_add({3, -9999, -9999, -9999}, {4, -1, 0, 0, 0}, {1, 1})
+
+    -- Carry causes a sign change in the result
+    verify_add({1, -2}, {2, -1, -1}, {1, 9999})
+    verify_add({1, 2}, {2, 1, 1}, {1, -9999})
 end
 
 function verify__trim_bignum(expected, num)

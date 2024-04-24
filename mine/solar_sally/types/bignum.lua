@@ -168,42 +168,39 @@ function bignum_add(num1, num2)
     -- Avoid modifying args
     num1, num2 = copy_and_align_sizes(num1, num2)
 
-    local max, min
+    -- We have to do this in two passes because the carry ranges depend on
+    -- the sign of the result, and we don't know the sign of the result
+    -- until we've added the most significant two numbers that add to non-zero.
 
-    -- Check if the result is positive so we know which way to carry
+    ret={0}
+    local min, max
     for i=2,#num1 do
         local c = num1[i] + num2[i]
-        if c > 0 then
-            max, min = 9999, 0
-            break
-        elseif c < 0 then
-            max, min = 0, -9999
-            break
+        ret[i] = c
+        if not min then
+            if(c > 0) min, max = 0, 9999
+            if(c < 0) min, max = -9999, 0
         end
     end
-    if(not max) return {1, 0}
+    if(not min) return {1, 0}
 
-    -- Do the addition right-to-left
-    local ret = {}
     local carry = 0
     for i=#num1,2,-1 do
-        local res = num1[i] + num2[i] + carry
+        local res = ret[i] + carry
         carry = 0
 
         if(res > max) carry = 1
         if(res < min) carry = -1
 
         if(carry ~= 0) res -= carry * 10000
-        add(ret, res)
+        ret[i] = res
     end
     local ret_size = num1[1]
     if carry ~= 0 then
-        add(ret, carry)
         ret_size += 1
+        add(ret, carry, 2)
     end
-    reverse_table(ret)
-
-    add(ret, ret_size, 1)
+    ret[1] = ret_size
 
     _trim_bignum(ret)
     return ret
