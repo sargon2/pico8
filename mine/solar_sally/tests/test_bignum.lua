@@ -7,13 +7,6 @@ function bignum_tests.test_strip_trailing_zeroes()
     assert.equals("0101", _strip_trailing_zeroes("01010000000000"))
 end
 
-function bignum_tests.test_strip_leading_zeroes()
-    assert.equals("", _strip_leading_zeroes("0"))
-    assert.equals("1", _strip_leading_zeroes("01"))
-    assert.equals("1", _strip_leading_zeroes("000000000001"))
-    assert.equals("1010", _strip_leading_zeroes("000000000001010"))
-end
-
 function bignum_tests.test_tostr()
     assert.equals("0", bignum_tostr({1, 0}))
     assert.equals("1", bignum_tostr({1, 1}))
@@ -36,56 +29,35 @@ function bignum_tests.test_tostr()
     assert.equals("-1", bignum_tostr({1, -1}))
     assert.equals("-10002", bignum_tostr({2, -1, -2}))
     assert.equals("-1.2", bignum_tostr({1, -1, -2000}))
-end
 
-function bignum_tests.test_decimals()
+    assert.equals("0.1", bignum_tostr({1, 0, 1000}))
     assert.equals("1.1", bignum_tostr({1, 1, 1000}))
     assert.equals("11", bignum_tostr({1, 11}))
     assert.equals("0.11", bignum_tostr({1, 0, 1100}))
+    assert.equals("0.000000000001", bignum_tostr({1, 0, 0, 0, 1}))
 end
 
-function bignum_tests.test_fromstr()
-    -- Test basic numbers without a decimal point
-    assert.dumpEquals({1, 0}, bignum_fromstr("0"))
-    assert.dumpEquals({1, 1}, bignum_fromstr("1"))
-    assert.dumpEquals({1, 1000}, bignum_fromstr("1000"))
-    assert.dumpEquals({1, 0}, bignum_fromstr("0"))
-
-    -- Test numbers with trailing zeroes
-    assert.dumpEquals({1, 1000}, bignum_fromstr("1000"))
-    assert.dumpEquals({2, 1, 0}, bignum_fromstr("10000"))
-    assert.dumpEquals({3, 1, 0, 0}, bignum_fromstr("100000000"))
-    assert.dumpEquals({1, 0, 1000}, bignum_fromstr("0.1000000000000000000000"))
-
-    -- Test numbers with a decimal point
-    assert.dumpEquals({1, 1, 1000}, bignum_fromstr("1.1"))
-    assert.dumpEquals({1, 100, 1234}, bignum_fromstr("100.1234"))
-    assert.dumpEquals({2, 9999, 9999, 1}, bignum_fromstr("99999999.0001"))
-
-    -- Handling leading zeros
-    assert.dumpEquals({1, 1}, bignum_fromstr("00001"))
-    assert.dumpEquals({1, 1, 2000}, bignum_fromstr("01.2"))
-    
-    -- Complex numbers with zeros between significant digits
-    assert.dumpEquals({3, 100, 0, 1}, bignum_fromstr("10000000001"))
-    assert.dumpEquals({1, 0, 1}, bignum_fromstr("0.0001"))
-
-    -- Edge case: Very large/small number
-    assert.dumpEquals({5, 1, 0, 0, 0, 1}, bignum_fromstr("10000000000000001"))
-    assert.dumpEquals({1, 0, 0, 0, 1}, bignum_fromstr("0.000000000001"))
+function assert_bignumStr(expected, actual)
+    assert.equals(expected, bignum_tostr(actual))
 end
 
 function bignum_tests.test_fromnum()
-    assert.dumpEquals({1, 0}, bignum_fromnum(0))
-    assert.dumpEquals({1, -1}, bignum_fromnum(-1))
-    assert.dumpEquals({1, 1}, bignum_fromnum(1))
-    assert.dumpEquals({1, 2}, bignum_fromnum(2))
-    assert.dumpEquals({1, 0, 1000}, bignum_fromnum(.1))
-    assert.dumpEquals({1, 0, 2000}, bignum_fromnum(.2))
-    assert.dumpEquals({2, 2, 0}, bignum_fromnum(20000))
-    assert.dumpEquals({1, 0, 1}, bignum_fromnum(.0001))
-    assert.dumpEquals({2, 2, 3, 4}, bignum_fromnum(20003.0004))
-    assert.dumpEquals({2, -1, -2679}, bignum_fromnum(-12679)) -- this one actually failed
+    assert_bignumStr("0", bignum_fromnum(0))
+    assert_bignumStr("-1", bignum_fromnum(-1))
+    assert_bignumStr("1", bignum_fromnum(1))
+    assert_bignumStr("2", bignum_fromnum(2))
+    assert_bignumStr("0.0999908447265625", bignum_fromnum(.1))
+    assert_bignumStr("0.1999969482421875", bignum_fromnum(.2))
+    assert_bignumStr("0.25", bignum_fromnum(.25))
+    assert_bignumStr("0.125", bignum_fromnum(.125))
+    assert_bignumStr("20000", bignum_fromnum(20000))
+    assert_bignumStr("0.000091552734375", bignum_fromnum(.0001))
+    assert_bignumStr("20003.000396728515625", bignum_fromnum(20003.0004))
+    assert_bignumStr("-12679", bignum_fromnum(-12679)) -- this one actually failed
+
+    assert_bignumStr("0.0002899169921875", bignum_fromnum(0.0003))
+    assert_bignumStr("0.0000152587890625", bignum_fromnum(0.00003))
+    assert_bignumStr("0", bignum_fromnum(0.000003))
 end
 
 function verify_add(expected, num1, num2)
@@ -96,7 +68,7 @@ end
 function bignum_tests.test_add_copies_args()
     -- Make sure add doesn't modify its args
     local num1 = {1, 4}
-    local num2 = {3, 1,  2, 3}
+    local num2 = {3, 1, 2, 3}
     bignum_add(num1, num2)
     assert.dumpEquals({1, 4}, num1)
 end
@@ -161,24 +133,8 @@ function bignum_tests.test__trim_bignum()
     verify__trim_bignum({2, 1, 0}, {2, 1, 0})
 end
 
-function bignum_tests.test_abs()
-    assert.dumpEquals({1, 0}, bignum_abs({1, 0}))
-    assert.dumpEquals({1, 1}, bignum_abs({1, 1}))
-    assert.dumpEquals({1, 1}, bignum_abs({1, -1}))
-    assert.dumpEquals({2, 1, 1}, bignum_abs({2, 1, 1}))
-    assert.dumpEquals({2, 1, 1}, bignum_abs({2, -1, -1}))
-end
-
-function bignum_tests.test_cmp()
-    assert.equals(0, bignum_cmp({1, 0}, {1, 0}))
-    assert.equals(-1, bignum_cmp({1, -1}, {1, 1}))
-    assert.equals(1, bignum_cmp({1, 1}, {1, -1}))
-    assert.equals(-1, bignum_cmp({1, -1}, {1, 0}))
-    assert.equals(-1, bignum_cmp({1, 0}, {1, 1}))
-    assert.equals(1, bignum_cmp({1, 1}, {1, 0}))
-    assert.equals(1, bignum_cmp({1, 0}, {1, -1}))
-    assert.equals(1, bignum_cmp({2, 0, 0}, {2, 0, -1}))
-    assert.equals(0, bignum_cmp({2, 0, 0}, {2, 0, 0}))
+function bignum_tests.test_bignum_mult()
+    assert.dumpEquals({1, 6}, bignum_mult({1, 2}, {1, 3}))
 end
 
 -- TODO

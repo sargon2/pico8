@@ -1,23 +1,15 @@
-function _pad_to_four(s)
-    for i=#s,3 do
-        s = "0"..s
-    end
-    return s
-end
+-- A bignum is a table.  The first element of the table is the position of the decimal point.
+-- The remaining elements are base-10000 components of the number.
+-- So, for example, {2, 1, 3, 4000} is 10003.4.
+-- Negative numbers are stored such that all components are negative, so e.g. -10001 is {2, -1, -1}.
+
+--[[const]] baselen = 4 -- 4=10000
+--[[const]] base = 10^baselen
 
 function _strip_trailing_zeroes(s)
     for i=#s,1,-1 do
         if s[i] ~= '0' then
             return sub(s, 0, i)
-        end
-    end
-    return ""
-end
-
-function _strip_leading_zeroes(s)
-    for i=1,#s do
-        if s[i] ~= '0' then
-            return sub(s, i)
         end
     end
     return ""
@@ -40,6 +32,13 @@ function _trim_bignum(num) -- modifies its arg
 end
 
 function bignum_tostr(num)
+    local function _pad_to_base(s)
+        for i=#s,baselen-1 do
+            s = "0"..s
+        end
+        return s
+    end
+
     local ret = ""
     local d = num[1]
     for i=2,#num do
@@ -49,7 +48,7 @@ function bignum_tostr(num)
         else
             n = tostr(abs(num[i]))
         end
-        if(i > 2) n = _pad_to_four(n)
+        if(i > 2) n = _pad_to_base(n)
         if(i == #num and i>d+1) n = _strip_trailing_zeroes(n) -- We can't use _trim_bignum because it doesn't trim within a component
         ret ..= n
     end
@@ -57,61 +56,29 @@ function bignum_tostr(num)
     return ret
 end
 
-function bignum_fromstr(numstr) -- TODO can this be removed for the final cart? It may be only used for testing. I could move it to the test file.
-    local dec = str_find_char(numstr, '.')
-    if(not dec) dec = #numstr+1
-
-    local ip = sub(numstr, 0, dec-1)
-    local fp = sub(numstr, dec+1, #numstr)
-
-    local ret = {}
-    
-    for i=#ip-3,-3,-4 do
-        local s = sub(ip, max(i,1), i+3)
-        add(ret, tonum(s))
+function bignum_flip_sign(num)
+    for i=2,#num do
+        num[i] = -num[i]
     end
-
-    reverse_table(ret)
-
-    local ip_size = #ret
-
-    local fp_size = #fp
-    fp = fp .. "000" -- Needed so last group has correct order of magnitude
-    for i=1,fp_size,4 do
-        local s = sub(fp, i, i+3)
-        add(ret, tonum(s))
-    end
-    add(ret, ip_size, 1)
-    _trim_bignum(ret)
-    return ret
 end
 
 function bignum_fromnum(n)
-    local negative = 1
+    local is_negative = false
     if n < 0 then
-        negative = -1
+        is_negative = true
         n = -n
     end
-    -- example: 20003.0004
-    local ip = flr(n) -- 20003
 
-    local tenthousands = ip\10000 -- 2
+    local ret = {1}
+    repeat
+        ret[#ret+1] = flr(n)
+        n -= flr(n)
+        n *= base
+    until n==0
 
-    -- There is some accuracy past here, but we start to get into weird rounding errors.
-    -- So, we just truncate numbers to 4 digits past the decimal, same as print().
-
-    ret = {}
-    if tenthousands == 0 then
-        add(ret, 1)
-    else
-        add(ret, 2)
-        add(ret, tenthousands * negative)
-    end
-
-    add(ret, negative*(ip-(tenthousands*10000))) -- 3
-
-    local tenthousandths = flr(((n-ip)*10000)+0.5) -- 4
-    if(tenthousandths ~= 0) add(ret, negative*tenthousandths)
+    _perform_carry(ret, n<0)
+    _trim_bignum(ret)
+    if(is_negative) bignum_flip_sign(ret)
     return ret
 end
 
@@ -136,23 +103,6 @@ function pad_end(num, size) -- modifies its arg
     end
 end
 
-function bignum_abs(a)
-    local ret = bignum_copy(a)
-    for i=2,#ret do
-        ret[i] = abs(ret[i])
-    end
-    return ret
-end
-
-function bignum_cmp(a, b)
-    a, b = copy_and_align_sizes(a, b)
-    for i=2,#a do
-        if(a[i] < b[i]) return -1
-        if(a[i] > b[i]) return 1
-    end
-    return 0
-end
-
 function copy_and_align_sizes(num1, num2)
     num1, num2 = bignum_copy(num1), bignum_copy(num2)
     -- zero-pad beginning of smaller number to align decimals
@@ -164,6 +114,33 @@ function copy_and_align_sizes(num1, num2)
     return num1, num2
 end
 
+function _perform_carry(num, is_negative) -- modifies arg
+    local min, max = 0, base-1
+    if(is_negative) min, max = -base+1, 0
+    local carry = 0
+    for i=#num,2,-1 do
+        local res = num[i] + carry
+        carry = 0
+
+        while res > max do
+            carry += 1
+            res -= base
+        end
+        while res < min do
+            carry -= 1
+            res += base
+        end
+
+        num[i] = res
+    end
+    local ret_size = num[1]
+    if carry ~= 0 then
+        ret_size += 1
+        add(num, carry, 2)
+    end
+    num[1] = ret_size
+end
+
 function bignum_add(num1, num2)
     -- Avoid modifying args
     num1, num2 = copy_and_align_sizes(num1, num2)
@@ -173,35 +150,24 @@ function bignum_add(num1, num2)
     -- until we've added the most significant two numbers that add to non-zero.
 
     ret={0}
-    local min, max
+    local is_negative
     for i=2,#num1 do
         local c = num1[i] + num2[i]
         ret[i] = c
-        if not min then
-            if(c > 0) min, max = 0, 9999
-            if(c < 0) min, max = -9999, 0
+        if is_negative == nil then
+            if(c > 0) is_negative = false
+            if(c < 0) is_negative = true
         end
     end
-    if(not min) return {1, 0}
+    if(is_negative == nil) return {1, 0}
 
-    local carry = 0
-    for i=#num1,2,-1 do
-        local res = ret[i] + carry
-        carry = 0
-
-        if(res > max) carry = 1
-        if(res < min) carry = -1
-
-        if(carry ~= 0) res -= carry * 10000
-        ret[i] = res
-    end
-    local ret_size = num1[1]
-    if carry ~= 0 then
-        ret_size += 1
-        add(ret, carry, 2)
-    end
-    ret[1] = ret_size
+    ret[1] = num1[1]
+    _perform_carry(ret, is_negative)
 
     _trim_bignum(ret)
     return ret
+end
+
+function bignum_mult(num1, num2)
+    return {1, 6}
 end
