@@ -157,6 +157,26 @@ function bignum_tests.test__trim_bignum()
     verify__trim_bignum({2, 1, 0}, {2, 1, 0})
 end
 
+function bignum_tests.test_abs()
+    assert.dumpEquals({1, 0}, bignum_abs({1, 0}))
+    assert.dumpEquals({1, 1}, bignum_abs({1, 1}))
+    assert.dumpEquals({1, 1}, bignum_abs({1, -1}))
+    assert.dumpEquals({2, 1, 1}, bignum_abs({2, 1, 1}))
+    assert.dumpEquals({2, 1, 1}, bignum_abs({2, -1, -1}))
+end
+
+function bignum_tests.test_cmp()
+    assert.equals(0, bignum_cmp({1, 0}, {1, 0}))
+    assert.equals(-1, bignum_cmp({1, -1}, {1, 1}))
+    assert.equals(1, bignum_cmp({1, 1}, {1, -1}))
+    assert.equals(-1, bignum_cmp({1, -1}, {1, 0}))
+    assert.equals(-1, bignum_cmp({1, 0}, {1, 1}))
+    assert.equals(1, bignum_cmp({1, 1}, {1, 0}))
+    assert.equals(1, bignum_cmp({1, 0}, {1, -1}))
+    assert.equals(1, bignum_cmp({2, 0, 0}, {2, 0, -1}))
+    assert.equals(0, bignum_cmp({2, 0, 0}, {2, 0, 0}))
+end
+
 -- TODO
 -- Multiplication
 -- Division

@@ -3,7 +3,7 @@ SmoothLocations_Grid = {} -- Grid[cell_x][cell_y][ent_id] = {x, y}
 SmoothLocations_cell = {} -- cell[ent_id] = {cell_x, cell_y}
 
 function SmoothLocations__get_cell(x, y)
-    return flr(x / SmoothLocations_cell_size), flr(y / SmoothLocations_cell_size)
+    return x \ SmoothLocations_cell_size, y \ SmoothLocations_cell_size
 end
 
 -- SmoothLocations only supports one x/y pair per ent_id.

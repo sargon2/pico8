@@ -95,7 +95,7 @@ function bignum_fromnum(n)
     -- example: 20003.0004
     local ip = flr(n) -- 20003
 
-    local tenthousands = flr(ip/10000) -- 2
+    local tenthousands = ip\10000 -- 2
 
     -- There is some accuracy past here, but we start to get into weird rounding errors.
     -- So, we just truncate numbers to 4 digits past the decimal, same as print().
@@ -136,8 +136,24 @@ function pad_end(num, size) -- modifies its arg
     end
 end
 
-function bignum_add(num1, num2)
-    -- Avoid modifying args
+function bignum_abs(a)
+    local ret = bignum_copy(a)
+    for i=2,#ret do
+        ret[i] = abs(ret[i])
+    end
+    return ret
+end
+
+function bignum_cmp(a, b)
+    a, b = copy_and_align_sizes(a, b)
+    for i=2,#a do
+        if(a[i] < b[i]) return -1
+        if(a[i] > b[i]) return 1
+    end
+    return 0
+end
+
+function copy_and_align_sizes(num1, num2)
     num1, num2 = bignum_copy(num1), bignum_copy(num2)
     -- zero-pad beginning of smaller number to align decimals
     pad_beginning(num1, num2[1])
@@ -145,6 +161,12 @@ function bignum_add(num1, num2)
     -- zero-pad end of shorter number to align sizes
     pad_end(num1, #num2)
     pad_end(num2, #num1)
+    return num1, num2
+end
+
+function bignum_add(num1, num2)
+    -- Avoid modifying args
+    num1, num2 = copy_and_align_sizes(num1, num2)
 
     local max, min
 
