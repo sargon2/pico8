@@ -1,7 +1,6 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
-#include ../floating_point.lua
 #include ../lua_extensions.lua
 #include ../vector_utils.lua
 #include ../podtree_debugger.lua

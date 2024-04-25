@@ -1,50 +1,35 @@
 
--- Calculates:
--- - Total electricity generation (watts)
--- - Total electricity out (watt-hours)
--- - Earning ($/h)
--- - Total earned ($)
-
 PanelCalculator = {
     name = "PanelCalculator",
     powered_panel_count = 0,
-    capacity = 0, -- watts
-    total_generated = 0, -- watt-hours
-    earning = 0, -- $/h
     earned = 0, -- $
+    frame_counter = 0
 }
-
-function PanelCalculator.init()
-    PanelCalculator.capacity = df_double({"+", "0", 0})
-    PanelCalculator.total_generated = df_double({"+", "0", 0})
-    PanelCalculator.earning = df_double({"+", "0", 0})
-    PanelCalculator.earned = df_double({"+", "0", 0})
-end
-
-function df_and_trim(val, digits)
-    if not digits then
-        digits = 7
-    end
-    return sub(df_tostr(val), 1, digits)
-end
 
 function PanelCalculator.draw()
     color(6)
-    print("capacity: "..df_and_trim(PanelCalculator.capacity).." watts")
-    print("total: "..df_and_trim(PanelCalculator.total_generated, 6).." watt-hours")
-    print("earning: $"..df_and_trim(PanelCalculator.earning).."/h")
-    print("earned: $"..df_and_trim(PanelCalculator.earned))
+    print("earned: $"..sub(full_tostr(PanelCalculator.earned),1,8))
 end
 
 function PanelCalculator.update(elapsed)
-    local num_panels = PanelCalculator.powered_panel_count
-    local elapsed_hours = df_divide(df_double(elapsed), df_double(3600)) -- convert seconds to hours
+    PanelCalculator.frame_counter += flr((elapsed * 60) + 0.5)
+    while PanelCalculator.frame_counter > 60 do
+        -- a second went by
+        PanelCalculator.add_panel_seconds(1)
+        PanelCalculator.frame_counter -= 60
+    end
+end
 
-    PanelCalculator.capacity = df_multiply(df_double(num_panels), df_double("1000")) -- 1000 watts per panel
-    PanelCalculator.total_generated = df_add(PanelCalculator.total_generated, df_multiply(elapsed_hours, PanelCalculator.capacity))
+function PanelCalculator.add_panel_seconds(num_seconds)
+    -- The smallest unit of time we can advance is 1 second, and the smallest amount we can add to earned is 1 >> 16.
+    PanelCalculator.earned += ((1 >> 16) * num_seconds) * PanelCalculator.powered_panel_count
+end
 
-    PanelCalculator.earning = df_divide(PanelCalculator.capacity, df_double("20000")) -- wattage / 1000000 to get MW, then * $50 to get 20,000
-    PanelCalculator.earned = df_add(PanelCalculator.earned, df_multiply(elapsed_hours, PanelCalculator.earning))
+function PanelCalculator.add_panel_8h(n) -- Add n 8-hour increments
+    -- 28800*h may not fit inside a pico-8 number, so we must repeat.
+    for i=1,n do
+        PanelCalculator.add_panel_seconds(28800)
+    end
 end
 
 function PanelCalculator.set_powered_panel_count(c)

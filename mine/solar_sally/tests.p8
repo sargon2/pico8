@@ -8,6 +8,7 @@ __lua__
 #include types/bignum.lua
 #include tests/test_bignum.lua
 #include tests/test_lua_extensions.lua
+#include tests/test_PanelCalculator.lua
 reportResults() -- Defined by test_framework, must be after all test executions
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

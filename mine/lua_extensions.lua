@@ -105,3 +105,17 @@ function reverse_table(t)
     end
 end
 
+-- Converts the given number to a string without truncating or rounding.
+function full_tostr(n)
+    local ret = tostr(flr(n))
+    n -= flr(n)
+    if n != 0 then
+        ret ..= "."
+        repeat
+            n *= 10
+            ret ..= flr(n)
+            n -= flr(n)
+        until n <= 0
+    end
+    return ret
+end

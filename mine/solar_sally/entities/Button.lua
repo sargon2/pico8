@@ -22,7 +22,7 @@ end
 
 function Button.press()
     Button.is_being_pressed = true
-    PanelCalculator.update(df_double("86400")) -- 86400 seconds = 24 hours
+    PanelCalculator.add_panel_8h(3) -- 3*8 = 24, so one day
 end
 
 function Button.release()
