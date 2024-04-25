@@ -1,4 +1,4 @@
-all: output/solar_sally.p8.png
+all: .tested
 
 SHRINKO8=python3 ../../shrinko8/shrinko8.py
 COUNTER=../../get_counts.sh

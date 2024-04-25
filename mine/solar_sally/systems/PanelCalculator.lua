@@ -2,14 +2,8 @@
 PanelCalculator = {
     name = "PanelCalculator",
     powered_panel_count = 0,
-    earned = 0, -- $
     frame_counter = 0
 }
-
-function PanelCalculator.draw()
-    color(6)
-    print("earned: $"..sub(full_tostr(PanelCalculator.earned),1,8))
-end
 
 function PanelCalculator.update(elapsed)
     PanelCalculator.frame_counter += flr((elapsed * 60) + 0.5)
@@ -22,7 +16,9 @@ end
 
 function PanelCalculator.add_panel_seconds(num_seconds)
     -- The smallest unit of time we can advance is 1 second, and the smallest amount we can add to earned is 1 >> 16.
-    PanelCalculator.earned += ((1 >> 16) * num_seconds) * PanelCalculator.powered_panel_count
+    Inventory.add(Entities_Money,
+        ((1 >> 16) * num_seconds) * PanelCalculator.powered_panel_count
+    )
 end
 
 function PanelCalculator.add_panel_8h(n) -- Add n 8-hour increments

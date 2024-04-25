@@ -33,6 +33,7 @@ Sprites = {}
 --[[const]] Sprite_id_window_bl = 45
 --[[const]] Sprite_id_window_b = 46
 --[[const]] Sprite_id_window_br = 47
+--[[const]] Sprite_id_money = 55
 
 function Sprites_add(ent_id, sprite, width, height, yoffset)
     -- Sprite just forwards to the DrawFn attribute
@@ -41,8 +42,8 @@ function Sprites_add(ent_id, sprite, width, height, yoffset)
     if(not height) height = 1
     if(not yoffset) yoffset = 0
 
-    local function d(x, y)
-        Sprites_draw_spr(sprite, x, y + yoffset, width, height)
+    local function d(x, y, ent_id, relative_to_screen)
+        Sprites_draw_spr(sprite, x, y + yoffset, width, height, false, relative_to_screen)
     end
 
     Attr_DrawFn[ent_id] = d

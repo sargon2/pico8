@@ -8,8 +8,9 @@
 --[[const]] Entities_Trees = 8
 --[[const]] Entities_YoungTrees = 9
 --[[const]] Entities_Wire = 10
+--[[const]] Entities_Money = 11
 
-Entities_current_entity_id = 11
+Entities_current_entity_id = 12
 
 function Entities_create_entity()
     -- returns an integer id
