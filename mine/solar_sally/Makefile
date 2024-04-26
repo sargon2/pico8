@@ -32,6 +32,10 @@ counts: output/solar_sally.p8.png
 run-windows:
 	cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -run root/mine/solar_sally/output/solar_sally.p8.png
 
+.PHONY: run-windows-nonshrunk
+run-windows-nonshrunk:
+	cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -run root/mine/solar_sally/solar_sally.p8
+
 .PHONY: copy-to-windows
 copy-to-windows: output/solar_sally.p8.png
 	cd ../.. && ./push-to-windows.sh
