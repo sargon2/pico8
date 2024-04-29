@@ -122,3 +122,13 @@ function Sprites_rect(x,y,xmin,ymin,xmax,ymax,c) -- TODO where should this live?
         c
     )
 end
+
+function Sprites_print_text(text, colour, x, y, xoffset, yoffset, relative_to_screen)
+    if(colour) color(colour)
+    if not relative_to_screen then
+        x, y = Sprites_convert_map_to_screen(x, y)
+    end
+    if(not xoffset) xoffset = 0
+    if(not yoffset) yoffset = 0
+    print(text, x*8+xoffset, y*8+yoffset)
+end

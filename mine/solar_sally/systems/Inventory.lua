@@ -86,10 +86,6 @@ function draw_window(x, y, width, height) -- TODO where should this live?
     _draw_spr(Sprite_id_window_br, x+width-1, y+height-1)
 end
 
-function print_text(text, x, y, xoffset, yoffset) -- TODO where should this live?
-    print(text, x*8+xoffset, y*8+yoffset)
-end
-
 function Inventory.draw()
     --[[const]] local window_left = 0
     --[[const]] local window_top = 13
@@ -101,10 +97,9 @@ function Inventory.draw()
     for ent_id in all(Inventory.order) do
         local count = Inventory.items[ent_id]
         Attr_DrawFn[ent_id](window_left+1+col*3, window_top+1+row, ent_id, true)
-        color(4)
         local fn = Inventory.stringFormatters[ent_id]
         if(fn) count = fn(count)
-        print_text(count, window_left+2+col*3, window_top+1+row, 2, 2)
+        Sprites_print_text(count, 4, window_left+2+col*3, window_top+1+row, 2, 2, true)
         col += 1
         if ent_id == Entities_Money then -- TODO hack
             col += 1
