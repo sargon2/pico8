@@ -1,25 +1,44 @@
 fadetoblack = {
     name = "fadetoblack",
-    fade_state = 0, -- 0=no fade in progress, 1=fading out, -1=fading in
-    current_fade_level = 0
 }
 
-function fadetoblack.start_fade()
-    fadetoblack.fade_state = 1
+-- TODO is any of this needed outside of the coroutine functions?
+local fadetoblack_fade_state = 0 -- 0=no fade in progress, 1=fading out, -1=fading in
+local fadetoblack_current_fade_level = 0
+
+function fadetoblack_start_fade()
+    fadetoblack_fade_state = 1
 end
 
-function fadetoblack.start_fade_in()
-    fadetoblack.fade_state = -1
+function fadetoblack_start_fade_in()
+    fadetoblack_fade_state = -1
 end
 
 function fadetoblack.update()
-    if fadetoblack.fade_state != 0 then
-        fadetoblack.current_fade_level += fadetoblack.fade_state
-        if fadetoblack.current_fade_level > 0 and fadetoblack.current_fade_level <= 24 then
-            fade(fadetoblack.current_fade_level)
+    if fadetoblack_fade_state != 0 then
+        fadetoblack_current_fade_level += fadetoblack_fade_state
+        if fadetoblack_current_fade_level > 0 and fadetoblack_current_fade_level <= 24 then
+            fade(fadetoblack_current_fade_level)
         else
-            fadetoblack.fade_state = 0
+            fadetoblack_fade_state = 0
         end
+    end
+end
+
+-- Functions suitable for use as coroutines
+function fadetoblack_fade_co()
+    local f = 0
+    for f=1,24 do
+        fade(f)
+        yield()
+    end
+end
+
+function fadetoblack_fadein_co()
+    local f = 0
+    for f=24,1,-1 do
+        fade(f)
+        yield()
     end
 end
 

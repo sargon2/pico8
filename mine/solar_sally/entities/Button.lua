@@ -22,7 +22,17 @@ end
 
 function Button.press()
     Button.is_being_pressed = true
-    PanelCalculator.add_panel_8h(3) -- 3*8 = 24, so one day
+
+    -- TODO disable all controller input
+    CoroutineRunner_StartScript(function ()
+        fadetoblack_fade_co()
+        PanelCalculator.add_panel_8h(3) -- 3*8 = 24, so one day
+        -- Wait some frames
+        for i=1,50 do
+            yield()
+        end
+        fadetoblack_fadein_co()
+    end)
 end
 
 function Button.release()

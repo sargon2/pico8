@@ -13,6 +13,7 @@ __lua__
 #include components/Attributes.lua
 #include systems/PerfTimer.lua
 #include systems/FrameTimer.lua
+#include systems/CoroutineRunner.lua
 #include systems/Placement.lua
 #include systems/World.lua
 #include systems/Map.lua
