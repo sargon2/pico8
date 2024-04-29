@@ -23,17 +23,31 @@ end
 function Button.press()
     Button.is_being_pressed = true
 
-    CoroutineRunner_StartScript(function ()
+    CoroutineRunner_StartScript(function()
         Input_AllInputDisabled = true
         fadetoblack_fade_co()
-        PanelCalculator.add_panel_8h(3) -- 3*8 = 24, so one day
-        -- Wait some frames
-        for i=1,50 do
-            yield()
-        end
+
+        unload_system(Map)
+        unload_system(World)
+        unload_system(Placement)
+
+        load_system(IndoorWorld)
+
         fadetoblack_fadein_co()
         Input_AllInputDisabled = false
     end)
+
+    -- CoroutineRunner_StartScript(function ()
+    --     Input_AllInputDisabled = true
+    --     fadetoblack_fade_co()
+    --     PanelCalculator.add_panel_8h(3) -- 3*8 = 24, so one day
+    --     -- Wait some frames
+    --     for i=1,50 do
+    --         yield()
+    --     end
+    --     fadetoblack_fadein_co()
+    --     Input_AllInputDisabled = false
+    -- end)
 end
 
 function Button.release()

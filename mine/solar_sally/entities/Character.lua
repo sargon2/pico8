@@ -17,11 +17,11 @@ function Character.update(elapsed)
     Character.handle_player_movement(elapsed)
 end
 
-function Character.drawChar()
+function Character.drawChar(x, y, ent_id, relative_to_screen)
     local f=Character.anim_frames[
         1+(flr(Character.frame) % #Character.anim_frames)
     ]
-    spr(f,64,64,1,1,Character.flip_x)
+    Sprites_draw_spr(f, x, y, 1, 1, Character.flip_x, relative_to_screen)
 end
 
 function Character.handle_player_movement(elapsed)

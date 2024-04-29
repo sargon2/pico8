@@ -20,6 +20,17 @@ function system_is_loaded(s)
     return contains(solar_sally.systems, s)
 end
 
+function unload_system(s)
+    del(solar_sally.systems, s)
+end
+
+function load_system(s) -- Careful! Order matters
+    add(solar_sally.systems, s)
+    if s.init then
+        s.init()
+    end
+end
+
 function _init()
     --srand(12345)
 

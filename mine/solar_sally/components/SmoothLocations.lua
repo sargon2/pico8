@@ -54,11 +54,16 @@ function SmoothLocations_move_by_if_not_obstructed(ent_id, x, y, dist)
     x, y = normalize(x, y, dist)
     local new_x, new_y = SmoothLocations_get_location(ent_id)
 
-    -- We have to move x and y separately to allow sliding along an obstruction
-    if not World.is_obstructed(new_x + x, new_y) then
+    if system_is_loaded(World) then
+        -- We have to move x and y separately to allow sliding along an obstruction
+        if not World.is_obstructed(new_x + x, new_y) then
+            new_x += x
+        end
+        if not World.is_obstructed(new_x, new_y + y) then
+            new_y += y
+        end
+    else
         new_x += x
-    end
-    if not World.is_obstructed(new_x, new_y + y) then
         new_y += y
     end
     SmoothLocations_set_or_update_location(ent_id, new_x, new_y)

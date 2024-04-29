@@ -2,6 +2,8 @@ Map = {
     name = "Map",
 }
 
+-- TODO merge this class into World
+
 function Map.draw()
     local char_x, char_y = SmoothLocations_get_location(Entities_Character) -- TODO pass character location around instead of getting it globally all over the place?
     -- The pico8 map only contains grass, and only in the top left 17x17 square.
