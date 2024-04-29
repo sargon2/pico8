@@ -67,49 +67,16 @@ function Character.handle_player_movement(elapsed)
     Character.is_moving = is_moving
 
     -- Process player movement
-
-    local max_sel_range=2 -- TODO move these things to settings
-    local sel_speed = 12
-
-    -- Is it the first movement frame?
-    if is_first_movement_frame then
-        -- If it's the first movement frame, we want to kickstart the movement, but not too far so we don't jump twice.
-        -- This is so a single-frame tap will always move the selection box, for responsiveness.
-        x=x/2
-        y=y/2
-    else
-        -- Then for subsequent frames, we normalize the movement speed to the frame rate.
-        x, y = normalize(x, y, sel_speed*elapsed)
+    if system_is_loaded(Placement) then
+        x, y = Placement_handle_character_movement(is_first_movement_frame, elapsed, x, y)
     end
-    Placement.sel_x_p += x
-    Placement.sel_y_p += y
 
-    -- If we're at the max selection range, move the character
-    local char_x, char_y = SmoothLocations_get_location(Entities_Character)
-    local char_new_x = 0
-    local char_new_y = 0
-    if Placement.sel_x_p > char_x + max_sel_range + .5 then
-        char_new_x = 1
-        Placement.sel_x_p = char_x + max_sel_range + .5
-    elseif Placement.sel_x_p < char_x - max_sel_range + .5 then
-        char_new_x = -1
-        Placement.sel_x_p = char_x - max_sel_range + .5
-    end
-    if Placement.sel_y_p > char_y + max_sel_range + .5 then
-        char_new_y = 1
-        Placement.sel_y_p = char_y + max_sel_range + .5
-    elseif Placement.sel_y_p < char_y - max_sel_range + .5 then
-        char_new_y = -1
-        Placement.sel_y_p = char_y - max_sel_range + .5
-    end
-    Placement.sel_x = flr(Placement.sel_x_p)
-    Placement.sel_y = flr(Placement.sel_y_p)
-    SmoothLocations_move_by_if_not_obstructed(Entities_Character, char_new_x, char_new_y, Character.speed*elapsed) -- TODO let the player walk a bit vertically into the next tile
+    SmoothLocations_move_by_if_not_obstructed(Entities_Character, x, y, Character.speed*elapsed)
+
     -- Animate walking
-    if char_new_x!=0 or char_new_y!=0 then
+    if x!=0 or y!=0 then
         Character.frame += Character.anim_speed*elapsed
     else
         Character.frame = 0.99 -- Very close to the next frame to increase responsivenes
     end
 end
-

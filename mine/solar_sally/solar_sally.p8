@@ -22,6 +22,7 @@ __lua__
 #include systems/Circuits.lua
 #include systems/Inventory.lua
 #include systems/fadetoblack.lua
+#include systems/NewThing.lua
 #include entities/Character.lua
 #include entities/Panels.lua
 #include entities/Rocks.lua

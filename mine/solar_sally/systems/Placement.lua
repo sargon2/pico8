@@ -207,3 +207,46 @@ function Placement.determine_action_and_sprite(entity_at_sel)
     -- No valid action was found.
     return "no_action", nil, Sprite_id_no_action
 end
+
+function Placement_handle_character_movement(is_first_movement_frame, elapsed, x, y) -- TODO this function has side effects
+    local max_sel_range=2 -- TODO move these things to settings
+    local sel_speed = 12
+
+    -- Is it the first movement frame?
+    if is_first_movement_frame then
+        -- If it's the first movement frame, we want to kickstart the movement, but not too far so we don't jump twice.
+        -- This is so a single-frame tap will always move the selection box, for responsiveness.
+        x=x/2
+        y=y/2
+    else
+        -- Then for subsequent frames, we normalize the movement speed to the frame rate.
+        x, y = normalize(x, y, sel_speed*elapsed)
+    end
+
+    local char_x, char_y = SmoothLocations_get_location(Entities_Character)
+
+    -- If we're at the max selection range, move the character
+    Placement.sel_x_p += x
+    Placement.sel_y_p += y
+
+    local char_new_x = 0
+    local char_new_y = 0
+    if Placement.sel_x_p > char_x + max_sel_range + .5 then
+        char_new_x = 1
+        Placement.sel_x_p = char_x + max_sel_range + .5
+    elseif Placement.sel_x_p < char_x - max_sel_range + .5 then
+        char_new_x = -1
+        Placement.sel_x_p = char_x - max_sel_range + .5
+    end
+    if Placement.sel_y_p > char_y + max_sel_range + .5 then
+        char_new_y = 1
+        Placement.sel_y_p = char_y + max_sel_range + .5
+    elseif Placement.sel_y_p < char_y - max_sel_range + .5 then
+        char_new_y = -1
+        Placement.sel_y_p = char_y - max_sel_range + .5
+    end
+    Placement.sel_x = flr(Placement.sel_x_p)
+    Placement.sel_y = flr(Placement.sel_y_p)
+
+    return char_new_x, char_new_y
+end

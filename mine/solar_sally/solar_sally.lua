@@ -15,6 +15,11 @@ solar_sally = {
     systems = {Rocks, Trees, Panels, Wire, GridWire, Transformers, Button, Map, World, Cows, Placement, Character, PanelCalculator, Inventory, fadetoblack, CoroutineRunner}
 }
 
+function system_is_loaded(s)
+    -- TODO should we cache a boolean table to speed this up?
+    return contains(solar_sally.systems, s)
+end
+
 function _init()
     --srand(12345)
 
