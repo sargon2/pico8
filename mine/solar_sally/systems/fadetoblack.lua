@@ -26,6 +26,14 @@ function fadetoblack.update()
 end
 
 -- Functions suitable for use as coroutines
+function fadeAndDisableInputForCo(fn)
+    CoroutineRunner_StartScript(function ()
+        fadetoblack_fade_co()
+        disableInputFor(fn)
+        fadetoblack_fadein_co()
+    end)
+end
+
 function fadetoblack_fade_co()
     local f = 0
     for f=1,24 do

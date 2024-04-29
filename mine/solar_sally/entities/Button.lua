@@ -37,30 +37,20 @@ function Button.draw_button(x, y, ent_id)
 end
 
 function Button.pressGoInside()
-    CoroutineRunner_StartScript(function()
-        Input_AllInputDisabled = true
-        fadetoblack_fade_co()
-
+    fadeAndDisableInputForCo(function () 
         unload_system(Placement)
         unload_system(World)
 
         load_system(IndoorWorld)
-
-        fadetoblack_fadein_co()
-        Input_AllInputDisabled = false
     end)
 end
 
 function Button.pressAdvanceTime()
-    CoroutineRunner_StartScript(function ()
-        Input_AllInputDisabled = true
-        fadetoblack_fade_co()
+    fadeAndDisableInputForCo(function () 
         PanelCalculator.add_panel_8h(3) -- 3*8 = 24, so one day
         -- Wait some frames
         for i=1,50 do
             yield()
         end
-        fadetoblack_fadein_co()
-        Input_AllInputDisabled = false
     end)
 end
