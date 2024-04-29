@@ -5,17 +5,33 @@ Inventory = {
     stringFormatters = {} -- stringFormatters[ent_id] = fn(text)
 }
 
+function _money_format(m)
+    -- Include everything up to the decimal, then stuff after the decimal until we fill to n digits
+    local ret = "$"
+    local after_decimal = false
+    m = full_tostr(m)
+    for c in all(m) do
+        if c == '.' then
+            after_decimal = true
+        end
+        ret ..= c
+        if after_decimal and #ret >= 9 then
+            break
+        end
+    end
+    return ret
+end
+
 function Inventory.init()
     -- Since we haven't implemented buying yet, just start with some core components.
     -- Order here is display order
     Sprites_add(Entities_Money, Sprite_id_money)
-    Inventory.addStringFormatter(Entities_Money, function (t) return "$"..full_tostr(t) end)
+    Inventory.addStringFormatter(Entities_Money, _money_format)
     Inventory.add(Entities_Money, 0)
 
     Inventory.add(Entities_Panels, Settings_start_panels)
     Inventory.add(Entities_Transformers_left, Settings_start_transformers)
     Inventory.add(Entities_Wire, Settings_start_wire) -- TODO should wire be infinite?
-
 end
 
 function Inventory.add(ent_id, num)
@@ -75,18 +91,23 @@ function print_text(text, x, y, xoffset, yoffset) -- TODO where should this live
 end
 
 function Inventory.draw()
-    -- TODO ui paper prototyping to tell where this window should go
-    --[[const]] local window_left = 10
-    --[[const]] local window_top = 3
-    draw_window(window_left, window_top, 6, #Inventory.order + 2)
+    --[[const]] local window_left = 0
+    --[[const]] local window_top = 13
+    --[[const]] local window_height = 3 -- #Inventory.order + 2
+    --[[const]] local window_width = 16
+    draw_window(window_left, window_top, window_width, window_height)
+    local col = 0
     local row = 0
     for ent_id in all(Inventory.order) do
         local count = Inventory.items[ent_id]
-        Attr_DrawFn[ent_id](window_left+1, 4+row, ent_id, true)
+        Attr_DrawFn[ent_id](window_left+1+col*3, window_top+1+row, ent_id, true)
         color(4)
         local fn = Inventory.stringFormatters[ent_id]
         if(fn) count = fn(count)
-        print_text(count, window_left+2, 4+row, 2, 2)
-        row += 1
+        print_text(count, window_left+2+col*3, window_top+1+row, 2, 2)
+        col += 1
+        if ent_id == Entities_Money then -- TODO hack
+            col += 1
+        end
     end
 end
