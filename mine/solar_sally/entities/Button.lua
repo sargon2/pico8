@@ -23,8 +23,8 @@ end
 function Button.press()
     Button.is_being_pressed = true
 
-    -- TODO disable all controller input
     CoroutineRunner_StartScript(function ()
+        Input_AllInputDisabled = true
         fadetoblack_fade_co()
         PanelCalculator.add_panel_8h(3) -- 3*8 = 24, so one day
         -- Wait some frames
@@ -32,6 +32,7 @@ function Button.press()
             yield()
         end
         fadetoblack_fadein_co()
+        Input_AllInputDisabled = false
     end)
 end
 

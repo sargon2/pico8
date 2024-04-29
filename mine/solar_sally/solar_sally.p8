@@ -11,6 +11,7 @@ __lua__
 #include components/Locations.lua
 #include components/SmoothLocations.lua
 #include components/Attributes.lua
+#include systems/Input.lua
 #include systems/PerfTimer.lua
 #include systems/FrameTimer.lua
 #include systems/CoroutineRunner.lua

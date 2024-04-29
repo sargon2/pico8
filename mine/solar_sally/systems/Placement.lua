@@ -106,7 +106,7 @@ function Placement.place(ent_id, x, y)
 end
 
 function Placement.handle_selection_and_placement()
-    if btnp(🅾️) then
+    if my_btnp(🅾️) then
         Placement.rotate_with_inventory_check()
     end
 
@@ -115,7 +115,7 @@ function Placement.handle_selection_and_placement()
     local action, action_ent, sprite = Placement.determine_action_and_sprite(entity_at_sel)
     Placement.sel_sprite = sprite
 
-    if btn(❎) then
+    if my_btn(❎) then
         if action == "no_action" then -- TODO passing around these strings as enums is weird
             -- pass
             if type(Placement.is_acting) == "number" then

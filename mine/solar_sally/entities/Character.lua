@@ -30,31 +30,31 @@ function Character.handle_player_movement(elapsed)
     local x=0
     local y=0
     local is_moving = false
-    if btn(⬅️) then
+    if my_btn(⬅️) then
         Character.flip_x=true
         Character.anim_frames={1,2}
         x=-1
         is_moving = true
     end
-    if btn(➡️) then
+    if my_btn(➡️) then
         Character.anim_frames={1,2}
         Character.flip_x=false
         x=1
         is_moving = true
     end
-    if btn(⬆️) then
+    if my_btn(⬆️) then
         Character.anim_frames={3,4}
         y=-1
         is_moving = true
-        if btn(⬅️) or btn(➡️) then
+        if my_btn(⬅️) or my_btn(➡️) then
             Character.anim_frames={9,10}
         end
     end
-    if btn(⬇️) then
+    if my_btn(⬇️) then
         Character.anim_frames={7,8}
         y=1
         is_moving = true
-        if btn(⬅️) or btn(➡️) then
+        if my_btn(⬅️) or my_btn(➡️) then
             Character.anim_frames={5,6}
         end
     end
