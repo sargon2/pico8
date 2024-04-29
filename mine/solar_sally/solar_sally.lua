@@ -23,8 +23,6 @@ function _init()
             system.init()
         end
     end
-
-    Circuits.recalculate() -- TODO remove
 end
 
 function _draw()

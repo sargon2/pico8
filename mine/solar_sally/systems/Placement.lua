@@ -81,7 +81,7 @@ function Placement.remove(ent_id, x, y)
     Placement.is_removing = ent_id
     Placement.place_ent_id = ent_id
 
-    Circuits.recalculate() -- TODO this probably shouldn't live here
+    Circuits_recalculate() -- TODO this probably shouldn't live here
     Inventory.add(ent_id)
 end
 
@@ -98,7 +98,7 @@ function Placement.place(ent_id, x, y)
         Locations_place_entity(ent_id, x, y)
     end
 
-    Circuits.recalculate() -- TODO this probably shouldn't live here
+    Circuits_recalculate() -- TODO this probably shouldn't live here
     if Inventory.get(ent_id) == 0 then
         -- That was our last one, rotate off it
         Placement.rotate_with_inventory_check()

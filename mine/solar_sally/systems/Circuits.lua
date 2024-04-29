@@ -2,7 +2,7 @@ Circuits = {
     name = "Circuits",
 }
 
-function Circuits.recalculate()
+function Circuits_recalculate()
     -- Panels provide power so really anything hooked up to a panel & wire should be powered, but
     -- for the purposes of determining if a panel is "powered" (that is, generating to the grid)
     -- it needs to be on a circuit that contains at least one transformer which is plugged into the central grid.
@@ -20,16 +20,16 @@ function Circuits.recalculate()
     -- 1. (later) Sally's house should be connected to "the grid"
     -- 1. implement above phases
 
-    PerfTimer.time("Circuits.recalculate() (only when editing)", function()
-        local grid_components, components = Circuits.get_connected_components()
+    PerfTimer.time("Circuits_recalculate() (only when editing)", function()
+        local grid_components, components = Circuits_get_connected_components()
 
-        Circuits.mark_powered_transformers(grid_components) 
+        Circuits_mark_powered_transformers(grid_components) 
 
-        Circuits.mark_powered_panels(components)
+        Circuits_mark_powered_panels(components)
     end)
 end
 
-function Circuits.mark_powered_panels(components)
+function Circuits_mark_powered_panels(components)
     Panels.clear_powered()
 
     local total_powered_panels = 0
@@ -104,7 +104,7 @@ function Circuits.mark_powered_panels(components)
     PanelCalculator.set_powered_panel_count(total_powered_panels)
 end
 
-function Circuits.mark_powered_transformers(grid_components)
+function Circuits_mark_powered_transformers(grid_components)
     Transformers.clear_powered()
 
     for component in all(grid_components) do
@@ -125,7 +125,7 @@ function Circuits.mark_powered_transformers(grid_components)
     end
 end
 
-function Circuits.get_connected_components()
+function Circuits_get_connected_components()
     -- both of these are components[ent_id][x] = {y1, y2, ...}
     local grid_components = {}
     local components = {}
