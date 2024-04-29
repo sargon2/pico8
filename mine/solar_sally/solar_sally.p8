@@ -17,7 +17,6 @@ __lua__
 #include systems/CoroutineRunner.lua
 #include systems/Placement.lua
 #include systems/World.lua
-#include systems/Map.lua
 #include systems/PanelCalculator.lua
 #include systems/Circuits.lua
 #include systems/Inventory.lua

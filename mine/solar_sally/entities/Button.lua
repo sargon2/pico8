@@ -27,9 +27,8 @@ function Button.press()
         Input_AllInputDisabled = true
         fadetoblack_fade_co()
 
-        unload_system(Map)
-        unload_system(World)
         unload_system(Placement)
+        unload_system(World)
 
         load_system(IndoorWorld)
 
