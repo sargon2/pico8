@@ -20,7 +20,6 @@ Placement = {
 function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
     Placement.placeable_entities = {Entities_Panels, Entities_Wire, Entities_Transformers_left}
-    Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
 end
 
 function Placement.update(elapsed)

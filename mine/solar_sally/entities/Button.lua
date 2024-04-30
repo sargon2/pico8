@@ -24,26 +24,13 @@ function Button_create_button(label, x, y, press_fn, release_fn, ...)
 end
 
 function Button.init()
-    local btn_row = -1
-    Button_create_button("buy 1 transformer for $1000", -5, btn_row, Button.pressBuy, nil, Entities_Transformers_left, 1000, 1)
-    btn_row += 1
-    Button_create_button("buy 10 wire for $1 ea", -5, btn_row, Button.pressBuy, nil, Entities_Wire, 1, 10)
-    btn_row += 1
-    Button_create_button("buy 1 panel for $50", -5, btn_row, Button.pressBuy, nil, Entities_Panels, 50, 1)
-    btn_row += 1
-    Button_create_button("50y", -5, btn_row, Button.pressAdvanceTimeYears, nil, 50)
-    btn_row += 1
-    Button_create_button("10y", -5, btn_row, Button.pressAdvanceTimeYears, nil, 10)
-    btn_row += 1
-    Button_create_button("1y", -5, btn_row, Button.pressAdvanceTimeYears, nil, 1)
-    btn_row += 1
-    Button_create_button("31d", -5, btn_row, Button.pressAdvanceTimeDays, nil, 31)
-    btn_row += 1
-    Button_create_button("7d", -5, btn_row, Button.pressAdvanceTimeDays, nil, 7)
-    btn_row += 1
-    Button_create_button("24h", -5, btn_row, Button.pressAdvanceTimeDays, nil, 1)
-    btn_row += 1
-    Button_create_button("go inside", -5, btn_row, Button.pressGoInside)
+    Button_create_button("buy 1 transformer for $1000", -5, 3, Button.pressBuy, nil, Entities_Transformers_left, 1000, 1)
+    Button_create_button("buy 10 wire for $1 ea", -5, 4, Button.pressBuy, nil, Entities_Wire, 1, 10)
+    Button_create_button("buy 10 panels for $500", -5, 5, Button.pressBuy, nil, Entities_Panels, 50, 10)
+    Button_create_button("buy 1 panel for $50", -5, 6, Button.pressBuy, nil, Entities_Panels, 50, 1)
+    Button_create_button("24h", -5, 0, Button.pressAdvanceTimeDays, nil, 1)
+    Button_create_button("go inside", -5, 1, Button.pressGoInside)
+    Button_create_button("unlock basement for $2", -5, 2, Button.pressUnlockBasement)
 end
 
 function Button.draw_button(x, y, ent_id)
@@ -94,4 +81,14 @@ function Button.pressAdvanceTimeYears(y)
             yield()
         end
     end)
+end
+
+function Button.pressUnlockBasement()
+    if(Inventory.get(Entities_Money) < 2) return -- can't afford -- TODO make key cost a setting
+    Inventory.add(Entities_Money, -2)
+    -- Button_create_button("50y", -5, 7, Button.pressAdvanceTimeYears, nil, 50)
+    -- Button_create_button("10y", -5, 8, Button.pressAdvanceTimeYears, nil, 10)
+    -- Button_create_button("1y", -5, 9, Button.pressAdvanceTimeYears, nil, 1)
+    Button_create_button("30d", -5, 10, Button.pressAdvanceTimeDays, nil, 30)
+    -- Button_create_button("7d", -5, 11, Button.pressAdvanceTimeDays, nil, 7)
 end
