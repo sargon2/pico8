@@ -3,7 +3,8 @@ Button = {
     labels = {}
 }
 
-function Button_create_button(label, x, y, press_fn, release_fn, press_arg)
+function Button_create_button(label, x, y, press_fn, release_fn, ...)
+    local args = {...}
     local ent_id = Entities_create_entity()
     Button.labels[ent_id] = label
 
@@ -12,7 +13,7 @@ function Button_create_button(label, x, y, press_fn, release_fn, press_arg)
     Attr_action_sprite[ent_id] = Sprite_id_button_mini
     Attr_action_fn[ent_id] = function ()
         Button.is_being_pressed = ent_id
-        if(press_fn) press_fn(press_arg)
+        if(press_fn) press_fn(unpack(args))
     end
     Attr_action_release_fn[ent_id] = function ()
         Button.is_being_pressed = nil
@@ -24,6 +25,12 @@ end
 
 function Button.init()
     local btn_row = -1
+    Button_create_button("buy 1 transformer for $1000", -5, btn_row, Button.pressBuy, nil, Entities_Transformers_left, 1000, 1)
+    btn_row += 1
+    Button_create_button("buy 10 wire for $1 ea", -5, btn_row, Button.pressBuy, nil, Entities_Wire, 1, 10)
+    btn_row += 1
+    Button_create_button("buy 1 panel for $50", -5, btn_row, Button.pressBuy, nil, Entities_Panels, 50, 1)
+    btn_row += 1
     Button_create_button("50y", -5, btn_row, Button.pressAdvanceTimeYears, nil, 50)
     btn_row += 1
     Button_create_button("10y", -5, btn_row, Button.pressAdvanceTimeYears, nil, 10)
@@ -46,6 +53,16 @@ function Button.draw_button(x, y, ent_id)
         Sprites_draw_spr(Sprite_id_button, x, y)
     end
     Sprites_print_text(Button.labels[ent_id], 1, x+1, y, 2, 2, false)
+end
+
+function _buy(buy_ent, price, qty)
+    if(Inventory.get(Entities_Money) < price * qty) return -- can't afford
+    Inventory.add(buy_ent, qty)
+    Inventory.add(Entities_Money, -(price * qty))
+end
+
+function Button.pressBuy(buy_ent, price, qty)
+    _buy(buy_ent, price, qty)
 end
 
 function Button.pressGoInside()

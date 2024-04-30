@@ -27,7 +27,7 @@ function Inventory.init()
     -- Order here is display order
     Sprites_add(Entities_Money, Sprite_id_money)
     Inventory.addStringFormatter(Entities_Money, _money_format)
-    Inventory.add(Entities_Money, 0)
+    Inventory.add(Entities_Money, Settings_start_money)
 
     Inventory.add(Entities_Panels, Settings_start_panels)
     Inventory.add(Entities_Transformers_left, Settings_start_transformers)
