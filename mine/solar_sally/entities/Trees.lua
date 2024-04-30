@@ -28,6 +28,7 @@ function Trees.init()
 end
 
 function Trees.update()
+    -- TODO this function is quite slow for moving large time periods. I guess we need a table of all trees?
     local rnd_x = flr(rnd(100))-50 -- note same as placement formula
     local rnd_y = flr(rnd(100))-50
     local ent_id = Locations_entity_at(rnd_x, rnd_y)
@@ -51,6 +52,25 @@ function Trees.update()
         -- Sometimes old trees die
         if rnd(100) < 46 then
             Locations_place_entity(nil, rnd_x, rnd_y)
+        end
+    end
+end
+
+function Trees_advanceTimeDays(d)
+    for i=1,d do
+        -- tree updating is weird -- to get the player to see trees changing, we update quite
+        -- fast when the player is in real-time, but when we're timeskipping we don't update
+        -- as much as we should in relation.
+        for j=1,100 do
+            Trees.update()
+        end
+    end
+end
+
+function Trees_advanceTimeYears(y)
+    for i=1,y do
+        for j=1,100 do
+            Trees_advanceTimeDays(1)
         end
     end
 end

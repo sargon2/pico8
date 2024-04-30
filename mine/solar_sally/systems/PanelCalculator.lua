@@ -21,6 +21,18 @@ function PanelCalculator.add_panel_seconds(num_seconds)
     )
 end
 
+function PanelCalculator.add_panel_years(y)
+    for i=1,y do
+        PanelCalculator.add_panel_days(365)
+    end
+    -- Deal with leap years
+    PanelCalculator.add_panel_seconds(20926.08) -- .2422 days is 20926.08 seconds
+end
+
+function PanelCalculator.add_panel_days(d)
+    PanelCalculator.add_panel_8h(d*3)
+end
+
 function PanelCalculator.add_panel_8h(n) -- Add n 8-hour increments
     -- 28800*h may not fit inside a pico-8 number, so we must repeat.
     for i=1,n do
