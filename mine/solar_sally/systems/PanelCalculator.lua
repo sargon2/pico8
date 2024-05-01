@@ -16,7 +16,7 @@ end
 
 function PanelCalculator.add_panel_seconds(num_seconds)
     -- The smallest unit of time we can advance is 1 second, and the smallest amount we can add to earned is 1 >> 16.
-    Inventory.add(Entities_Money,
+    Inventory_addMoney(
         ((1 >> 16) * num_seconds) * PanelCalculator.powered_panel_count
     )
 end

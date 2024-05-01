@@ -43,9 +43,9 @@ function Button.draw_button(x, y, ent_id)
 end
 
 function _buy(buy_ent, price, qty)
-    if(Inventory.get(Entities_Money) < price * qty) return -- can't afford
+    if(not Inventory_canAfford(price * qty)) return
     Inventory.add(buy_ent, qty)
-    Inventory.add(Entities_Money, -(price * qty))
+    Inventory_addMoney(-(price * qty))
 end
 
 function Button.pressBuy(buy_ent, price, qty)
@@ -84,8 +84,9 @@ function Button.pressAdvanceTimeYears(y)
 end
 
 function Button.pressUnlockBasement()
-    if(Inventory.get(Entities_Money) < 2) return -- can't afford -- TODO make key cost a setting
-    Inventory.add(Entities_Money, -2)
+    -- TODO make key cost a setting
+    if(not Inventory_canAfford(2)) return
+    Inventory_addMoney(-2)
     -- Button_create_button("50y", -5, 7, Button.pressAdvanceTimeYears, nil, 50)
     -- Button_create_button("10y", -5, 8, Button.pressAdvanceTimeYears, nil, 10)
     -- Button_create_button("1y", -5, 9, Button.pressAdvanceTimeYears, nil, 1)
