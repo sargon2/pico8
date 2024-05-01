@@ -40,3 +40,11 @@ function twonum:add(n)
     self.small_val += n
     self:_carry()
 end
+
+function twonum:cmp(n)
+    -- Returns -1 if we're bigger, 0 if we're equal, and 1 if n is bigger.
+    if(self.big_val > 0) return -1
+    if(self.small_val > n) return -1
+    if(self.small_val < n) return 1
+    return 0
+end

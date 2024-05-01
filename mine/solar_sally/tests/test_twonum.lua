@@ -52,4 +52,23 @@ function twonum_tests.test_really_big()
     assert.equals("327679999.9999847412109375", num:tostr())
 end
 
+function twonum_tests.test_cmp()
+    assert.equals(0, NewObj(twonum, 0):cmp(0))
+    assert.equals(-1, NewObj(twonum, 0):cmp(-1))
+    assert.equals(-1, NewObj(twonum, 50):cmp(49))
+    assert.equals(1, NewObj(twonum, 49):cmp(50))
+    assert.equals(-1, NewObj(twonum, 0):cmp(-32768))
+
+    local num = NewObj(twonum, 0)
+    for i=1,100 do
+        num:add(10000)
+    end
+
+    assert.equals(-1, num:cmp(0))
+    assert.equals(-1, num:cmp(1))
+    assert.equals(-1, num:cmp(0b111111111111111.1111111111111111))
+    assert.equals(-1, num:cmp(-1))
+    assert.equals(-1, num:cmp(-32768))
+end
+
 runTests("twonum tests", twonum_tests)
