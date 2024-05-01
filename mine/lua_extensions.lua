@@ -73,12 +73,12 @@ function swap(arr, i, j)
 end
 
 -- This allows us to deduplicate constructor functions for simulated objects.
-function NewObj(type)
+function NewObj(type, ...)
     local o = {}
     setmetatable(o, type)
     type.__index = type
 
-    if(o.construct) o:construct()
+    if(o.construct) o:construct(...)
 
     return o
 end
@@ -107,7 +107,13 @@ end
 
 -- Converts the given number to a string without truncating or rounding.
 function full_tostr(n)
-    local ret = tostr(flr(n))
+    local ret = ""
+    if n < 0 then
+        ret ..= "-"
+        n = -n
+        if(n < 0) ret = "" -- Overflow
+    end
+    ret ..= tostr(flr(n))
     n -= flr(n)
     if n != 0 then
         ret ..= "."

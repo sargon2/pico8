@@ -6,9 +6,11 @@ __lua__
 #include tests/asserts.lua
 #include tests/test_framework.lua
 #include types/bignum.lua
+#include types/twonum.lua
 #include tests/test_bignum.lua
 #include tests/test_lua_extensions.lua
 #include tests/test_PanelCalculator.lua
+#include tests/test_twonum.lua
 reportResults() -- Defined by test_framework, must be after all test executions
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
