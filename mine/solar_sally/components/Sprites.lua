@@ -34,6 +34,13 @@ Sprites = {}
 --[[const]] Sprite_id_window_b = 46
 --[[const]] Sprite_id_window_br = 47
 --[[const]] Sprite_id_money = 55
+--[[const]] Sprite_id_axe_swing_right_1 = 11
+--[[const]] Sprite_id_axe_swing_right_2 = 12
+
+Sprites_offsets = {
+    [Sprite_id_axe_swing_right_1] = {3, 2},
+    [Sprite_id_axe_swing_right_2] = {3, 3},
+}
 
 function Sprites_add(ent_id, sprite, width, height, yoffset)
     -- Sprite just forwards to the DrawFn attribute
@@ -66,6 +73,8 @@ function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
     x = round_to_nearest_pixel(x)
     y = round_to_nearest_pixel(y)
 
+    local xoffset, yoffset = 0, 0
+
     if(not width) width = 1
     if(not height) height = 1
     -- s = Sprites[s]
@@ -78,11 +87,14 @@ function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
         -- flag 1 means "use white as transparent"
         palt(0b0000000100000000)
         changed_transparency = true
+    elseif fget(s, 2) then
+        -- flag 2 means "has offset"
+        xoffset, yoffset = unpack(Sprites_offsets[s])
     end
     spr(
         s,
-        x*8,
-        y*8,
+        x*8+xoffset,
+        y*8+yoffset,
         width,
         height,
         flip_x
