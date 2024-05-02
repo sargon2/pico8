@@ -36,8 +36,8 @@ run-windows: copy-to-windows
 run-windows-nonpng: copy-to-windows
 	cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -run root/mine/solar_sally/output/solar_sally.p8
 
-.PHONY: copy-noncode-back
-copy-noncode-back:
+.PHONY: pull-noncode-back
+pull-noncode-back:
 	# Copy everything except code from the output .p8 file to the input .p8 file.
 	# Suitable for use with run-windows-nonpng.
 	cp /mnt/c/Users/dbese/Dropbox/pico8/root/mine/solar_sally/output/solar_sally.p8 output/
