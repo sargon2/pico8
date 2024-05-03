@@ -12,11 +12,9 @@ Placement = { -- TODO convert a lot of these to local globals
     current_action = Actions_no_action,
     current_action_ent = nil,
 
-    -- State related to what we'll place or remove (?) next.
+    -- State related to what we'll place next.
     placeable_entities = nil,
-    placeable_index = 1,
-
-    place_ent_id = nil, -- TODO this guy is weird and probably shouldn't exist
+    placeable_index = nil,
 
     -- Custom functions for Transformer since it's 2 tiles wide
     placement_fns = {},
@@ -27,12 +25,13 @@ Placement = { -- TODO convert a lot of these to local globals
 -- TODO
 -- 1. (Done) Extract strings into Action constants
 -- 2. (Done) Replace is_* with "current_action" and "current_action_ent"
--- 3. Reevaluate place_ent_id
+-- 3. (Done) Reevaluate place_ent_id
 -- 3. Reevaluate function division
 
 function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
     Placement.placeable_entities = {Entities_Panels, Entities_Wire, Entities_Transformers_left}
+    Placement.rotate_with_inventory_check() -- Set the placement icon to "no action" or the first thing, if we have anything
 end
 
 function Placement.update(elapsed)
@@ -97,26 +96,39 @@ function Placement.draw()
     Sprites_draw_spr(Placement.sel_sprite,Placement.sel_x,Placement.sel_y-1)
 end
 
-function Placement._rotate_place_ent_id()
-    Placement.placeable_index %= #Placement.placeable_entities
-    Placement.placeable_index += 1
-
-    Placement.place_ent_id = Placement.placeable_entities[Placement.placeable_index]
+function Placement_get_place_ent_id() -- return what the user would like to place next
+    if(Placement.placeable_index == nil) return nil
+    return Placement.placeable_entities[Placement.placeable_index]
 end
 
 function Placement.rotate_with_inventory_check()
-    local start_index = Placement.placeable_index
-    Placement._rotate_place_ent_id()
+    local start_index
+    if(Placement.placeable_index == nil) Placement.placeable_index = #Placement.placeable_entities -- since it'll get advanced at least once in the loop
 
-    -- Does the player have one to place?
-    while Inventory.get(Placement.place_ent_id) <= 0 do -- TODO do/until
+    repeat
+        -- Advance
+        Placement.placeable_index %= #Placement.placeable_entities
+        Placement.placeable_index += 1
+
+        -- Check for empty inventory
         if Placement.placeable_index == start_index then
-            -- Nothing to place
-            Placement.place_ent_id = nil
+            Placement.placeable_index = nil
             return
         end
-        -- Rotate again
-        Placement._rotate_place_ent_id()
+
+        if(start_index == nil) start_index = Placement.placeable_index -- We want to go one past a full loop so we can end where we started if that's all the player has
+
+    -- Does the player have one to place?
+    until Inventory.get(Placement_get_place_ent_id()) > 0
+end
+
+function Placement_set_place_ent(ent_id)
+    -- Careful! Only call this if you know the user has at least one in their inventory.
+    for i, e in pairs(Placement.placeable_entities) do
+        if ent_id == e then
+            Placement.placeable_index = i
+            return
+        end
     end
 end
 
@@ -132,7 +144,7 @@ function Placement.remove(ent_id, x, y)
     end
     Placement.current_action = Actions_pick_up
     Placement.current_action_ent = ent_id
-    Placement.place_ent_id = ent_id
+    Placement_set_place_ent(ent_id)
 
     Circuits_recalculate() -- TODO this probably shouldn't live here
     Inventory.add(ent_id)
@@ -144,7 +156,6 @@ function Placement.place(ent_id, x, y)
     end
     Placement.current_action = Actions_place
     Placement.current_action_ent = ent_id
-    Placement.place_ent_id = ent_id
     local fn = Placement.placement_fns[ent_id]
     if fn then
         fn(x, y)
@@ -173,23 +184,28 @@ function Placement.determine_action_and_sprite(entity_at_sel)
             if SmoothLocations_is_obstructed(Placement.sel_x, Placement.sel_y) then
                 return Actions_no_action, nil, Sprite_id_no_action
             end
+
+            -- What are we placing?
+
+            local place_ent_id = Placement_get_place_ent_id()
+            if not place_ent_id then
+                -- Nothing to place
+                return Actions_no_action, nil, Sprite_id_no_action
+            end
+
             -- Does the thing we're placing think this location is obstructed?
-            local fn = Placement.obstructed_fns[Placement.place_ent_id]
+            local fn = Placement.obstructed_fns[place_ent_id]
             if fn and fn(Placement.sel_x, Placement.sel_y) then
                 return Actions_no_action, nil, Sprite_id_no_action -- TODO should this be a custom sprite?
             end
             -- We're not removing and we have nothing selected, so we're placing the user's selected item.
-            if not Placement.place_ent_id then
-                -- Nothing to place
-                return Actions_no_action, nil, Sprite_id_no_action
-            end
-            return Actions_place, Placement.place_ent_id, Attr_placement_sprite[Placement.place_ent_id]
+            return Actions_place, place_ent_id, Attr_placement_sprite[place_ent_id]
         end
     end
 
     -- We have something selected
 
-    -- Is it an actionable entity?
+    -- Is it a custom actionable entity?
     if Placement.current_action == Actions_no_action or Placement.current_action == Actions_custom then
         local act_sprite = Attr_action_sprite[entity_at_sel]
         if act_sprite then
