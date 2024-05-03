@@ -41,33 +41,30 @@ function Placement.update(elapsed)
 
     local entity_at_sel = Locations_entity_at(Placement.sel_x, Placement.sel_y) -- may be nil
 
+    -- Determine what possible action we could take
     local action, action_ent, sprite = Placement.determine_action_and_sprite(entity_at_sel)
+    -- Display that action to the user
     Placement.sel_sprite = sprite
 
+    -- Carry out the action
     if my_btn(❎) then
-        if action == Actions_no_action then -- TODO passing around these strings as enums is weird
-            -- The user is pressing the button, but they have a non-actionable entity selected.
-            -- So, if we were just doing a custom action, we need to release that action.
-            -- TODO dup'd with below.
-            -- Were we taking a custom action that we now have to release?
-            -- TODO we also need to release if the entity ids don't match, like the user moved to a different actionable entity.
-            if Placement.current_action == Actions_custom then
-                Attr_action_release_fn[Placement.current_action_ent]()
-            end
-        elseif action == Actions_custom then
-            if Placement.current_action == Actions_no_action then
-                -- We're taking a custom action.
+        if action == Actions_custom then
+            if Placement.current_action != Actions_custom then
+                -- We're taking a custom action, initiate it.
                 Attr_action_fn[action_ent]()
-                Placement.current_action = Actions_custom
+                Placement.current_action = action
                 Placement.current_action_ent = action_ent
             end
         elseif action == Actions_pick_up then
-            -- TODO should we be setting current_action/current_action_ent here instead of in remove?
             Placement.remove(action_ent, Placement.sel_x, Placement.sel_y)
+            Placement.current_action = action
+            Placement.current_action_ent = action_ent
         elseif action == Actions_place then
-            -- TODO same
             Placement.place(action_ent, Placement.sel_x, Placement.sel_y)
+            Placement.current_action = action
+            Placement.current_action_ent = action_ent
         end
+
     else
         -- Were we taking a custom action that we now have to release?
         if Placement.current_action == Actions_custom then
@@ -142,9 +139,7 @@ function Placement.remove(ent_id, x, y)
     else
         Locations_remove_entity(x, y)
     end
-    Placement.current_action = Actions_pick_up
-    Placement.current_action_ent = ent_id
-    Placement_set_place_ent(ent_id)
+    Placement_set_place_ent(ent_id) -- Set the next placement item to the one we just picked up for convenience
 
     Circuits_recalculate() -- TODO this probably shouldn't live here
     Inventory.add(ent_id)
@@ -154,8 +149,6 @@ function Placement.place(ent_id, x, y)
     if not Inventory.check_and_remove(ent_id) then
         assert(false) -- Place failed inventory check
     end
-    Placement.current_action = Actions_place
-    Placement.current_action_ent = ent_id
     local fn = Placement.placement_fns[ent_id]
     if fn then
         fn(x, y)
@@ -211,11 +204,6 @@ function Placement.determine_action_and_sprite(entity_at_sel)
         if act_sprite then
             return Actions_custom, entity_at_sel, act_sprite
         end
-    end
-
-    if Placement.current_action == Actions_custom then
-        -- We took a custom action, but we don't have something custom-actionable selected.
-        return Actions_no_action, nil, Sprite_id_no_action
     end
 
     -- If we're placing the currently selected item
