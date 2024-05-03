@@ -14,7 +14,7 @@ output/solar_sally.p8.png: $$(shell find $$* -type f \( -name "*.lua" -o -name "
 
 
 .tested: output/solar_sally.p8.png
-	# cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -x root/mine/solar_sally/tests.p8
+	# cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -x root/playground/solar_sally/tests.p8
 	rm -f test_output.txt
 	../../../../pico8/pico-8/pico8 -x tests.p8 | tee test_output.txt
 	cat test_output.txt | tail -1 | grep "Pass"
@@ -30,17 +30,17 @@ counts: output/solar_sally.p8.png
 
 .PHONY: run-windows
 run-windows: copy-to-windows
-	cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -run root/mine/solar_sally/output/solar_sally.p8.png
+	cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -run root/playground/solar_sally/output/solar_sally.p8.png
 
 .PHONY: run-windows-nonpng
 run-windows-nonpng: copy-to-windows
-	cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -run root/mine/solar_sally/output/solar_sally.p8
+	cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -run root/playground/solar_sally/output/solar_sally.p8
 
 .PHONY: pull-noncode-back
 pull-noncode-back:
 	# Copy everything except code from the output .p8 file to the input .p8 file.
 	# Suitable for use with run-windows-nonpng.
-	cp /mnt/c/Users/dbese/Dropbox/pico8/root/mine/solar_sally/output/solar_sally.p8 output/
+	cp /mnt/c/Users/dbese/Dropbox/pico8/root/playground/solar_sally/output/solar_sally.p8 output/
 	sed '/__.*__/{/__lua__/!q;}' solar_sally.p8 | head -n -1 > solar_sally_new.p8
 	awk '/__.*__/ && !/__lua__/ {p=1} p' output/solar_sally.p8 >> solar_sally_new.p8
 	mv solar_sally_new.p8 solar_sally.p8

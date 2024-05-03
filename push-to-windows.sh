@@ -4,7 +4,7 @@
 # So just retry a few times.
 max_retry=5
 counter=0
-until rm -rf /mnt/c/Users/dbese/Dropbox/pico8/root/mine
+until rm -rf /mnt/c/Users/dbese/Dropbox/pico8/root/playground
 do
     sleep 0.1
     [[ counter -eq $max_retry ]] && echo "Failed!" && exit 1
@@ -12,4 +12,4 @@ do
     ((counter++))
 done
 
-cp -r mine /mnt/c/Users/dbese/Dropbox/pico8/root/
+cp -r playground /mnt/c/Users/dbese/Dropbox/pico8/root/
