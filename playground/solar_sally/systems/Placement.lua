@@ -44,7 +44,7 @@ function Placement.draw()
     Sprites_draw_spr(Placement.sel_sprite,Placement.sel_x,Placement.sel_y-1)
 end
 
-function Placement.rotate_place_ent_id()
+function Placement._rotate_place_ent_id()
     Placement.placeable_index %= #Placement.placeable_entities
     Placement.placeable_index += 1
 
@@ -53,7 +53,7 @@ end
 
 function Placement.rotate_with_inventory_check()
     local start_index = Placement.placeable_index
-    Placement.rotate_place_ent_id()
+    Placement._rotate_place_ent_id()
 
     -- Does the player have one to place?
     while Inventory.get(Placement.place_ent_id) <= 0 do
@@ -63,7 +63,7 @@ function Placement.rotate_with_inventory_check()
             return
         end
         -- Rotate again
-        Placement.rotate_place_ent_id()
+        Placement._rotate_place_ent_id()
     end
 end
 
@@ -207,9 +207,19 @@ function Placement.determine_action_and_sprite(entity_at_sel)
     return "no_action", nil, Sprite_id_no_action
 end
 
+function limit_to(val, min, max)
+    if val < min then
+        return -1, min
+    elseif val > max then
+        return 1, max
+    end
+    return 0, val
+end
+
 function Placement_handle_character_movement(is_first_movement_frame, elapsed, x, y) -- TODO this function has side effects
-    local max_sel_range=2 -- TODO move these things to settings
-    local sel_speed = 12
+    -- Takes in the user's requested movement vector.
+    -- Moves the selection box first, then both box and character once it reaches max range.
+    -- Returns the character's modified movement vector.
 
     -- Is it the first movement frame?
     if is_first_movement_frame then
@@ -219,31 +229,18 @@ function Placement_handle_character_movement(is_first_movement_frame, elapsed, x
         y=y/2
     else
         -- Then for subsequent frames, we normalize the movement speed to the frame rate.
-        x, y = normalize(x, y, sel_speed*elapsed)
+        x, y = normalize(x, y, Settings_selection_speed*elapsed)
     end
 
     local char_x, char_y = SmoothLocations_get_location(Entities_Character)
 
     -- If we're at the max selection range, move the character
-    Placement.sel_x_p += x
-    Placement.sel_y_p += y
 
-    local char_new_x = 0
-    local char_new_y = 0
-    if Placement.sel_x_p > char_x + max_sel_range + .5 then
-        char_new_x = 1
-        Placement.sel_x_p = char_x + max_sel_range + .5
-    elseif Placement.sel_x_p < char_x - max_sel_range + .5 then
-        char_new_x = -1
-        Placement.sel_x_p = char_x - max_sel_range + .5
-    end
-    if Placement.sel_y_p > char_y + max_sel_range + .5 then
-        char_new_y = 1
-        Placement.sel_y_p = char_y + max_sel_range + .5
-    elseif Placement.sel_y_p < char_y - max_sel_range + .5 then
-        char_new_y = -1
-        Placement.sel_y_p = char_y - max_sel_range + .5
-    end
+    local char_new_x
+    local char_new_y
+    char_new_x, Placement.sel_x_p = limit_to(Placement.sel_x_p + x, char_x - Settings_max_selection_range, char_x + Settings_max_selection_range)
+    char_new_y, Placement.sel_y_p = limit_to(Placement.sel_y_p + y, char_y - Settings_max_selection_range, char_y + Settings_max_selection_range)
+
     Placement.sel_x = flr(Placement.sel_x_p)
     Placement.sel_y = flr(Placement.sel_y_p)
 

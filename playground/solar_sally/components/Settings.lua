@@ -7,3 +7,5 @@ Settings_start_money = 1060
 Settings_start_panels = 0
 Settings_start_transformers = 0
 Settings_start_wire = 0
+Settings_max_selection_range = 2.5
+Settings_selection_speed = 12
