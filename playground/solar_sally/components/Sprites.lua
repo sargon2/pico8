@@ -1,5 +1,3 @@
-Sprites = {}
-
 --[[const]] Sprite_id_grass = 16
 --[[const]] Sprite_id_solar_panel = 17
 --[[const]] Sprite_id_transformer_left = 18
