@@ -49,22 +49,16 @@ function Placement.update(elapsed)
     -- Carry out the action
     if my_btn(❎) then
         if action == Actions_custom then
-            if Placement.current_action != Actions_custom then
-                -- We're taking a custom action, initiate it.
-                Attr_action_fn[action_ent]()
-                Placement.current_action = action
-                Placement.current_action_ent = action_ent
-            end
+            Placement_custom_action(action_ent)
         elseif action == Actions_pick_up then
             Placement.remove(action_ent, Placement.sel_x, Placement.sel_y)
-            Placement.current_action = action
-            Placement.current_action_ent = action_ent
         elseif action == Actions_place then
             Placement.place(action_ent, Placement.sel_x, Placement.sel_y)
+        end
+        if action ~= Actions_no_action then
             Placement.current_action = action
             Placement.current_action_ent = action_ent
         end
-
     else
         -- Were we taking a custom action that we now have to release?
         if Placement.current_action == Actions_custom then
@@ -139,10 +133,10 @@ function Placement.remove(ent_id, x, y)
     else
         Locations_remove_entity(x, y)
     end
-    Placement_set_place_ent(ent_id) -- Set the next placement item to the one we just picked up for convenience
-
-    Circuits_recalculate() -- TODO this probably shouldn't live here
     Inventory.add(ent_id)
+
+    Placement_set_place_ent(Placement.current_action_ent) -- Set the next placement item to the one we just picked up for convenience
+    Circuits_recalculate()
 end
 
 function Placement.place(ent_id, x, y)
@@ -161,6 +155,12 @@ function Placement.place(ent_id, x, y)
         -- That was our last one, rotate off it
         Placement.rotate_with_inventory_check()
     end
+end
+
+function Placement_custom_action(ent_id)
+    Attr_action_fn[ent_id]()
+    -- The custom action may have modified our inventory
+    if(Placement.placeable_index == nil or Inventory.get(Placement.placeable_index) == 0) Placement.rotate_with_inventory_check()
 end
 
 function Placement.determine_action_and_sprite(entity_at_sel)
@@ -199,17 +199,22 @@ function Placement.determine_action_and_sprite(entity_at_sel)
     -- We have something selected
 
     -- Is it a custom actionable entity?
-    if Placement.current_action == Actions_no_action or Placement.current_action == Actions_custom then
+    if Placement.current_action == Actions_no_action then
         local act_sprite = Attr_action_sprite[entity_at_sel]
         if act_sprite then
             return Actions_custom, entity_at_sel, act_sprite
         end
     end
 
+    if Placement.current_action == Actions_custom then
+        -- We already started a custom action.  Don't trigger it again, but continue to display its sprite
+        return Actions_no_action, nil, Placement.sel_sprite
+    end
+
     -- If we're placing the currently selected item
     if Placement.current_action == Actions_place and Placement.current_action_ent == entity_at_sel then
         -- We can't re-place an item, but we let the user know we're still placing.
-        return Actions_no_action, nil, Attr_placement_sprite[entity_at_sel]
+        return Actions_no_action, nil, Placement.sel_sprite
     end
 
     -- If we're removing the currently selected item, pick it up.
