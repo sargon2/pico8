@@ -13,7 +13,8 @@ function CoroutineRunner.update()
     local s = {}
     for f in all(CoroutineRunner_Scripts) do
         if f and costatus(f) != 'dead' then
-            coresume(f)
+            local succeeded, err = coresume(f)
+            if(not succeeded) printh(err)
             add(s, f)
         end
     end

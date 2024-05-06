@@ -9,6 +9,42 @@ function Trees.init()
     Sprites_add(Entities_Trees, Sprite_id_tree_top, 1, 2, -1)
     Sprites_add(Entities_YoungTrees, Sprite_id_young_tree, 1, 1)
 
+    Attr_action_sprite[Entities_Trees] = Sprite_id_place_axe
+    Attr_action_sprite[Entities_YoungTrees] = Sprite_id_place_axe
+
+    -- TODO only show the axing action if the character is close enough to the tree to prevent wifi axing
+    local continue_cutting -- TODO should this really live here? Or should there be some other cancel operation or something?
+    local function begin_action(ent_id, x, y)
+        continue_cutting = true
+        CoroutineRunner_StartScript(function ()
+            for i=1,10 do -- TODO make the time it takes a setting
+                -- TODO animation for facing left, up, down
+                for frame in all({Sprite_id_axe_swing_right_1, Sprite_id_axe_swing_right_2}) do
+                    if(not continue_cutting) return
+                    Character.set_temp_frame(frame)
+                    for _=1,10 do -- Show the animation frame for n real frames
+                        yield()
+                    end
+                end
+            end
+            -- TODO play animation for tree falling over
+            Character.set_temp_frame(nil)
+            Locations_remove_entity(x, y)
+        end)
+    end
+
+    local function end_action()
+        -- TODO cancel axing action if player moves such that the selected location changes
+        Character.set_temp_frame(nil)
+        continue_cutting = false
+    end
+
+    Attr_action_fn[Entities_Trees] = begin_action
+    Attr_action_release_fn[Entities_Trees] = end_action
+
+    Attr_action_fn[Entities_YoungTrees] = begin_action
+    Attr_action_release_fn[Entities_YoungTrees] = end_action
+
     for _=1,500 do
         local x = flr(rnd(100))-50
         local y = flr(rnd(100))-50

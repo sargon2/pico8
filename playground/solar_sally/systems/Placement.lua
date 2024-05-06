@@ -49,7 +49,7 @@ function Placement.update(elapsed)
     -- Carry out the action
     if my_btn(❎) then
         if action == Actions_custom then
-            Placement_custom_action(action_ent)
+            Placement_custom_action(action_ent, Placement.sel_x, Placement.sel_y)
         elseif action == Actions_pick_up then
             Placement.remove(action_ent, Placement.sel_x, Placement.sel_y)
         elseif action == Actions_place then
@@ -157,8 +157,8 @@ function Placement.place(ent_id, x, y)
     end
 end
 
-function Placement_custom_action(ent_id)
-    Attr_action_fn[ent_id]()
+function Placement_custom_action(ent_id, x, y)
+    Attr_action_fn[ent_id](ent_id, x, y)
     -- The custom action may have modified our inventory
     if(Placement.placeable_index == nil or Inventory.get(Placement.placeable_index) == 0) Placement.rotate_with_inventory_check()
 end

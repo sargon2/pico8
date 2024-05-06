@@ -34,10 +34,11 @@
 --[[const]] Sprite_id_money = 55
 --[[const]] Sprite_id_axe_swing_right_1 = 11
 --[[const]] Sprite_id_axe_swing_right_2 = 12
+--[[const]] Sprite_id_place_axe = 28
 
 Sprites_offsets = {
-    [Sprite_id_axe_swing_right_1] = {3, 2},
-    [Sprite_id_axe_swing_right_2] = {3, 3},
+    [Sprite_id_axe_swing_right_1] = {-2, 0},
+    [Sprite_id_axe_swing_right_2] = {2, 0},
 }
 
 function Sprites_add(ent_id, sprite, width, height, yoffset)

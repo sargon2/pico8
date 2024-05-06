@@ -1,4 +1,4 @@
-Character = {
+Character = { -- TODO a lot of these should be local globals
     name = "Character",
     frame=1,
     speed=6,
@@ -18,10 +18,20 @@ function Character.update(elapsed)
 end
 
 function Character.drawChar(x, y, ent_id, relative_to_screen)
-    local f=Character.anim_frames[
-        1+(flr(Character.frame) % #Character.anim_frames)
-    ]
+    local f
+    if Character.temp_frame then
+        f = Character.temp_frame
+    else
+        -- Normal walking animations
+        f=Character.anim_frames[
+            1+(flr(Character.frame) % #Character.anim_frames)
+        ]
+    end
     Sprites_draw_spr(f, x, y, 1, 1, Character.flip_x, relative_to_screen)
+end
+
+function Character.set_temp_frame(f)
+    Character.temp_frame = f
 end
 
 function Character.handle_player_movement(elapsed)
