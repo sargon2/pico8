@@ -68,12 +68,12 @@ function do_update()
 end
 
 -- The debug tree window scroll wheel doesn't work at 60 fps, so if that's enabled, drop to 30.
-if Settings_debug_window then
-    function _update()
+if Settings_60fps then
+    function _update60()
         do_update()
     end
 else
-    function _update60()
+    function _update()
         do_update()
     end
 end

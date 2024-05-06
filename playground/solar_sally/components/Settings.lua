@@ -1,6 +1,7 @@
 Settings_max_panels_per_transformer = 48
 Settings_debug_timing = false
-Settings_debug_window = false
+Settings_debug_window = false -- Recommend switching to 30fps if you turn this on
+Settings_60fps = true -- if false, 30fps
 Settings_cheat_lotsofmoney = false
 Settings_cow_speed = 1
 Settings_start_money = 1060
