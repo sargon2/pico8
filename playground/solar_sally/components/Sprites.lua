@@ -89,6 +89,7 @@ function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
     elseif fget(s, 2) then
         -- flag 2 means "has offset"
         xoffset, yoffset = unpack(Sprites_offsets[s])
+        if(flip_x) xoffset = -xoffset
     end
     spr(
         s,

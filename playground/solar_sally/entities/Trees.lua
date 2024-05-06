@@ -13,12 +13,14 @@ function Trees.init()
     Attr_action_sprite[Entities_YoungTrees] = Sprite_id_place_axe
 
     -- TODO only show the axing action if the character is close enough to the tree to prevent wifi axing
+    -- TODO make Sally face the tree automatically
+    -- TODO make it take less hits to fell a young tree
     local continue_cutting -- TODO should this really live here? Or should there be some other cancel operation or something?
     local function begin_action(ent_id, x, y)
         continue_cutting = true
         CoroutineRunner_StartScript(function ()
             for i=1,10 do -- TODO make the time it takes a setting
-                -- TODO animation for facing left, up, down
+                -- TODO animation for facing up, down
                 for frame in all({Sprite_id_axe_swing_right_1, Sprite_id_axe_swing_right_2}) do
                     if(not continue_cutting) return
                     Character.set_temp_frame(frame)
