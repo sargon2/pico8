@@ -9,3 +9,6 @@ Settings_start_transformers = 0
 Settings_start_wire = 0
 Settings_max_selection_range = 2.5
 Settings_selection_speed = 12
+Settings_axeswings_fullsizetree = 10
+Settings_axeswings_youngtree = 5
+Settings_axeswing_speed = 11
