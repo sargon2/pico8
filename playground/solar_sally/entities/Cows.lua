@@ -40,7 +40,7 @@ function Cows.update(elapsed)
     -- TODO this bounding is duplicated with world.draw()
     local char_x, char_y = SmoothLocations_get_location(Entities_Character)
 
-    local xmin, xmax, ymin, ymax = flr(char_x - 10), flr(char_x + 8), flr(char_y - 9), flr(char_y + 9) -- TODO increase bounding box size for cows? so they move slightly off-screen
+    local xmin, xmax, ymin, ymax = flr(char_x - 10), flr(char_x + 9), flr(char_y - 9), flr(char_y + 9) -- TODO increase bounding box size for cows? so they move slightly off-screen
 
     local smooth_ents = SmoothLocations_get_all_visible(xmin, xmax, ymin, ymax)
 
