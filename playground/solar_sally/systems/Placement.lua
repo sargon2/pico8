@@ -30,7 +30,7 @@ Placement = { -- TODO convert a lot of these to local globals
 
 function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
-    Placement.placeable_entities = {Entities_Panels, Entities_Wire, Entities_Transformers_left}
+    Placement.placeable_entities = {Entities_Panels, Entities_Wire, Entities_Transformers_left, Entities_Fence}
     Placement.rotate_with_inventory_check() -- Set the placement icon to "no action" or the first thing, if we have anything
 end
 

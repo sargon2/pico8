@@ -32,6 +32,7 @@ function Button.init()
     Button_create_button("buy 10 panels for $500", -5, 5, Button.pressBuy, nil, Entities_Panels, 50, 10)
     Button_create_button("buy 1 panel for $50", -5, 6, Button.pressBuy, nil, Entities_Panels, 50, 1)
     Button_create_button("buy axe for $100", -5, 7, Button.pressBuyAxe, nil, 100)
+    Button_create_button("buy fence for $10", -5, 7, Button.pressBuy, nil, Entities_Fence, 10, 1)
 end
 
 function Button.draw_button(x, y, ent_id)

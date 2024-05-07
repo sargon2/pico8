@@ -150,3 +150,42 @@ function Sprites_print_text(text, colour, x, y, xoffset, yoffset, relative_to_sc
     if(not yoffset) yoffset = 0
     print(text, x*8+xoffset, y*8+yoffset)
 end
+
+function Sprites_draw_linking(x, y, relative_to_screen, linking_attr, left_spr, right_spr, up_spr, down_spr)
+    if relative_to_screen then
+        -- For icons and such, we just draw it horizontal.
+        Sprites_draw_spr(left_spr, x, y, 1, 1, false, true)
+        Sprites_draw_spr(right_spr, x, y, 1, 1, false, true)
+        return
+    end
+    local left = Attributes_get_attr_by_location(x-1,y, linking_attr)
+    local right = Attributes_get_attr_by_location(x+1,y, linking_attr)
+    local up = Attributes_get_attr_by_location(x,y-1, linking_attr)
+    local down = Attributes_get_attr_by_location(x,y+1, linking_attr)
+
+    -- straight has a couple of special cases (0 or 1 connections)
+    if not up and not down then
+        Sprites_draw_spr(left_spr, x, y)
+        Sprites_draw_spr(right_spr, x, y)
+        return
+    end
+    if not left and not right then
+        Sprites_draw_spr(up_spr, x, y)
+        Sprites_draw_spr(down_spr, x, y)
+        return
+    end
+
+    -- the other cases are all straightforward.  The order here matters for overlap.
+    if up then
+        Sprites_draw_spr(up_spr, x, y)
+    end
+    if left then
+        Sprites_draw_spr(left_spr, x, y)
+    end
+    if right then
+        Sprites_draw_spr(right_spr, x, y)
+    end
+    if down then
+        Sprites_draw_spr(down_spr, x, y)
+    end
+end

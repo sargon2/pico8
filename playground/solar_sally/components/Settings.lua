@@ -8,6 +8,7 @@ Settings_start_money = 0
 Settings_start_panels = 1
 Settings_start_transformers = 1
 Settings_start_wire = 10
+Settings_start_fence = 0
 Settings_max_selection_range = 2.5
 Settings_selection_speed = 12
 Settings_axeswings_fullsizetree = 10

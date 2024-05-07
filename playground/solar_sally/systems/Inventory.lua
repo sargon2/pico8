@@ -41,6 +41,7 @@ function Inventory.init()
     Inventory.add(Entities_Panels, Settings_start_panels)
     Inventory.add(Entities_Transformers_left, Settings_start_transformers)
     Inventory.add(Entities_Wire, Settings_start_wire) -- TODO should wire be infinite?
+    Inventory.add(Entities_Fence, Settings_start_fence)
 end
 
 function Inventory.add(ent_id, num) -- Does not work for money.

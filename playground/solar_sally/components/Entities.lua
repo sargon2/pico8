@@ -9,8 +9,9 @@
 --[[const]] Entities_YoungTrees = 9
 --[[const]] Entities_Wire = 10
 --[[const]] Entities_Money = 11
+--[[const]] Entities_Fence = 12
 
-Entities_current_entity_id = 12
+Entities_current_entity_id = 99
 
 function Entities_create_entity()
     -- returns an integer id
