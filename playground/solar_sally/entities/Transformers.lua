@@ -10,7 +10,7 @@ function Transformers.init()
     Attr_removable[Entities_Transformers_left] = true
     Attr_is_circuit_component[Entities_Transformers_left] = true
     Attr_pluggable[Entities_Transformers_left] = true
-    Attr_placement_sprite[Entities_Transformers_left] = Sprite_id_place_transformer
+    Attr_mini_sprite[Entities_Transformers_left] = Sprite_id_place_transformer
 
     Attr_WalkingObstruction[Entities_Transformers_right] = true
     Attr_removable[Entities_Transformers_right] = true

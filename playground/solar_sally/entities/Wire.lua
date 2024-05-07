@@ -3,7 +3,7 @@ Wire = {}
 function Wire.init()
     Attr_removable[Entities_Wire] = true
     Attr_pluggable[Entities_Wire] = true
-    Attr_placement_sprite[Entities_Wire] = Sprite_id_place_wire
+    Attr_mini_sprite[Entities_Wire] = Sprite_id_place_wire
     Attr_DrawFn[Entities_Wire] = Wire.draw_wire_tile
 end
 

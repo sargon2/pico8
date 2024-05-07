@@ -10,7 +10,7 @@ function Button_create_button(label, x, y, press_fn, release_fn, ...)
 
     Attr_WalkingObstruction[ent_id] = true
     Attr_DrawFn[ent_id] = Button.draw_button
-    Attr_action_sprite[ent_id] = Sprite_id_button_mini
+    Attr_mini_sprite[ent_id] = Sprite_id_button_mini
     Attr_action_fn[ent_id] = function ()
         Button.is_being_pressed = ent_id
         if(press_fn) press_fn(unpack(args))

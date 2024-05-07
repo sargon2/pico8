@@ -192,7 +192,7 @@ function Placement.determine_action_and_sprite(entity_at_sel)
                 return Actions_no_action, nil, Sprite_id_no_action -- TODO should this be a custom sprite?
             end
             -- We're not removing and we have nothing selected, so we're placing the user's selected item.
-            return Actions_place, place_ent_id, Attr_placement_sprite[place_ent_id]
+            return Actions_place, place_ent_id, Attr_mini_sprite[place_ent_id]
         end
     end
 
@@ -200,9 +200,14 @@ function Placement.determine_action_and_sprite(entity_at_sel)
 
     -- Is it a custom actionable entity?
     if Placement.current_action == Actions_no_action then
-        local act_sprite = Attr_action_sprite[entity_at_sel]
+        local act_sprite = Attr_mini_sprite[entity_at_sel]
         if act_sprite then
-            return Actions_custom, entity_at_sel, act_sprite
+            -- Is it in range for that action?
+            local char_x, char_y = SmoothLocations_get_location(Entities_Character)
+            local adist = Attr_action_mindist[entity_at_sel]
+            if adist == nil or dist(char_x, char_y, Placement.sel_x, Placement.sel_y) <= adist then
+                return Actions_custom, entity_at_sel, act_sprite
+            end
         end
     end
 

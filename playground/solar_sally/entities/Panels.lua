@@ -9,7 +9,7 @@ function Panels.init()
     Attr_removable[Entities_Panels] = true
     Attr_is_circuit_component[Entities_Panels] = true
     Attr_pluggable[Entities_Panels] = true
-    Attr_placement_sprite[Entities_Panels] = Sprite_id_place_panel
+    Attr_mini_sprite[Entities_Panels] = Sprite_id_place_panel
     Attr_DrawFn[Entities_Panels] = Panels._draw
 end
 

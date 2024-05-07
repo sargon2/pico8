@@ -50,8 +50,8 @@ function SmoothLocations_is_obstructed(x, y)
     return false
 end
 
-function SmoothLocations_move_by_if_not_obstructed(ent_id, x, y, dist)
-    x, y = normalize(x, y, dist)
+function SmoothLocations_move_by_if_not_obstructed(ent_id, x, y, mdist)
+    x, y = normalize(x, y, mdist)
     local new_x, new_y = SmoothLocations_get_location(ent_id)
 
     if system_is_loaded(World) then

@@ -11,15 +11,17 @@ function Trees.init()
     Sprites_add(Entities_Trees, Sprite_id_tree_top, 1, 2, -1)
     Sprites_add(Entities_YoungTrees, Sprite_id_young_tree, 1, 1)
 
-    Attr_action_sprite[Entities_Trees] = Sprite_id_place_axe
-    Attr_action_sprite[Entities_YoungTrees] = Sprite_id_place_axe
+    Attr_mini_sprite[Entities_Trees] = Sprite_id_place_axe
+    Attr_mini_sprite[Entities_YoungTrees] = Sprite_id_place_axe
+
+    Attr_action_mindist[Entities_Trees] = Settings_axe_min_dist
+    Attr_action_mindist[Entities_YoungTrees] = Settings_axe_min_dist
 
     local function end_action()
         Character.set_temp_frame(nil)
         Trees_continue_cutting = false
     end
 
-    -- TODO only show the axing action if the character is close enough to the tree to prevent wifi axing
     local function begin_action(ent_id, x, y)
         Trees_continue_cutting = true
         -- Face the tree
