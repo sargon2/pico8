@@ -32,7 +32,7 @@ function Trees.init()
         CoroutineRunner_StartScript(function ()
             local time = Settings_axeswings_fullsizetree
             if(ent_id == Entities_YoungTrees) time = Settings_axeswings_youngtree
-            for i=1,time do
+            for _=1,time do
                 -- TODO animation for facing up, down
                 for frame in all({Sprite_id_axe_swing_right_1, Sprite_id_axe_swing_right_2}) do
                     if(Character.is_moving) end_action() -- Cancel the operation if the player moves
@@ -103,19 +103,19 @@ function Trees.update()
 end
 
 function Trees_advanceTimeDays(d)
-    for i=1,d do
+    for _=1,d do
         -- tree updating is weird -- to get the player to see trees changing, we update quite
         -- fast when the player is in real-time, but when we're timeskipping we don't update
         -- as much as we should in relation.
-        for j=1,100 do
+        for _2=1,100 do
             Trees.update()
         end
     end
 end
 
 function Trees_advanceTimeYears(y)
-    for i=1,y do
-        for j=1,100 do
+    for _=1,y do
+        for _2=1,100 do
             Trees_advanceTimeDays(1)
         end
     end

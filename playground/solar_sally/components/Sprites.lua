@@ -48,7 +48,7 @@ function Sprites_add(ent_id, sprite, width, height, yoffset)
     if(not height) height = 1
     if(not yoffset) yoffset = 0
 
-    local function d(x, y, ent_id, relative_to_screen)
+    local function d(x, y, eid, relative_to_screen)
         Sprites_draw_spr(sprite, x, y + yoffset, width, height, false, relative_to_screen)
     end
 

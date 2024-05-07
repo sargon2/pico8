@@ -35,7 +35,6 @@ function fadeAndDisableInputForCo(fn)
 end
 
 function fadetoblack_fade_co()
-    local f = 0
     for f=1,24 do
         fade(f)
         yield()
@@ -43,7 +42,6 @@ function fadetoblack_fade_co()
 end
 
 function fadetoblack_fadein_co()
-    local f = 0
     for f=24,1,-1 do
         fade(f)
         yield()

@@ -74,8 +74,8 @@ function SmoothLocations_get_all_visible(xmin, xmax, ymin, ymax)
     -- ret = {{ent_id, x, y}, {ent_id2, x2, y2}, ...}
     local ret = {}
 
-    cellxmin, cellymin = SmoothLocations__get_cell(xmin, ymin)
-    cellxmax, cellymax = SmoothLocations__get_cell(xmax, ymax)
+    local cellxmin, cellymin = SmoothLocations__get_cell(xmin, ymin)
+    local cellxmax, cellymax = SmoothLocations__get_cell(xmax, ymax)
 
     for cellx = cellxmin, cellxmax do
         for celly = cellymin, cellymax do

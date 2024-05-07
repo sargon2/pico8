@@ -29,7 +29,7 @@ function Inventory.init()
     Inventory.addFormatter(Entities_Money, _money_format)
     Inventory.items[Entities_Money] = NewObj(twonum, Settings_start_money)
     if Settings_cheat_lotsofmoney then
-        for i=1,10000 do
+        for _=1,10000 do
             Inventory_addMoney(30000)
         end
         Inventory_addMoney(0.25)

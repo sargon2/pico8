@@ -66,7 +66,7 @@ function Button.pressAdvanceTimeDays(d)
         PanelCalculator.add_panel_days(d)
         Trees_advanceTimeDays(d)
         -- Wait some frames
-        for i=1,50 do
+        for _=1,50 do
             yield()
         end
     end)
@@ -77,7 +77,7 @@ function Button.pressAdvanceTimeYears(y)
         PanelCalculator.add_panel_years(y)
         Trees_advanceTimeYears(y)
         -- Wait some frames
-        for i=1,50 do
+        for _=1,50 do
             yield()
         end
     end)

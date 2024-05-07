@@ -47,8 +47,8 @@ function World.draw()
     -- Check for smooth entity collisions.  TODO extract & move this to SmoothLocations or wherever
     curr_pos = 1
     while smooth_ents[curr_pos+1] do
-        local ent1, x1, y1 = unpack(smooth_ents[curr_pos]) -- TODO refer by number instead of unpacking to save tokens
-        local ent2, x2, y2 = unpack(smooth_ents[curr_pos+1])
+        local _ent1, x1, y1 = unpack(smooth_ents[curr_pos]) -- TODO refer by number instead of unpacking to save tokens
+        local _ent2, x2, y2 = unpack(smooth_ents[curr_pos+1])
         if abs(x1-x2) < 1 and abs(y1-y2) < 1 then
             -- Collision detected
         end

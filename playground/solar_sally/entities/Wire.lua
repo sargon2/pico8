@@ -9,8 +9,8 @@ end
 
 
 function Wire.draw_wire_tile(x, y, ent_id, relative_to_screen)
-    local function is_pluggable(x, y)
-        return Attributes_get_attr_by_location(x, y, Attr_pluggable)
+    local function is_pluggable(px, py) -- TODO inline
+        return Attributes_get_attr_by_location(px, py, Attr_pluggable)
     end
 
     if relative_to_screen then

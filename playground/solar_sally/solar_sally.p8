@@ -7,8 +7,8 @@ __lua__
 #include types/BooleanGrid.lua
 #include types/twonum.lua
 #include components/Settings.lua
-#include components/Sprites.lua
 #include components/Entities.lua
+#include components/Sprites.lua
 #include components/Locations.lua
 #include components/SmoothLocations.lua
 #include components/Attributes.lua

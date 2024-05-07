@@ -34,7 +34,7 @@ function Placement.init()
     Placement.rotate_with_inventory_check() -- Set the placement icon to "no action" or the first thing, if we have anything
 end
 
-function Placement.update(elapsed)
+function Placement.update(_elapsed)
     if my_btnp(🅾️) then
         Placement.rotate_with_inventory_check()
     end

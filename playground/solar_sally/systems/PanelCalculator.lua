@@ -22,7 +22,7 @@ function PanelCalculator.add_panel_seconds(num_seconds)
 end
 
 function PanelCalculator.add_panel_years(y)
-    for i=1,y do
+    for _=1,y do
         PanelCalculator.add_panel_days(365)
     end
     -- Deal with leap years
@@ -35,7 +35,7 @@ end
 
 function PanelCalculator.add_panel_8h(n) -- Add n 8-hour increments
     -- 28800*h may not fit inside a pico-8 number, so we must repeat.
-    for i=1,n do
+    for _=1,n do
         PanelCalculator.add_panel_seconds(28800)
     end
 end
