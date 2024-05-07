@@ -4,6 +4,7 @@
 _dbopen = {}
 _dby,_dbmy,_dbyy = 2,64,2
 _dbscroll,_dbscrollto = 0,0
+_dbmp,dbmp,dbmx,dbmy,dbmw = 0, 0, 0, 0, 0
 
 poke(0x5f2d,1)
 function db_window()
@@ -22,7 +23,7 @@ function db_window()
     _dby += (top_to-_dby)*0.5
     
     -- contents
-    local x,y,ox = 1,top+2+_dbscroll
+    local x,y,_ox = 1,top+2+_dbscroll
     clip(0,top+2,128,126-top)
     db_table(_𝘦𝘯𝘷,x,y) clip()
     
@@ -38,21 +39,21 @@ end
 
 function db_table(tbl,x,y)
     for k,v in pairs(tbl) do
-        local t,ox,oy = type(v)
+        local t,_ox,oy = type(v)
         local click = dbmp and dbmy>y and dbmy<y+7
         if y > 128 then break end
 
         -- <tables> --
         if t=="table" then
             if click then _dbopen[k] = not _dbopen[k] end
-            ox,oy = print((_dbopen[k] and "[-] [" or "[+] [")..k.."]",x,y,7)
+            _ox,oy = print((_dbopen[k] and "[-] [" or "[+] [")..k.."]",x,y,7)
             y = _dbopen[k] and db_table(v,x+6,y+7) or oy
             
         -- <variables> --
         elseif t~="function" then
             if click and t=="boolean" then tbl[k]=not v end
             if t == "string" then v='"'..v..'"' end
-            ox,y = print("\fe"..k..": \fc"..tostr(v),x,y,7)
+            _ox,y = print("\fe"..k..": \fc"..tostr(v),x,y,7)
         end
     end
     return y

@@ -9,9 +9,8 @@ output/solar_sally.p8.png: solar_sally.p8 $(LUA_FILES)
 	mkdir -p output
 	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --minify --no-minify-lines --focus-tokens # So we can examine minified code
 	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png --minify --no-minify-lines --focus-tokens
-	$(SHRINKO8) solar_sally.p8 --lint --no-lint-fail
+	# $(SHRINKO8) solar_sally.p8 --lint --no-lint-fail
 	$(SHRINKO8) output/solar_sally.p8.png --count
-
 
 .tested: output/solar_sally.p8.png
 	# cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -x root/playground/solar_sally/tests.p8
@@ -59,3 +58,9 @@ copy-and-run: copy-to-windows run-windows
 .PHONY: clean
 clean:
 	git clean -X -d -f -f
+
+# Workflow targets
+
+# Intended for use with watch-and-run. We do the build before running lint so we can debug pre-linted code
+.PHONY: workflow-copy-lint
+workflow-copy-lint: copy-to-windows lint
