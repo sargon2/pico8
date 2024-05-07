@@ -1,9 +1,11 @@
-Inventory = {
+Inventory = { -- TODO local globals
     name = "Inventory",
     items = {}, -- items[ent_id] = count
     order = {}, -- order[] = ent_id -- just for display order
     formatters = {} -- formatters[ent_id] = fn(text)
 }
+
+Inventory_icons = {}
 
 function _money_format(m)
     -- Include everything up to the decimal, then stuff after the decimal until we fill to n digits
@@ -52,6 +54,10 @@ end
 
 function Inventory_addMoney(amount)
     Inventory.items[Entities_Money]:add(amount)
+end
+
+function Inventory_addIcon(icon)
+    add(Inventory_icons, icon)
 end
 
 function Inventory_canAfford(amount)
@@ -112,13 +118,20 @@ function Inventory.draw()
     local row = 0
     for ent_id in all(Inventory.order) do
         local count = Inventory.items[ent_id]
-        Attr_DrawFn[ent_id](window_left+1+col*3, window_top+1+row, ent_id, true)
+        Attr_DrawFn[ent_id](window_left+1+col*3, window_top+1.25+row, ent_id, true)
         local fn = Inventory.formatters[ent_id]
         if(fn) count = fn(count)
-        Sprites_print_text(count, 4, window_left+2+col*3, window_top+1+row, 2, 2, true)
+        Sprites_print_text(count, 4, window_left+2+col*3, window_top+1.25+row, 2, 2, true)
         col += 1
         if ent_id == Entities_Money then -- TODO hack
             col += 1
         end
+    end
+
+    -- Draw icons
+    local x = 14.25
+    for icon in all(Inventory_icons) do
+        Sprites_draw_relative_to_screen(icon,x,13.25)
+        x -= 1
     end
 end

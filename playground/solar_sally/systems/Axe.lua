@@ -16,6 +16,8 @@ function Axe.init()
 
     Attr_action_release_fn[Entities_Trees] = Axe_end_action
     Attr_action_release_fn[Entities_YoungTrees] = Axe_end_action
+
+    Inventory_addIcon(Sprite_id_inventory_axe)
 end
 
 -- Not needed until there's a way to drop the axe

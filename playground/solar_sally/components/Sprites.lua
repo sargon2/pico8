@@ -35,6 +35,7 @@
 --[[const]] Sprite_id_axe_swing_right_1 = 11
 --[[const]] Sprite_id_axe_swing_right_2 = 12
 --[[const]] Sprite_id_place_axe = 28
+--[[const]] Sprite_id_inventory_axe = 27
 
 Sprites_offsets = {
     [Sprite_id_axe_swing_right_1] = {-2, 0},

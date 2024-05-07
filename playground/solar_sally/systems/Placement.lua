@@ -200,13 +200,12 @@ function Placement.determine_action_and_sprite(entity_at_sel)
 
     -- Is it a custom actionable entity?
     if Placement.current_action == Actions_no_action then
-        local act_sprite = Attr_mini_sprite[entity_at_sel]
-        if act_sprite then
+        if Attr_action_fn[entity_at_sel] then
             -- Is it in range for that action?
             local char_x, char_y = SmoothLocations_get_location(Entities_Character)
             local adist = Attr_action_mindist[entity_at_sel]
             if adist == nil or dist(char_x, char_y, Placement.sel_x, Placement.sel_y) <= adist then
-                return Actions_custom, entity_at_sel, act_sprite
+                return Actions_custom, entity_at_sel, Attr_mini_sprite[entity_at_sel]
             end
         end
     end
