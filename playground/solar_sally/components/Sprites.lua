@@ -36,6 +36,11 @@
 --[[const]] Sprite_id_axe_swing_right_2 = 12
 --[[const]] Sprite_id_place_axe = 28
 --[[const]] Sprite_id_inventory_axe = 27
+--[[const]] Sprite_id_fence_left = 56
+--[[const]] Sprite_id_fence_right = 57
+--[[const]] Sprite_id_fence_up = 58
+--[[const]] Sprite_id_fence_down = 59
+--[[const]] Sprite_id_fence_mini = 43
 
 Sprites_offsets = {
     [Sprite_id_axe_swing_right_1] = {-2, 0},
