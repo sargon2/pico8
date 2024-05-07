@@ -14,3 +14,4 @@ Settings_axeswings_fullsizetree = 10
 Settings_axeswings_youngtree = 5
 Settings_axeswing_speed = 11
 Settings_axe_min_dist = 1.5
+Settings_tree_felling_payment = 10

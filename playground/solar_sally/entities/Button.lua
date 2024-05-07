@@ -24,7 +24,7 @@ function Button_create_button(label, x, y, press_fn, release_fn, ...)
 end
 
 function Button.init()
-    Button_create_button("24h", -5, 0, Button.pressAdvanceTimeDays, nil, 1)
+    Button_create_button("sleep 24h", -5, 0, Button.pressAdvanceTimeDays, nil, 1)
     Button_create_button("go inside", -5, 1, Button.pressGoInside)
     Button_create_button("unlock basement for $2", -5, 2, Button.pressUnlockBasement)
     Button_create_button("buy 1 transformer for $1000", -5, 3, Button.pressBuy, nil, Entities_Transformers_left, 1000, 1)
@@ -72,6 +72,7 @@ function Button.pressAdvanceTimeDays(d)
     fadeAndDisableInputForCo(function ()
         PanelCalculator.add_panel_days(d)
         Trees_advanceTimeDays(d)
+        Cows_advanceTimeDays(d)
         -- Wait some frames
         for _=1,50 do
             yield()
@@ -94,9 +95,5 @@ function Button.pressUnlockBasement()
     -- TODO make key cost a setting
     if(not Inventory_canAfford(2)) return
     Inventory_addMoney(-2)
-    -- Button_create_button("50y", -5, 7, Button.pressAdvanceTimeYears, nil, 50)
-    -- Button_create_button("10y", -5, 8, Button.pressAdvanceTimeYears, nil, 10)
-    -- Button_create_button("1y", -5, 9, Button.pressAdvanceTimeYears, nil, 1)
-    Button_create_button("30d", -5, 10, Button.pressAdvanceTimeDays, nil, 30)
-    -- Button_create_button("7d", -5, 11, Button.pressAdvanceTimeDays, nil, 7)
+    Button_create_button("sleep 30d", -5, 11, Button.pressAdvanceTimeDays, nil, 30)
 end

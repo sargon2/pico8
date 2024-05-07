@@ -66,6 +66,7 @@ function Axe_begin_action(ent_id, x, y)
         -- TODO play animation for tree falling over
         Character.set_temp_frame(nil)
         Locations_remove_entity(x, y)
+        Inventory_addMoney(Settings_tree_felling_payment)
     end)
 end
 

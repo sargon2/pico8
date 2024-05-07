@@ -79,3 +79,9 @@ function Cows.update(elapsed)
         end
     end
 end
+
+function Cows_advanceTimeDays(d)
+    for _=1,100 do -- Need to run it enough times to ensure the cow is moving at least once
+        Cows.update(d)
+    end
+end
