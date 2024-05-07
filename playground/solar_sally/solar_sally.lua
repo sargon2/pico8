@@ -1,50 +1,52 @@
 
 -- todo
--- add total electricity generated
 -- add energy storage
 -- add day/night cycle
--- add panel inventory
--- add money to buy panels
 -- add store to buy panels from
--- add trees
 -- add houses?
 
-solar_sally = {
-    -- The order here is important (think dep injection dependency graph)
-    -- Includes entities as well as systems; anything that needs to be init'd
-    systems = {Rocks, Trees, Panels, Wire, GridWire, Transformers, Button, World, Cows, Inventory, Placement, Character, PanelCalculator, fadetoblack, CoroutineRunner}
-}
+solar_sally_systems = {}
 
 function system_is_loaded(s)
     -- TODO should we cache a boolean table to speed this up?
-    return contains(solar_sally.systems, s)
+    return contains(solar_sally_systems, s)
 end
 
 function unload_system(s)
-    del(solar_sally.systems, s)
+    if(s.destroy) s.destroy()
+    del(solar_sally_systems, s)
 end
 
 function load_system(s) -- Careful! Order matters
-    add(solar_sally.systems, s)
-    if s.init then
-        s.init()
-    end
+    add(solar_sally_systems, s)
+    if(s.init) s.init()
 end
 
 function _init()
     --srand(12345)
 
-    for system in all(solar_sally.systems) do
-        if system.init then
-            system.init()
-        end
-    end
+    -- The order here is important (think dep injection dependency graph)
+    load_system(Rocks)
+    load_system(Trees)
+    load_system(Panels)
+    load_system(Wire)
+    load_system(GridWire)
+    load_system(Transformers)
+    load_system(Button)
+    load_system(World)
+    load_system(Cows)
+    load_system(Inventory)
+    load_system(Placement)
+    load_system(Character)
+    load_system(PanelCalculator)
+    load_system(fadetoblack)
+    load_system(CoroutineRunner)
 end
 
 function _draw()
     cls()
 
-    for system in all(solar_sally.systems) do
+    for system in all(solar_sally_systems) do
         if system.draw then
             PerfTimer.time(system.name..".draw()", function ()
                 system.draw()
@@ -58,7 +60,7 @@ end
 function do_update()
     local elapsed = FrameTimer_calculate_elapsed()
 
-    for system in all(solar_sally.systems) do
+    for system in all(solar_sally_systems) do
         if system.update then
             PerfTimer.time(system.name..".update()", function ()
                 system.update(elapsed)

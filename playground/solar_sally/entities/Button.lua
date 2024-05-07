@@ -24,13 +24,14 @@ function Button_create_button(label, x, y, press_fn, release_fn, ...)
 end
 
 function Button.init()
+    Button_create_button("24h", -5, 0, Button.pressAdvanceTimeDays, nil, 1)
+    Button_create_button("go inside", -5, 1, Button.pressGoInside)
+    Button_create_button("unlock basement for $2", -5, 2, Button.pressUnlockBasement)
     Button_create_button("buy 1 transformer for $1000", -5, 3, Button.pressBuy, nil, Entities_Transformers_left, 1000, 1)
     Button_create_button("buy 10 wire for $1 ea", -5, 4, Button.pressBuy, nil, Entities_Wire, 1, 10)
     Button_create_button("buy 10 panels for $500", -5, 5, Button.pressBuy, nil, Entities_Panels, 50, 10)
     Button_create_button("buy 1 panel for $50", -5, 6, Button.pressBuy, nil, Entities_Panels, 50, 1)
-    Button_create_button("24h", -5, 0, Button.pressAdvanceTimeDays, nil, 1)
-    Button_create_button("go inside", -5, 1, Button.pressGoInside)
-    Button_create_button("unlock basement for $2", -5, 2, Button.pressUnlockBasement)
+    Button_create_button("buy axe for $100", -5, 7, Button.pressBuyAxe, nil, 100)
 end
 
 function Button.draw_button(x, y, ent_id)
@@ -50,6 +51,12 @@ end
 
 function Button.pressBuy(buy_ent, price, qty)
     _buy(buy_ent, price, qty)
+end
+
+function Button.pressBuyAxe(cost)
+    if(not Inventory_canAfford(cost)) return
+    Inventory_addMoney(-cost)
+    load_system(Axe)
 end
 
 function Button.pressGoInside()

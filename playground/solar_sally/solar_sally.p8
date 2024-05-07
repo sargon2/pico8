@@ -24,6 +24,7 @@ __lua__
 #include systems/Inventory.lua
 #include systems/fadetoblack.lua
 #include systems/IndoorWorld.lua
+#include systems/Axe.lua
 #include entities/Character.lua
 #include entities/Panels.lua
 #include entities/Rocks.lua
