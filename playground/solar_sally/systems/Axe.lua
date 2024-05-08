@@ -36,7 +36,7 @@ end
 -- end
 
 function Axe_end_action()
-    Character.set_temp_frame(nil)
+    Character_set_temp_frame(nil)
     Axe_continue_cutting = false
 end
 
@@ -45,9 +45,9 @@ function Axe_begin_action(ent_id, x, y)
     -- Face the tree
     local char_x, _ = SmoothLocations_get_location(Entities_Character)
     if x < char_x then
-        Character.flip_x = true
+        Character_flip_x = true
     else
-        Character.flip_x = false
+        Character_flip_x = false
     end
     CoroutineRunner_StartScript(function ()
         local time = Settings_axeswings_fullsizetree
@@ -55,16 +55,16 @@ function Axe_begin_action(ent_id, x, y)
         for _=1,time do
             -- TODO animation for facing up, down
             for frame in all({Sprite_id_axe_swing_right_1, Sprite_id_axe_swing_right_2}) do
-                if(Character.is_moving) Axe_end_action() -- Cancel the operation if the player moves
+                if(Character_is_moving) Axe_end_action() -- Cancel the operation if the player moves
                 if(not Axe_continue_cutting) return
-                Character.set_temp_frame(frame)
+                Character_set_temp_frame(frame)
                 for _=1,Settings_axeswing_speed do -- Show the animation frame for n real frames
                     yield()
                 end
             end
         end
         -- TODO play animation for tree falling over
-        Character.set_temp_frame(nil)
+        Character_set_temp_frame(nil)
         Locations_remove_entity(x, y)
         Inventory_addMoney(Settings_tree_felling_payment)
     end)

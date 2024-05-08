@@ -56,10 +56,10 @@ function SmoothLocations_move_by_if_not_obstructed(ent_id, x, y, mdist)
 
     if system_is_loaded(World) then
         -- We have to move x and y separately to allow sliding along an obstruction
-        if not World.is_obstructed(new_x + x, new_y) then
+        if not World_is_obstructed(new_x + x, new_y) then
             new_x += x
         end
-        if not World.is_obstructed(new_x, new_y + y) then
+        if not World_is_obstructed(new_x, new_y + y) then
             new_y += y
         end
     else

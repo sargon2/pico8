@@ -24,7 +24,7 @@ function World.draw()
     local xmin, xmax, ymin, ymax = flr(char_x - 10), flr(char_x + 9), flr(char_y - 9), flr(char_y + 9)
 
     local smooth_ents = SmoothLocations_get_all_visible(xmin, xmax, ymin, ymax)
-    World._sort_by_y(smooth_ents)
+    World__sort_by_y(smooth_ents)
 
     -- Draw entities
     local curr_pos = 1
@@ -57,7 +57,7 @@ function World.draw()
 
 end
 
-function World._sort_by_y(smooth_ents)
+function World__sort_by_y(smooth_ents)
     local function compare_by_y(a, b)
         return a[3] < b[3]
     end
@@ -65,6 +65,6 @@ function World._sort_by_y(smooth_ents)
     quicksort(smooth_ents, compare_by_y)
 end
 
-function World.is_obstructed(x, y)
+function World_is_obstructed(x, y)
     return Attributes_get_attr_by_location(flr(x+.6), flr(y+1), Attr_WalkingObstruction)
 end

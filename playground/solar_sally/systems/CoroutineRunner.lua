@@ -3,7 +3,7 @@ CoroutineRunner = {
     name = "CoroutineRunner",
 }
 
-CoroutineRunner_Scripts = {}
+local CoroutineRunner_Scripts = {}
 
 function CoroutineRunner_StartScript(s)
     add(CoroutineRunner_Scripts, cocreate(s))

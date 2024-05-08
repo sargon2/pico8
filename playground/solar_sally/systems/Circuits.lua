@@ -20,7 +20,7 @@ function Circuits_recalculate()
     -- 1. (later) Sally's house should be connected to "the grid"
     -- 1. implement above phases
 
-    PerfTimer.time("Circuits_recalculate() (only when editing)", function()
+    PerfTimer_time("Circuits_recalculate() (only when editing)", function()
         local grid_components, components = Circuits_get_connected_components()
 
         Circuits_mark_powered_transformers(grid_components) 
@@ -30,7 +30,7 @@ function Circuits_recalculate()
 end
 
 function Circuits_mark_powered_panels(components)
-    Panels.clear_powered()
+    Panels_clear_powered()
 
     local total_powered_panels = 0
 
@@ -58,7 +58,7 @@ function Circuits_mark_powered_panels(components)
             for x, ys in pairs(component[Entities_Transformers_left]) do
                 for y, t in pairs(ys) do
                     if t then
-                        if Transformers.is_powered(x, y) then
+                        if Transformers_is_powered(x, y) then
                             num_powered_transformers += 1
                         end
                     end
@@ -81,8 +81,8 @@ function Circuits_mark_powered_panels(components)
                 for x, ys in pairs(component[Entities_Panels]) do
                     for y, t in pairs(ys) do
                         if t then
-                            if not Panels.is_powered(x, y) then
-                                Panels.mark_powered(x, y)
+                            if not Panels_is_powered(x, y) then
+                                Panels_mark_powered(x, y)
                                 total_powered_panels += 1
                             end
                         end
@@ -93,7 +93,7 @@ function Circuits_mark_powered_panels(components)
                 for x, ys in pairs(component[Entities_Transformers_left]) do
                     for y, t in pairs(ys) do
                         if t then
-                            Transformers.mark_overloaded(x, y)
+                            Transformers_mark_overloaded(x, y)
                         end
                     end
                 end
@@ -101,24 +101,24 @@ function Circuits_mark_powered_panels(components)
         end
     end
 
-    PanelCalculator.set_powered_panel_count(total_powered_panels)
+    PanelCalculator_set_powered_panel_count(total_powered_panels)
 end
 
 function Circuits_mark_powered_transformers(grid_components)
-    Transformers.clear_powered()
+    Transformers_clear_powered()
 
     for component in all(grid_components) do
         for x, ys in pairs(component[Entities_Transformers_left]) do
             for y, t in pairs(ys) do
                 if t then
-                    Transformers.mark_powered(x, y)
+                    Transformers_mark_powered(x, y)
                 end
             end
         end
         for x, ys in pairs(component[Entities_Transformers_right]) do
             for y, t in pairs(ys) do
                 if t then
-                    Transformers.mark_powered(x-1, y)
+                    Transformers_mark_powered(x-1, y)
                 end
             end
         end

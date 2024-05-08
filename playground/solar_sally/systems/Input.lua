@@ -1,4 +1,4 @@
-Input_AllInputDisabled = false
+local Input_AllInputDisabled = false
 
 function my_btn(...)
     if(Input_AllInputDisabled) return false

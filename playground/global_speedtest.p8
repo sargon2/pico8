@@ -1,22 +1,27 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
-i=0
+
+thing = {
+	i=0,
+}
+
+local thing_i = 0
 
 function _update60()
 end
 
 function _draw()
- local k=i
- k=0
  -- 1180 when global
  -- 2760 when local
- -- 2750 when faked
-	for j=1,2750 do
-		k += 1
+ -- 2750 when local copy of global
+ -- 922 when inside global table
+ -- 1183 when global local
+ thing_i = 0
+	for j=1,1183 do
+		thing_i += 1
 	end
-	i=k
-	print(k)
+	print(thing_i)
 end
 
 __gfx__
