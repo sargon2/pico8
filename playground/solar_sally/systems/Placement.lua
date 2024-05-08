@@ -90,8 +90,9 @@ function Placement_get_place_ent_id() -- return what the user would like to plac
 end
 
 function Placement.rotate_with_inventory_check()
-    local start_index
     if(Placement.placeable_index == nil) Placement.placeable_index = #Placement.placeable_entities -- since it'll get advanced at least once in the loop
+
+    local started_on_none = (Placement_get_place_ent_id() == Entities_None)
 
     local ent_id
     repeat
@@ -99,16 +100,15 @@ function Placement.rotate_with_inventory_check()
         Placement.placeable_index %= #Placement.placeable_entities
         Placement.placeable_index += 1
 
+        ent_id = Placement_get_place_ent_id()
+
         -- Check for empty inventory
-        if Placement.placeable_index == start_index then
+        if started_on_none and ent_id == Entities_None then
             Placement.placeable_index = nil
             return
         end
 
-        if(start_index == nil) start_index = Placement.placeable_index -- We want to go one past a full loop so we can end where we started if that's all the player has
-
         -- Does the player have one to place?
-        ent_id = Placement_get_place_ent_id()
     until ent_id == Entities_None or Inventory.get(ent_id) > 0
 end
 
