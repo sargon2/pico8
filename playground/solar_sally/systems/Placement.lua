@@ -22,15 +22,9 @@ Placement = { -- TODO convert a lot of these to local globals
     obstructed_fns = {},
 }
 
--- TODO
--- 1. (Done) Extract strings into Action constants
--- 2. (Done) Replace is_* with "current_action" and "current_action_ent"
--- 3. (Done) Reevaluate place_ent_id
--- 3. Reevaluate function division
-
 function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
-    Placement.placeable_entities = {Entities_Panels, Entities_Wire, Entities_Transformers_left, Entities_Fence}
+    Placement.placeable_entities = {Entities_None, Entities_Panels, Entities_Wire, Entities_Transformers_left, Entities_Fence}
     Placement.rotate_with_inventory_check() -- Set the placement icon to "no action" or the first thing, if we have anything
 end
 
@@ -38,6 +32,8 @@ function Placement.update(_elapsed)
     if my_btnp(🅾️) then
         Placement.rotate_with_inventory_check()
     end
+
+    if(Placement_get_place_ent_id() == Entities_None) return
 
     local entity_at_sel = Locations_entity_at(Placement.sel_x, Placement.sel_y) -- may be nil
 
@@ -83,6 +79,7 @@ function Placement.set_placement_obstruction_fn(ent_id, fn)
 end
 
 function Placement.draw()
+    if(Placement_get_place_ent_id() == Entities_None) return
     Sprites_draw_spr(Sprite_id_selection_box,Placement.sel_x,Placement.sel_y)
     Sprites_draw_spr(Placement.sel_sprite,Placement.sel_x,Placement.sel_y-1)
 end
@@ -96,6 +93,7 @@ function Placement.rotate_with_inventory_check()
     local start_index
     if(Placement.placeable_index == nil) Placement.placeable_index = #Placement.placeable_entities -- since it'll get advanced at least once in the loop
 
+    local ent_id
     repeat
         -- Advance
         Placement.placeable_index %= #Placement.placeable_entities
@@ -109,8 +107,9 @@ function Placement.rotate_with_inventory_check()
 
         if(start_index == nil) start_index = Placement.placeable_index -- We want to go one past a full loop so we can end where we started if that's all the player has
 
-    -- Does the player have one to place?
-    until Inventory.get(Placement_get_place_ent_id()) > 0
+        -- Does the player have one to place?
+        ent_id = Placement_get_place_ent_id()
+    until ent_id == Entities_None or Inventory.get(ent_id) > 0
 end
 
 function Placement_set_place_ent(ent_id)
@@ -135,7 +134,7 @@ function Placement.remove(ent_id, x, y)
     end
     Inventory.add(ent_id)
 
-    Placement_set_place_ent(Placement.current_action_ent) -- Set the next placement item to the one we just picked up for convenience
+    Placement_set_place_ent(ent_id) -- Set the next placement item to the one we just picked up for convenience
     Circuits_recalculate()
 end
 
@@ -245,33 +244,39 @@ function limit_to(val, min, max)
     return 0, val
 end
 
-function Placement_handle_character_movement(is_first_movement_frame, elapsed, x, y) -- TODO this function has side effects
+function Placement_handle_character_movement(is_first_movement_frame, elapsed, xv, yv) -- TODO this function has side effects
     -- Takes in the user's requested movement vector.
     -- Moves the selection box first, then both box and character once it reaches max range.
     -- Returns the character's modified movement vector.
 
-    -- Is it the first movement frame?
-    if is_first_movement_frame then
-        -- If it's the first movement frame, we want to kickstart the movement, but not too far so we don't jump twice.
-        -- This is so a single-frame tap will always move the selection box, for responsiveness.
-        x=x/2
-        y=y/2
-    else
-        -- Then for subsequent frames, we normalize the movement speed to the frame rate.
-        x, y = normalize(x, y, Settings_selection_speed*elapsed)
-    end
-
     local char_x, char_y = SmoothLocations_get_location(Entities_Character)
+    local new_xv = xv
+    local new_yv = yv
 
-    -- If we're at the max selection range, move the character
+    -- If we're not using placement, don't change anything.  Just keep the selection box nearby
+    if(Placement_get_place_ent_id() == Entities_None) then
+        Placement.sel_x_p = char_x + 0.5
+        Placement.sel_y_p = char_y + 0.5
+    else
+        -- Is it the first movement frame?
+        if is_first_movement_frame then
+            -- If it's the first movement frame, we want to kickstart the movement, but not too far so we don't jump twice.
+            -- This is so a single-frame tap will always move the selection box, for responsiveness.
+            xv=xv/2
+            yv=yv/2
+        else
+            -- Then for subsequent frames, we normalize the movement speed to the frame rate.
+            xv, yv = normalize(xv, yv, Settings_selection_speed*elapsed)
+        end
 
-    local char_new_x
-    local char_new_y
-    char_new_x, Placement.sel_x_p = limit_to(Placement.sel_x_p + x, char_x - Settings_max_selection_range, char_x + Settings_max_selection_range)
-    char_new_y, Placement.sel_y_p = limit_to(Placement.sel_y_p + y, char_y - Settings_max_selection_range, char_y + Settings_max_selection_range)
+        -- If we're at the max selection range, move the character
+
+        new_xv, Placement.sel_x_p = limit_to(Placement.sel_x_p + xv, char_x - Settings_max_selection_range, char_x + Settings_max_selection_range)
+        new_yv, Placement.sel_y_p = limit_to(Placement.sel_y_p + yv, char_y - Settings_max_selection_range, char_y + Settings_max_selection_range)
+    end
 
     Placement.sel_x = flr(Placement.sel_x_p)
     Placement.sel_y = flr(Placement.sel_y_p)
 
-    return char_new_x, char_new_y
+    return new_xv, new_yv
 end

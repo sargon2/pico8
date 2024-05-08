@@ -1,3 +1,4 @@
+--[[const]] Entities_None = 0
 --[[const]] Entities_Button = 1
 --[[const]] Entities_Character = 2
 --[[const]] Entities_GridWire = 3
