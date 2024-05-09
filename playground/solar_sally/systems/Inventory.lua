@@ -3,7 +3,6 @@ Inventory = {
 }
 
 local Inventory_items = {} -- items[ent_id] = count
-local Inventory_order = {} -- order[] = ent_id -- just for display order
 local Inventory_formatters = {} -- formatters[ent_id] = fn(text)
 local Inventory_icons = {}
 
@@ -36,7 +35,6 @@ function Inventory.init()
         end
         Inventory_addMoney(0.25)
     end
-    add(Inventory_order, Entities_Money)
 
     Inventory_add(Entities_Panels, Settings_start_panels)
     Inventory_add(Entities_Transformers_left, Settings_start_transformers)
@@ -46,10 +44,7 @@ end
 
 function Inventory_add(ent_id, num) -- Does not work for money.
     if(not num) num = 1
-    if not Inventory_items[ent_id] then
-        Inventory_items[ent_id] = 0
-        add(Inventory_order, ent_id)
-    end
+    if(not Inventory_items[ent_id]) Inventory_items[ent_id] = 0
     Inventory_items[ent_id] += num
 end
 
@@ -109,30 +104,41 @@ function draw_window(x, y, width, height) -- TODO where should this live?
     _draw_spr(Sprite_id_window_br, x+width-1, y+height-1)
 end
 
+--[[const]] local Inventory_locations = {
+    [Entities_Money] = {1, 14.5},
+    [Entities_Panels] = {1, 13.5},
+    [Entities_Transformers_left] = {4.5, 13.5},
+    [Entities_Wire] = {8, 13.5},
+    [Entities_Fence] = {11.5, 13.5},
+}
+
+--[[const]] icon_x_start = 14.25 -- starts right and moves left
+--[[const]] icon_y = 14.5
+
+local should_draw_fence = false -- TODO hack to not draw fence before you get it the first time
+
 function Inventory.draw()
     --[[const]] local window_left = 0
     --[[const]] local window_top = 13
-    --[[const]] local window_height = 3 -- #Inventory_order + 2
+    --[[const]] local window_height = 3
     --[[const]] local window_width = 16
     draw_window(window_left, window_top, window_width, window_height)
-    local col = 0
-    local row = 0
-    for ent_id in all(Inventory_order) do
+
+    for ent_id, loc in pairs(Inventory_locations) do
         local count = Inventory_items[ent_id]
-        Attr_DrawFn[ent_id](window_left+1+col*3, window_top+1.25+row, ent_id, true)
-        local fn = Inventory_formatters[ent_id]
-        if(fn) count = fn(count)
-        Sprites_print_text(count, 4, window_left+2+col*3, window_top+1.25+row, 2, 2, true)
-        col += 1
-        if ent_id == Entities_Money then -- TODO hack
-            col += 1
+        if(ent_id == Entities_Fence and count > 0) should_draw_fence = true
+        if(ent_id != Entities_Fence or should_draw_fence) then
+            Attr_DrawFn[ent_id](loc[1], loc[2], ent_id, true)
+            local fn = Inventory_formatters[ent_id]
+            if(fn) count = fn(count)
+            Sprites_print_text(count, 4, loc[1]+1, loc[2], 2, 2, true)
         end
     end
 
     -- Draw icons
-    local x = 14.25
+    local x = icon_x_start
     for icon in all(Inventory_icons) do
-        Sprites_draw_relative_to_screen(icon,x,13.25)
+        Sprites_draw_relative_to_screen(icon,x,icon_y)
         x -= 1
     end
 end
