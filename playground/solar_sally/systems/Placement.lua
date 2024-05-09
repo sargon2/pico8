@@ -260,8 +260,10 @@ function Placement_handle_character_movement(is_first_movement_frame, elapsed, x
 
     -- If we're not using placement, don't change anything.  Just keep the selection box nearby
     if(Placement_get_place_ent_id() == Entities_None) then
-        Placement_sel_x_p = char_x + 0.5
-        Placement_sel_y_p = char_y + 0.5
+        if(xv != 0 or yv != 0) then
+            Placement_sel_x_p = char_x + 0.5 + (xv*1.5)
+            Placement_sel_y_p = char_y + 0.5 + (yv*1.5)
+        end
     else
         -- Is it the first movement frame?
         if is_first_movement_frame then
