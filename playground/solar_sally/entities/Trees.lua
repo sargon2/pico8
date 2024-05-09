@@ -12,7 +12,7 @@ function Trees.init()
     for _=1,500 do
         local x = flr(rnd(100))-50
         local y = flr(rnd(100))-50
-        if x != 0 or y != 1 then -- Don't want a tree starting right over Sally
+        if abs(x) > 3 or abs(y) > 3 then -- Don't want a tree starting right over Sally
             if rnd(100) < 50 then
                 Locations_place_entity(Entities_Trees, x, y)
             else
