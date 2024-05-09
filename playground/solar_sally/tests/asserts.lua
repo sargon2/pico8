@@ -1,5 +1,12 @@
 asserts = {} -- Assert functions should take whatever args they need, and return two -- the result as a boolean, and a failure message.
 
+-- Functions here are implemented as "asserts.*" but invoked as "assert.*" so the framework can inject its code.
+-- See test_framework.lua.
+
+function asserts.fail(failMsg)
+    return false, "asserts.fail: "..tostr(failMsg)
+end
+
 function asserts.isTrue(a, failMsg)
     return a, "asserts.isTrue failure: expected "..dump(a).." to be true: "..tostr(failMsg)
 end

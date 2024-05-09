@@ -1,0 +1,28 @@
+-- This file defines the code included in the "tests" testing run.
+-- We can't name this file .p8 or .lua because then the vscode pico8 extension gets confused.
+-- We can't include the entire solar sally because then we exceed the token limit.
+-- If the testing cart ever hits that limit, we can just make a 2nd testing cart to run the additional tests.
+
+#include ../components/Settings.lua
+#include ../../lua_extensions.lua
+#include ../types/bignum.lua
+#include ../types/twonum.lua
+
+-- Needed for Placement
+#include ../components/Entities.lua
+#include ../components/Sprites.lua
+#include ../components/Attributes.lua
+#include ../systems/Inventory.lua
+
+#include ../systems/Placement.lua
+
+#include ../tests/testing_framework.lua
+#include ../tests/asserts.lua
+#include ../tests/test_framework.lua
+#include ../tests/test_bignum.lua
+#include ../tests/test_lua_extensions.lua
+#include ../tests/test_PanelCalculator.lua
+#include ../tests/test_twonum.lua
+#include ../tests/test_placement.lua
+
+reportResults() -- Defined by test_framework, must be after all test executions

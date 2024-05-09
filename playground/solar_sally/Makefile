@@ -15,7 +15,8 @@ output/solar_sally.p8.png: solar_sally.p8 $(LUA_FILES)
 .tested: output/solar_sally.p8.png
 	# cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -x root/playground/solar_sally/tests.p8
 	rm -f test_output.txt
-	../../../../pico8/pico-8/pico8 -x tests.p8 | tee test_output.txt
+	cp tests/tests.txt output/tests.lua
+	../../../../pico8/pico-8/pico8 -x output/tests.lua | tee test_output.txt
 	cat test_output.txt | tail -1 | grep "Pass"
 	touch .tested
 

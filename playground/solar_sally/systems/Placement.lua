@@ -26,6 +26,7 @@ local Placement_obstructed_fns = {}
 function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
     Placement_placeable_entities = {Entities_None, Entities_Panels, Entities_Wire, Entities_Transformers_left, Entities_Fence}
+    Placement_placeable_index = nil -- To reset rotation in tests
     Placement_rotate_with_inventory_check() -- Set the placement icon to "no action" or the first thing, if we have anything
 end
 
@@ -90,7 +91,7 @@ function Placement_get_place_ent_id() -- return what the user would like to plac
     return Placement_placeable_entities[Placement_placeable_index]
 end
 
-function Placement_rotate_with_inventory_check()
+function Placement_rotate_with_inventory_check(skip_off)
     if(Placement_placeable_index == nil) Placement_placeable_index = #Placement_placeable_entities -- since it'll get advanced at least once in the loop
 
     local started_on_none = (Placement_get_place_ent_id() == Entities_None)
@@ -111,6 +112,9 @@ function Placement_rotate_with_inventory_check()
 
         -- Does the player have one to place?
     until ent_id == Entities_None or Inventory_get(ent_id) > 0
+
+    -- If we're skipping none, we can just rotate again since we never rotate None -> None, only None -> nil.
+    if(skip_off and ent_id == Entities_None) Placement_rotate_with_inventory_check()
 end
 
 function Placement_set_place_ent(ent_id)
@@ -152,8 +156,8 @@ function Placement_place(ent_id, x, y)
 
     Circuits_recalculate() -- TODO this probably shouldn't live here
     if Inventory_get(ent_id) == 0 then
-        -- That was our last one, rotate off it
-        Placement_rotate_with_inventory_check()
+        -- That was our last one, rotate off it, skipping None since rotating to None would be weird
+        Placement_rotate_with_inventory_check(true)
     end
 end
 
