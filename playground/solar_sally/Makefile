@@ -64,4 +64,4 @@ clean:
 
 # Intended for use with watch-and-run. We do the build before running lint so we can debug pre-linted code
 .PHONY: workflow-copy-lint
-workflow-copy-lint: copy-to-windows lint
+workflow-copy-lint: copy-to-windows .tested lint
