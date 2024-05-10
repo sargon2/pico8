@@ -36,7 +36,21 @@ function lua_framework_tests.test_full_tostr()
     assert.equals("32767.9999847412109375", full_tostr(0b111111111111111.1111111111111111))
     assert.equals("-32767.9999847412109375", full_tostr(0b1000000000000000.0000000000000001))
     assert.equals("-32768", full_tostr(0b1000000000000000.0000000000000000))
+end
 
+function lua_framework_tests.test_set_with_ensure()
+    local t = {}
+    t[1] = "hi"
+    set_with_ensure(t, 2, 3, 4)
+    assert.equals(t[1], "hi")
+    assert.equals(t[2][3], 4)
+    set_with_ensure(t, 3, 4)
+    assert.equals(t[3], 4)
+    set_with_ensure(t, 3, 5)
+    assert.equals(t[3], 5)
+    t[3] = 6
+    set_with_ensure(t, 3, 7)
+    assert.equals(t[3], 7)
 end
 
 runTests("Lua framework tests", lua_framework_tests)

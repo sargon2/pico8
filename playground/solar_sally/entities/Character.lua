@@ -3,8 +3,6 @@ Character = {
 }
 
 local Character_frame=1
---[[const]] Character_speed=6 -- TODO move to settings
---[[const]] Character_anim_speed=8 -- TODO move to settings
 local Character_anim_frames={1,2}
 Character_flip_x=false
 Character_is_moving = false
@@ -82,11 +80,11 @@ function Character_handle_player_movement(elapsed)
         x, y = Placement_handle_character_movement(is_first_movement_frame, elapsed, x, y)
     end
 
-    SmoothLocations_move_by_if_not_obstructed(Entities_Character, x, y, Character_speed*elapsed)
+    SmoothLocations_move_by_if_not_obstructed(Entities_Character, x, y, Settings_character_speed*elapsed)
 
     -- Animate walking
     if x!=0 or y!=0 then
-        Character_frame += Character_anim_speed*elapsed
+        Character_frame += Settings_character_anim_speed*elapsed
     else
         Character_frame = 0.99 -- Very close to the next frame to increase responsivenes
     end

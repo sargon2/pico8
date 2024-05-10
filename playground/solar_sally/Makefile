@@ -26,7 +26,7 @@ lint:
 
 .PHONY: find-todos
 find-todos:
-	grep --exclude Makefile -rin --color=yes todo .
+	! grep --exclude Makefile -rin --color=yes todo .
 
 .PHONY: counts
 counts: output/solar_sally.p8.png

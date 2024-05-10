@@ -6,8 +6,7 @@ function Locations_place_entity(ent_id, x, y)
         if(not Locations_locations[y]) return
         Locations_locations[y][x] = nil
     else
-        if(not Locations_locations[y]) Locations_locations[y] = {}
-        Locations_locations[y][x] = ent_id
+        set_with_ensure(Locations_locations, y, x, ent_id)
     end
 end
 

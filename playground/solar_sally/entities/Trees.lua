@@ -28,7 +28,6 @@ function Trees.init()
 end
 
 function Trees.update()
-    -- TODO this function is quite slow for moving large time periods. I guess we need a table of all trees?
     local rnd_x = flr(rnd(100))-50 -- note same as placement formula
     local rnd_y = flr(rnd(100))-50
     local ent_id = Locations_entity_at(rnd_x, rnd_y)

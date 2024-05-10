@@ -1,4 +1,4 @@
 --[[const]] Actions_no_action = 1
 --[[const]] Actions_place = 2
 --[[const]] Actions_pick_up = 3
---[[const]] Actions_custom = 99 -- TODO remove this, there should be no vague actions
+--[[const]] Actions_custom = 99

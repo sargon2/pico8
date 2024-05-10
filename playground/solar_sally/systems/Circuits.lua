@@ -39,10 +39,7 @@ function Circuits_mark_powered_panels(components)
             for x, ys in pairs(component[Entities_Transformers_right]) do
                 for y, t in pairs(ys) do
                     if t then
-                        if(not component[Entities_Transformers_left]) component[Entities_Transformers_left] = {}
-                        if(not component[Entities_Transformers_left][x-1]) component[Entities_Transformers_left][x-1] = {}
-                        if(not component[Entities_Transformers_left][x-1][y]) component[Entities_Transformers_left][x-1][y] = {}
-                        component[Entities_Transformers_left][x-1][y] = true
+                        set_with_ensure(component, Entities_Transformers_left, x-1, y, true)
                     end
                 end
             end
@@ -137,10 +134,7 @@ function Circuits_get_connected_components()
         if ent_id != nil then
             if Attr_is_circuit_component[ent_id] then
                 -- If it's a circuit component, add it to the list of connected entities for this graph component
-                if(not current_component[ent_id]) current_component[ent_id] = {}
-                if(not current_component[ent_id][x]) current_component[ent_id][x] = {}
-                if(not current_component[ent_id][x][y]) current_component[ent_id][x][y] = {}
-                current_component[ent_id][x][y] = true
+                set_with_ensure(current_component, ent_id, x, y, true)
             elseif ent_id == Entities_Wire or ent_id == Entities_GridWire then
                 -- If it's wire or gridwire, continue recursing
                 visited:set(x, y)

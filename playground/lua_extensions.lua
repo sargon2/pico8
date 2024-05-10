@@ -125,3 +125,18 @@ function full_tostr(n)
     end
     return ret
 end
+
+-- table[arg1][arg2][arg3][...] = argn
+-- requires at least 2 args after the table for table[arg1] = arg2
+function set_with_ensure(table, ...)
+    local args = {...}
+    local last_element = deli(args, #args)
+    for i, e in pairs(args) do
+        if i == #args then
+            table[e] = last_element
+            return
+        end
+        if(not table[e]) table[e] = {}
+        table = table[e]
+    end
+end

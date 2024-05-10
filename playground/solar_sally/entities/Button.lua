@@ -26,13 +26,13 @@ end
 function Button.init()
     Button_create_button("sleep 24h", -5, 0, Button_pressAdvanceTimeDays, nil, 1)
     Button_create_button("go inside", -5, 1, Button_pressGoInside)
-    Button_create_button("unlock basement for $2", -5, 2, Button_pressUnlockBasement)
-    Button_create_button("buy 1 transformer for $1000", -5, 3, Button_pressBuy, nil, Entities_Transformers_left, 1000, 1)
-    Button_create_button("buy 10 wire for $1 ea", -5, 4, Button_pressBuy, nil, Entities_Wire, 1, 10)
-    Button_create_button("buy 10 panels for $500", -5, 5, Button_pressBuy, nil, Entities_Panels, 50, 10)
-    Button_create_button("buy 1 panel for $50", -5, 6, Button_pressBuy, nil, Entities_Panels, 50, 1)
-    Button_create_button("buy axe for $100", -5, 7, Button_pressBuyAxe, nil, 100)
-    Button_create_button("buy fence for $10", -5, 8, Button_pressBuy, nil, Entities_Fence, 10, 1)
+    Button_create_button("unlock basement for $"..tostr(Settings_key_cost), -5, 2, Button_pressUnlockBasement)
+    Button_create_button("buy 1 transformer for $"..tostr(Settings_transformer_cost), -5, 3, Button_pressBuy, nil, Entities_Transformers_left, Settings_transformer_cost, 1)
+    Button_create_button("buy "..tostr(Settings_wire_qty).." wire for $"..tostr(Settings_wire_cost).." ea", -5, 4, Button_pressBuy, nil, Entities_Wire, Settings_wire_cost, Settings_wire_qty)
+    -- Button_create_button("buy 10 panels for $500", -5, 5, Button_pressBuy, nil, Entities_Panels, 50, 10)
+    Button_create_button("buy 1 panel for $"..tostr(Settings_panel_cost), -5, 6, Button_pressBuy, nil, Entities_Panels, Settings_panel_cost, 1)
+    Button_create_button("buy axe for $"..tostr(Settings_axe_cost), -5, 7, Button_pressBuyAxe, nil, Settings_axe_cost)
+    Button_create_button("buy fence for $"..tostr(Settings_fence_cost), -5, 8, Button_pressBuy, nil, Entities_Fence, Settings_fence_cost, 1)
 end
 
 function Button_draw_button(x, y, ent_id)
@@ -93,8 +93,7 @@ function Button_pressAdvanceTimeYears(y)
 end
 
 function Button_pressUnlockBasement()
-    -- TODO make key cost a setting
-    if(not Inventory_canAfford(2)) return
-    Inventory_addMoney(-2)
+    if(not Inventory_canAfford(Settings_key_cost)) return
+    Inventory_addMoney(-Settings_key_cost)
     Button_create_button("sleep 30d", -5, 11, Button_pressAdvanceTimeDays, nil, 30)
 end

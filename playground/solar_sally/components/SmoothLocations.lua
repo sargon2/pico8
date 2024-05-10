@@ -18,11 +18,8 @@ function SmoothLocations_set_or_update_location(ent_id, x, y)
         end
     end
 
-    -- TODO there's gotta be a better way to do this...
-    if(not SmoothLocations_Grid[cell_x]) SmoothLocations_Grid[cell_x] = {}
-    if(not SmoothLocations_Grid[cell_x][cell_y]) SmoothLocations_Grid[cell_x][cell_y] = {}
+    set_with_ensure(SmoothLocations_Grid, cell_x, cell_y, ent_id, {x, y})
 
-    SmoothLocations_Grid[cell_x][cell_y][ent_id] = {x, y}
     SmoothLocations_cell[ent_id] = {cell_x, cell_y}
 end
 
@@ -37,14 +34,12 @@ function SmoothLocations_is_obstructed(x, y)
     -- Not sure what's up with these weird values.
     -- The goal of the values is if Sally places a panel, then walks up to it, she can remove and place it again.
     -- But if she picks it up and moves 1 pixel closer, she can't replace it.
-    -- TODO this could use a unit test.
     local xmin = (x-.08)-.49
     local xmax = (x-.08)+.49
     local ymin = (y-.55)-.49
     local ymax = (y-.55)+.49
 
-    local results = SmoothLocations_get_all_visible(xmin, xmax, ymin, ymax) -- TODO we only need the first one...
-    if next(results) then
+    if next(SmoothLocations_get_all_visible(xmin, xmax, ymin, ymax)) then
         return true
     end
     return false

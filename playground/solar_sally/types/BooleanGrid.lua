@@ -6,8 +6,7 @@ function BooleanGrid:construct()
 end
 
 function BooleanGrid:set(x, y)
-    if(not self.values[x]) self.values[x] = {}
-    self.values[x][y] = true
+    set_with_ensure(self.values, x, y, true)
 end
 
 function BooleanGrid:unset(x, y)

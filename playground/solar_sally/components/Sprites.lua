@@ -115,7 +115,7 @@ function Sprites_convert_map_to_screen(x, y)
     return 8+x-char_x, 8+y-char_y
 end
 
-function Sprites_set_pixel(x,y,xoffset,yoffset,c, relative_to_screen) -- TODO where should this live?
+function Sprites_set_pixel(x,y,xoffset,yoffset,c, relative_to_screen)
     if not relative_to_screen then
         x, y = Sprites_convert_map_to_screen(x, y)
     end
@@ -126,11 +126,11 @@ function Sprites_set_pixel(x,y,xoffset,yoffset,c, relative_to_screen) -- TODO wh
     )
 end
 
-function Sprites_set_pixel_relative_to_screen(x,y,xoffset,yoffset,c) -- convenience -- TODO where should this live?
+function Sprites_set_pixel_relative_to_screen(x,y,xoffset,yoffset,c) -- convenience
     Sprites_set_pixel(x, y, xoffset, yoffset, c, true)
 end
 
-function Sprites_rect(x,y,xmin,ymin,xmax,ymax,c) -- TODO where should this live?
+function Sprites_rect(x,y,xmin,ymin,xmax,ymax,c)
     local char_x, char_y = SmoothLocations_get_location(Entities_Character)
     rect(
         (8+x-char_x)*8+xmin,
