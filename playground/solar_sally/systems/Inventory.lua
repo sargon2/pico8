@@ -38,7 +38,7 @@ function Inventory.init()
 
     Inventory_add(Entities_Panels, Settings_start_panels)
     Inventory_add(Entities_Transformers_left, Settings_start_transformers)
-    Inventory_add(Entities_Wire, Settings_start_wire) -- TODO should wire be infinite?
+    Inventory_add(Entities_Wire, Settings_start_wire)
     Inventory_add(Entities_Fence, Settings_start_fence)
 end
 
@@ -78,7 +78,7 @@ function Inventory_check_and_remove(ent_id)
     return nil
 end
 
-function draw_window(x, y, width, height) -- TODO where should this live?
+function draw_window(x, y, width, height)
     local function _draw_spr(sprite_id, spr_x, spr_y)
         Sprites_draw_relative_to_screen(sprite_id, spr_x, spr_y)
     end
@@ -115,7 +115,7 @@ end
 --[[const]] icon_x_start = 14.25 -- starts right and moves left
 --[[const]] icon_y = 14.5
 
-local should_draw_fence = false -- TODO hack to not draw fence before you get it the first time
+local should_draw_fence = false
 
 function Inventory.draw()
     --[[const]] local window_left = 0

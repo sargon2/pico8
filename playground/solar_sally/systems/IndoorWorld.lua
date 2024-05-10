@@ -1,5 +1,3 @@
--- TODO name this
-
 IndoorWorld = {
     name = "IndoorWorld"
 }

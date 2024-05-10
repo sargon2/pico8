@@ -67,7 +67,6 @@ function Placement.update(_elapsed)
     end
 end
 
--- TODO these set_fn methods are weird and only needed since not all entities are exactly 1 tile
 function Placement_set_placement_fn(ent_id, fn)
     Placement_placement_fns[ent_id] = fn
 end
@@ -154,11 +153,11 @@ function Placement_place(ent_id, x, y)
         Locations_place_entity(ent_id, x, y)
     end
 
-    Circuits_recalculate() -- TODO this probably shouldn't live here
     if Inventory_get(ent_id) == 0 then
         -- That was our last one, rotate off it, skipping None since rotating to None would be weird
         Placement_rotate_with_inventory_check(true)
     end
+    Circuits_recalculate()
 end
 
 function Placement_custom_action(ent_id, x, y)
@@ -193,7 +192,7 @@ function Placement_determine_action_and_sprite(entity_at_sel)
             -- Does the thing we're placing think this location is obstructed?
             local fn = Placement_obstructed_fns[place_ent_id]
             if fn and fn(Placement_sel_x, Placement_sel_y) then
-                return Actions_no_action, nil, Sprite_id_no_action -- TODO should this be a custom sprite?
+                return Actions_no_action, nil, Sprite_id_no_action
             end
             -- We're not removing and we have nothing selected, so we're placing the user's selected item.
             return Actions_place, place_ent_id, Attr_mini_sprite[place_ent_id]
@@ -249,7 +248,7 @@ function limit_to(val, min, max)
     return 0, val
 end
 
-function Placement_handle_character_movement(is_first_movement_frame, elapsed, xv, yv) -- TODO this function has side effects
+function Placement_handle_character_movement(is_first_movement_frame, elapsed, xv, yv)
     -- Takes in the user's requested movement vector.
     -- Moves the selection box first, then both box and character once it reaches max range.
     -- Returns the character's modified movement vector.

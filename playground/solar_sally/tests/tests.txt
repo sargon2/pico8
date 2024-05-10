@@ -5,8 +5,8 @@
 
 #include ../components/Settings.lua
 #include ../../lua_extensions.lua
-#include ../types/bignum.lua
 #include ../types/twonum.lua
+#include ../types/BooleanGrid.lua
 
 -- Needed for Placement
 #include ../components/Entities.lua
@@ -19,7 +19,6 @@
 #include ../tests/testing_framework.lua
 #include ../tests/asserts.lua
 #include ../tests/test_framework.lua
-#include ../tests/test_bignum.lua
 #include ../tests/test_lua_extensions.lua
 #include ../tests/test_PanelCalculator.lua
 #include ../tests/test_twonum.lua

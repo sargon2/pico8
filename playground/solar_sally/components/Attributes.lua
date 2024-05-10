@@ -8,6 +8,7 @@ Attr_action_mindist = {}
 Attr_action_fn = {}
 Attr_action_release_fn = {}
 Attr_fence_linkable = {}
+Attr_powered_grid = NewObj(BooleanGrid)
 
 Attr_DrawFn = {} -- fn(x, y, ent_id, relative_to_screen)
 

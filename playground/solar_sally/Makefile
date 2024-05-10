@@ -24,6 +24,10 @@ output/solar_sally.p8.png: solar_sally.p8 $(LUA_FILES)
 lint:
 	$(SHRINKO8) solar_sally.p8 --lint
 
+.PHONY: find-todos
+find-todos:
+	grep --exclude Makefile -rin --color=yes todo .
+
 .PHONY: counts
 counts: output/solar_sally.p8.png
 	@$(COUNTER) $(LUA_FILES) solar_sally.p8 output/solar_sally.p8.png
@@ -64,4 +68,4 @@ clean:
 
 # Intended for use with watch-and-run. We do the build before running lint so we can debug pre-linted code
 .PHONY: workflow-copy-lint
-workflow-copy-lint: copy-to-windows .tested lint
+workflow-copy-lint: copy-to-windows .tested lint find-todos

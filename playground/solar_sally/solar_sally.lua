@@ -1,25 +1,20 @@
-
--- todo
--- add energy storage
--- add day/night cycle
--- add store to buy panels from
--- add houses?
-
-solar_sally_systems = {}
+solar_sally_systems = {} -- ordered, index-based list
+solar_sally_loaded_systems = {} -- cache for speed of system_is_loaded(); map of system to boolean
 
 function system_is_loaded(s)
-    -- TODO should we cache a boolean table to speed this up?
-    return contains(solar_sally_systems, s)
+    return solar_sally_loaded_systems[s]
 end
 
 function unload_system(s)
     if(s.destroy) s.destroy()
     del(solar_sally_systems, s)
+    solar_sally_loaded_systems[s] = nil
 end
 
 function load_system(s) -- Careful! Order matters
     add(solar_sally_systems, s)
     if(s.init) s.init()
+    solar_sally_loaded_systems[s] = true
 end
 
 function _init()

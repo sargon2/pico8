@@ -2,29 +2,6 @@ fadetoblack = {
     name = "fadetoblack",
 }
 
--- TODO is any of this needed outside of the coroutine functions?
-local fadetoblack_fade_state = 0 -- 0=no fade in progress, 1=fading out, -1=fading in
-local fadetoblack_current_fade_level = 0
-
-function fadetoblack_start_fade()
-    fadetoblack_fade_state = 1
-end
-
-function fadetoblack_start_fade_in()
-    fadetoblack_fade_state = -1
-end
-
-function fadetoblack.update()
-    if fadetoblack_fade_state != 0 then
-        fadetoblack_current_fade_level += fadetoblack_fade_state
-        if fadetoblack_current_fade_level > 0 and fadetoblack_current_fade_level <= 24 then
-            fade(fadetoblack_current_fade_level)
-        else
-            fadetoblack_fade_state = 0
-        end
-    end
-end
-
 -- Functions suitable for use as coroutines
 function fadeAndDisableInputForCo(fn)
     CoroutineRunner_StartScript(function ()

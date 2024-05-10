@@ -6,22 +6,19 @@ function Circuits_recalculate()
     -- Panels provide power so really anything hooked up to a panel & wire should be powered, but
     -- for the purposes of determining if a panel is "powered" (that is, generating to the grid)
     -- it needs to be on a circuit that contains at least one transformer which is plugged into the central grid.
-    -- That means we need phases:
-    -- 1. (done) determine circuit components and what's on them
+    -- That means we have phases:
+    -- 1. determine circuit components and what's on them
     -- 2. determine which transformers are "powered" (i.e. connected to the grid)
     -- - If any component other than a transformer is plugged into the grid, it's not powered
     -- 3. a panel is powered if it's on a circuit with:
     -- - enough powered transformers
     -- - NOT the grid
 
-    -- TODO:
-    -- 1. (done) Add a sprite for "the grid" wire
-    -- 1. (done) add an entity for "the grid" wire and add one or more into the world
-    -- 1. (later) Sally's house should be connected to "the grid"
-    -- 1. implement above phases
-
     PerfTimer_time("Circuits_recalculate() (only when editing)", function()
         local grid_components, components = Circuits_get_connected_components()
+
+        Attr_powered_grid = NewObj(BooleanGrid)
+        Transformers_clear_overloaded()
 
         Circuits_mark_powered_transformers(grid_components) 
 
@@ -30,8 +27,6 @@ function Circuits_recalculate()
 end
 
 function Circuits_mark_powered_panels(components)
-    Panels_clear_powered()
-
     local total_powered_panels = 0
 
     for component in all(components) do
@@ -58,7 +53,7 @@ function Circuits_mark_powered_panels(components)
             for x, ys in pairs(component[Entities_Transformers_left]) do
                 for y, t in pairs(ys) do
                     if t then
-                        if Transformers_is_powered(x, y) then
+                        if Attr_powered_grid:is_set(x, y) then
                             num_powered_transformers += 1
                         end
                     end
@@ -81,8 +76,8 @@ function Circuits_mark_powered_panels(components)
                 for x, ys in pairs(component[Entities_Panels]) do
                     for y, t in pairs(ys) do
                         if t then
-                            if not Panels_is_powered(x, y) then
-                                Panels_mark_powered(x, y)
+                            if not Attr_powered_grid:is_set(x, y) then
+                                Attr_powered_grid:set(x, y)
                                 total_powered_panels += 1
                             end
                         end
@@ -105,8 +100,6 @@ function Circuits_mark_powered_panels(components)
 end
 
 function Circuits_mark_powered_transformers(grid_components)
-    Transformers_clear_powered()
-
     for component in all(grid_components) do
         for x, ys in pairs(component[Entities_Transformers_left]) do
             for y, t in pairs(ys) do
