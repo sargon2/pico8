@@ -1,6 +1,6 @@
 Axe = {}
 
-local Axe_continue_cutting -- bool
+local Axe_Coroutine
 
 function Axe.init()
     Attr_mini_sprite[Entities_Trees] = Sprite_id_place_axe
@@ -35,11 +35,10 @@ end
 
 function Axe_end_action()
     Character_set_temp_frame(nil)
-    Axe_continue_cutting = false
+    CoroutineRunner_Cancel(Axe_Coroutine)
 end
 
 function Axe_begin_action(ent_id, x, y)
-    Axe_continue_cutting = true
     -- Face the tree
     local char_x, _ = SmoothLocations_get_location(Entities_Character)
     if x < char_x then
@@ -47,13 +46,15 @@ function Axe_begin_action(ent_id, x, y)
     else
         Character_flip_x = false
     end
-    CoroutineRunner_StartScript(function ()
+    Axe_Coroutine = CoroutineRunner_StartScript(function ()
         local time = Settings_axeswings_fullsizetree
         if(ent_id == Entities_YoungTrees) time = Settings_axeswings_youngtree
         for _=1,time do
             for frame in all({Sprite_id_axe_swing_right_1, Sprite_id_axe_swing_right_2}) do
-                if(Character_is_moving) Axe_end_action() -- Cancel the operation if the player moves
-                if(not Axe_continue_cutting) return
+                if(Character_is_moving) then
+                    Axe_end_action() -- Cancel the operation if the player moves
+                    return
+                end
                 Character_set_temp_frame(frame)
                 for _=1,Settings_axeswing_speed do -- Show the animation frame for n real frames
                     yield()

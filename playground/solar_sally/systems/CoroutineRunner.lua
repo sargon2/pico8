@@ -6,7 +6,9 @@ CoroutineRunner = {
 local CoroutineRunner_Scripts = {}
 
 function CoroutineRunner_StartScript(s)
-    add(CoroutineRunner_Scripts, cocreate(s))
+    local c = cocreate(s)
+    add(CoroutineRunner_Scripts, c)
+    return c
 end
 
 function CoroutineRunner.update()
@@ -19,4 +21,8 @@ function CoroutineRunner.update()
         end
     end
     CoroutineRunner_Scripts = s -- remove finished scripts
+end
+
+function CoroutineRunner_Cancel(c)
+    del(CoroutineRunner_Scripts, c)
 end
