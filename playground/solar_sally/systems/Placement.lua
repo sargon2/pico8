@@ -25,6 +25,10 @@ local Placement_placement_fns = {}
 local Placement_removal_fns = {}
 local Placement_obstructed_fns = {}
 
+-- State for progress indicator
+Placement_placing_coroutine = nil
+Placement_progress = nil -- 0 to 1
+
 function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
     Placement_placeable_entities = {Entities_None, Entities_Panels, Entities_Wire, Entities_Transformers_left, Entities_Fence}
@@ -53,7 +57,7 @@ function Placement.update(_elapsed)
         elseif action == Actions_pick_up then
             Placement_remove(action_ent, Placement_sel_x, Placement_sel_y)
         elseif action == Actions_place then
-            Placement_place(action_ent, Placement_sel_x, Placement_sel_y)
+            Placement_begin_place(action_ent, Placement_sel_x, Placement_sel_y)
         end
         if action ~= Actions_no_action then
             Placement_current_action = action
@@ -66,6 +70,9 @@ function Placement.update(_elapsed)
         end
         Placement_current_action = Actions_no_action
         Placement_current_action_ent = nil
+
+        -- Cancel any placement in progress
+        Placement_cancel_place()
     end
 end
 
@@ -85,6 +92,17 @@ function Placement.draw()
     if(Placement_get_place_ent_id() == Entities_None) return
     Sprites_draw_spr(Sprite_id_selection_box,Placement_sel_x_visual,Placement_sel_y_visual)
     Sprites_draw_spr(Placement_sel_sprite,Placement_sel_x_visual,Placement_sel_y_visual-1)
+
+    -- Progress indicator
+    if(Placement_progress != nil) then
+        Sprites_draw_line(
+            Placement_sel_x_visual,
+            Placement_sel_y_visual+1,
+            lerp(Placement_sel_x_visual, Placement_sel_x_visual+(7/8), Placement_progress),
+            Placement_sel_y_visual+1,
+            11
+        )
+    end
 end
 
 function Placement_get_place_ent_id() -- return what the user would like to place next
@@ -144,7 +162,32 @@ function Placement_remove(ent_id, x, y)
     Circuits_recalculate()
 end
 
-function Placement_place(ent_id, x, y)
+function Placement_cancel_place()
+    Placement_progress = nil
+    CoroutineRunner_Cancel(Placement_placing_coroutine)
+end
+
+function Placement_begin_place(ent_id, x, y)
+    -- Is there a place already in progress?
+    if Placement_progress != nil then
+        return
+    end
+    local num_frames = Attr_placement_speed[ent_id]
+    Placement_placing_coroutine = CoroutineRunner_StartScript(function ()
+        for frame_num=1,num_frames do
+            if(Character_is_moving) then
+                Placement_cancel_place() -- Cancel the operation if the player moves
+                return
+            end
+            Placement_progress = frame_num/num_frames
+            yield()
+        end
+        Placement_complete_place(ent_id, x, y)
+        Placement_progress = nil
+    end)
+end
+
+function Placement_complete_place(ent_id, x, y)
     if not Inventory_check_and_remove(ent_id) then
         assert(false) -- Place failed inventory check
     end

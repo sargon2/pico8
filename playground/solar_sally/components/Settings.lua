@@ -3,7 +3,7 @@
 
 --[[const]] Settings_60fps = true -- if false, 30fps
 
---[[const]] Settings_cheat_lotsofmoney = false
+--[[const]] Settings_cheat_lotsofmoney = true
 
 --[[const]] Settings_max_panels_per_transformer = 48
 
@@ -38,3 +38,9 @@
 --[[const]] Settings_panel_cost = 50
 --[[const]] Settings_axe_cost = 100
 --[[const]] Settings_fence_cost = 10
+
+-- Placement speeds
+--[[const]] Settings_panel_placement_speed = 50
+--[[const]] Settings_transformer_placement_speed = 100
+--[[const]] Settings_wire_placement_speed = 10
+--[[const]] Settings_fence_placement_speed = 50

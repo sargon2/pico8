@@ -111,6 +111,14 @@ function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
     end
 end
 
+function Sprites_draw_line(x1, y1, x2, y2, color, relative_to_screen)
+    if not relative_to_screen then
+        x1, y1 = Sprites_convert_map_to_screen(x1, y1)
+        x2, y2 = Sprites_convert_map_to_screen(x2, y2)
+    end
+    line(x1*8, y1*8, x2*8, y2*8, color)
+end
+
 function Sprites_convert_map_to_screen(x, y)
     local char_x, char_y = SmoothLocations_get_location(Entities_Character)
     return 8+x-char_x, 8+y-char_y

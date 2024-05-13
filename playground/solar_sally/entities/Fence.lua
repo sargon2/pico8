@@ -7,6 +7,7 @@ function Fence.init()
     Attr_fence_linkable[Entities_Fence] = true
     Attr_mini_sprite[Entities_Fence] = Sprite_id_fence_mini
     Attr_DrawFn[Entities_Fence] = Fence_draw_fence
+    Attr_placement_speed[Entities_Fence] = Settings_fence_placement_speed
 end
 
 function Fence_draw_fence(x, y, ent_id, relative_to_screen)

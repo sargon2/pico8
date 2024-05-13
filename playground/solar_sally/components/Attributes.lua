@@ -10,6 +10,7 @@ Attr_action_release_fn = {}
 Attr_fence_linkable = {}
 Attr_flip_x = {}
 Attr_powered_grid = NewObj(BooleanGrid)
+Attr_placement_speed = {}
 
 Attr_DrawFn = {} -- fn(x, y, ent_id, relative_to_screen)
 

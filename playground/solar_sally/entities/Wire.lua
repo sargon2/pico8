@@ -5,6 +5,7 @@ function Wire.init()
     Attr_pluggable[Entities_Wire] = true
     Attr_mini_sprite[Entities_Wire] = Sprite_id_place_wire
     Attr_DrawFn[Entities_Wire] = Wire_draw_wire_tile
+    Attr_placement_speed[Entities_Wire] = Settings_wire_placement_speed
 end
 
 function Wire_draw_wire_tile(x, y, ent_id, relative_to_screen)
