@@ -95,5 +95,6 @@ end
 function Button_pressUnlockBasement()
     if(not Inventory_canAfford(Settings_key_cost)) return
     Inventory_addMoney(-Settings_key_cost)
+    Inventory_addIcon(Sprite_id_inventory_key)
     Button_create_button("sleep 30d", -5, 11, Button_pressAdvanceTimeDays, nil, 30)
 end
