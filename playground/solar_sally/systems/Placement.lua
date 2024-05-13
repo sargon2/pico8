@@ -7,6 +7,8 @@ local Placement_sel_x_p=0 -- "precise" (sub-integer)
 local Placement_sel_y_p=0
 local Placement_sel_x=0 -- should always equal flr(sel_x_p)
 local Placement_sel_y=0 -- should always equal flr(sel_y_p)
+local Placement_sel_x_visual = 0 -- for juicy animations
+local Placement_sel_y_visual = 0
 
 local Placement_sel_sprite = Sprite_id_no_action
 
@@ -81,8 +83,8 @@ end
 
 function Placement.draw()
     if(Placement_get_place_ent_id() == Entities_None) return
-    Sprites_draw_spr(Sprite_id_selection_box,Placement_sel_x,Placement_sel_y)
-    Sprites_draw_spr(Placement_sel_sprite,Placement_sel_x,Placement_sel_y-1)
+    Sprites_draw_spr(Sprite_id_selection_box,Placement_sel_x_visual,Placement_sel_y_visual)
+    Sprites_draw_spr(Placement_sel_sprite,Placement_sel_x_visual,Placement_sel_y_visual-1)
 end
 
 function Placement_get_place_ent_id() -- return what the user would like to place next
@@ -281,8 +283,11 @@ function Placement_handle_character_movement(is_first_movement_frame, elapsed, x
         new_yv, Placement_sel_y_p = limit_to(Placement_sel_y_p + yv, char_y - Settings_max_selection_range, char_y + Settings_max_selection_range)
     end
 
+    local old_sel_x, old_sel_y = Placement_sel_x, Placement_sel_y
     Placement_sel_x = flr(Placement_sel_x_p)
     Placement_sel_y = flr(Placement_sel_y_p)
+    if(old_sel_x != Placement_sel_x) animate_movement(function (val) Placement_sel_x_visual = val end, old_sel_x, Placement_sel_x, 5, easeinoutelastic)
+    if(old_sel_y != Placement_sel_y) animate_movement(function (val) Placement_sel_y_visual = val end, old_sel_y, Placement_sel_y, 5, easeinoutelastic)
 
     return new_xv, new_yv
 end
