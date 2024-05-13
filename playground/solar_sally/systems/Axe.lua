@@ -49,6 +49,7 @@ function Axe_begin_action(ent_id, x, y)
     Axe_Coroutine = CoroutineRunner_StartScript(function ()
         local time = Settings_axeswings_fullsizetree
         if(ent_id == Entities_YoungTrees) time = Settings_axeswings_youngtree
+        if(not Settings_60fps) time /= 2
         for _=1,time do
             for frame in all({Sprite_id_axe_swing_right_1, Sprite_id_axe_swing_right_2}) do
                 if(Character_is_moving) then

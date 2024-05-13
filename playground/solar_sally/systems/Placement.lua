@@ -168,6 +168,7 @@ function Placement_cancel_timed_action()
 end
 
 function Placement_begin_timed_action(num_frames, complete_fn, ...)
+    if(not Settings_60fps) num_frames /= 2
     -- Is there a place already in progress?
     if Placement_progress != nil then
         return
