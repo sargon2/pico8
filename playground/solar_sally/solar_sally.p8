@@ -5,8 +5,10 @@ __lua__
 #include ../vector_utils.lua
 #include ../podtree_debugger.lua
 #include ../easing.lua
+
 #include types/BooleanGrid.lua
 #include types/twonum.lua
+
 #include components/Settings.lua
 #include components/Entities.lua
 #include components/Sprites.lua
@@ -14,6 +16,7 @@ __lua__
 #include components/SmoothLocations.lua
 #include components/Attributes.lua
 #include components/Actions.lua
+
 #include systems/Input.lua
 #include systems/PerfTimer.lua
 #include systems/FrameTimer.lua
@@ -26,6 +29,7 @@ __lua__
 #include systems/fadetoblack.lua
 #include systems/IndoorWorld.lua
 #include systems/Axe.lua
+
 #include entities/Character.lua
 #include entities/Panels.lua
 #include entities/Rocks.lua
@@ -36,6 +40,7 @@ __lua__
 #include entities/GridWire.lua
 #include entities/Button.lua
 #include entities/Fence.lua
+
 #include solar_sally.lua
 __gfx__
 00000000000000000044440000000000004440000000000000444400000000000044400000000000004444000000f00000000000222222222222222222222222

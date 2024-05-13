@@ -4,9 +4,9 @@ function lerp(a,b,t)
     return a+(b-a)*t
 end
 
-function easeinoutelastic(t)
+function easeinquadoutelastic(t)
     if t<.5 then
-        return 2^(10*2*t-10)*cos(2*2*t-2)/2
+        return t*t*2
     else
         t-=.5
         return 1-2^(-10*2*t)*cos(2*2*t)/2
