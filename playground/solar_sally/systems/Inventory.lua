@@ -6,6 +6,8 @@ local Inventory_items = {} -- items[ent_id] = count
 local Inventory_formatters = {} -- formatters[ent_id] = fn(text)
 local Inventory_icons = {}
 
+Inventory_has_key = false
+
 function _money_format(m)
     -- Include everything up to the decimal, then stuff after the decimal until we fill to n digits
     local ret = "$"
