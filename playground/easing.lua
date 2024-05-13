@@ -21,3 +21,23 @@ function animate_movement(setter, begin, ending, num_frames, easer)
         end
     end)
 end
+
+function elastic_around_zero(t)
+    -- start at zero, take a bounce that fades, end at zero
+    --[[const]] local num_shakes = 10
+    --[[const]] local shake_magnitude = 10
+    --[[const]] local shake_falloff = 50
+    return shake_magnitude*2^(-shake_falloff*t)*sin(num_shakes * t)
+end
+
+function shake_screen()
+    --[[const]] local num_frames = 50
+    CoroutineRunner_StartScript(function ()
+        for frame_num=1, num_frames do
+            local t = frame_num / num_frames
+            local eased_t = elastic_around_zero(t)
+            camera(eased_t/4, eased_t)
+            yield()
+        end
+    end)
+end

@@ -160,6 +160,7 @@ function Placement_place(ent_id, x, y)
         Placement_rotate_with_inventory_check(true)
     end
     Circuits_recalculate()
+    shake_screen()
 end
 
 function Placement_custom_action(ent_id, x, y)
