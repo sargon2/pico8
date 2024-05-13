@@ -36,7 +36,8 @@ function shake_screen()
         for frame_num=1, num_frames do
             local t = frame_num / num_frames
             local eased_t = elastic_around_zero(t)
-            camera(eased_t/4, eased_t)
+            local x_factor = rnd(6)-3
+            camera(eased_t/x_factor, eased_t)
             yield()
         end
     end)

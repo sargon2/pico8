@@ -19,7 +19,7 @@ end
 
 function World_get_visible_ranges(char_x, char_y)
     if(char_x == nil) char_x, char_y = SmoothLocations_get_location(Entities_Character)
-    return flr(char_x - 10), flr(char_x + 9), flr(char_y - 9), flr(char_y + 9)
+    return flr(char_x - 10), flr(char_x + 9), flr(char_y - 10), flr(char_y + 9)
 end
 
 function World.draw()
