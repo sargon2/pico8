@@ -55,9 +55,9 @@ function Placement.update(_elapsed)
         if action == Actions_custom then
             Placement_custom_action(action_ent, Placement_sel_x, Placement_sel_y)
         elseif action == Actions_pick_up then
-            Placement_remove(action_ent, Placement_sel_x, Placement_sel_y)
+            Placement_begin_timed_action(Attr_removal_speed[action_ent], Placement_complete_remove, action_ent, Placement_sel_x, Placement_sel_y)
         elseif action == Actions_place then
-            Placement_begin_place(action_ent, Placement_sel_x, Placement_sel_y)
+            Placement_begin_timed_action(Attr_placement_speed[action_ent], Placement_complete_place, action_ent, Placement_sel_x, Placement_sel_y)
         end
         if action ~= Actions_no_action then
             Placement_current_action = action
@@ -72,7 +72,7 @@ function Placement.update(_elapsed)
         Placement_current_action_ent = nil
 
         -- Cancel any placement in progress
-        Placement_cancel_place()
+        Placement_cancel_timed_action()
     end
 end
 
@@ -146,7 +146,7 @@ function Placement_set_place_ent(ent_id)
     end
 end
 
-function Placement_remove(ent_id, x, y)
+function Placement_complete_remove(ent_id, x, y)
     local fn = Placement_removal_fns[ent_id]
     if fn then
         local e = fn(x, y)
@@ -162,27 +162,27 @@ function Placement_remove(ent_id, x, y)
     Circuits_recalculate()
 end
 
-function Placement_cancel_place()
+function Placement_cancel_timed_action()
     Placement_progress = nil
     CoroutineRunner_Cancel(Placement_placing_coroutine)
 end
 
-function Placement_begin_place(ent_id, x, y)
+function Placement_begin_timed_action(num_frames, complete_fn, ...)
     -- Is there a place already in progress?
     if Placement_progress != nil then
         return
     end
-    local num_frames = Attr_placement_speed[ent_id]
+    local fn_args = {...}
     Placement_placing_coroutine = CoroutineRunner_StartScript(function ()
         for frame_num=1,num_frames do
             if(Character_is_moving) then
-                Placement_cancel_place() -- Cancel the operation if the player moves
+                Placement_cancel_timed_action() -- Cancel the operation if the player moves
                 return
             end
             Placement_progress = frame_num/num_frames
             yield()
         end
-        Placement_complete_place(ent_id, x, y)
+        complete_fn(unpack(fn_args))
         Placement_progress = nil
     end)
 end

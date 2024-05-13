@@ -44,3 +44,8 @@
 --[[const]] Settings_transformer_placement_speed = 100
 --[[const]] Settings_wire_placement_speed = 10
 --[[const]] Settings_fence_placement_speed = 50
+
+--[[const]] Settings_panel_removal_speed = 100
+--[[const]] Settings_transformer_removal_speed = 200
+--[[const]] Settings_wire_removal_speed = 20
+--[[const]] Settings_fence_removal_speed = 100
