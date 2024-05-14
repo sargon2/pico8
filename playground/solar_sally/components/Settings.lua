@@ -49,3 +49,5 @@
 --[[const]] Settings_transformer_removal_speed = 200
 --[[const]] Settings_wire_removal_speed = 20
 --[[const]] Settings_fence_removal_speed = 100
+
+--[[const]] Settings_footstep_sfx_loop_speed = 14

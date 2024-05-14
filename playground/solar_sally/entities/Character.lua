@@ -6,6 +6,7 @@ local Character_frame=1
 local Character_anim_frames={1,2}
 Character_flip_x=false
 Character_is_moving = false
+local Character_footstep_sfx_loop = nil
 
 function Character.init()
     SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
@@ -74,6 +75,12 @@ function Character_handle_player_movement(elapsed)
         is_first_movement_frame = true
     end
     Character_is_moving = is_moving
+    if Character_is_moving then
+        if(Character_footstep_sfx_loop == nil) Character_footstep_sfx_loop = start_sfx_loop(SFX_id_footsteps, Settings_footstep_sfx_loop_speed)
+    else
+        stop_sfx_loop(Character_footstep_sfx_loop)
+        Character_footstep_sfx_loop = nil
+    end
 
     -- Process player movement
     if system_is_loaded(Placement) then
