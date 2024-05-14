@@ -33,7 +33,7 @@ function Placement.init()
     -- Add placeable entities in the same order they'll show up to the user
     Placement_placeable_entities = {Entities_None, Entities_Panels, Entities_Wire, Entities_Transformers_left, Entities_Fence}
     Placement_placeable_index = nil -- To reset rotation in tests
-    Placement_rotate_with_inventory_check() -- Set the placement icon to "no action" or the first thing, if we have anything
+    Placement_rotate_with_inventory_check(false, true) -- Set the placement icon to "no action" or the first thing, if we have anything
 end
 
 function Placement.update(_elapsed)
@@ -110,7 +110,7 @@ function Placement_get_place_ent_id() -- return what the user would like to plac
     return Placement_placeable_entities[Placement_placeable_index]
 end
 
-function Placement_rotate_with_inventory_check(skip_off)
+function Placement_rotate_with_inventory_check(skip_off, skip_sfx)
     if(Placement_placeable_index == nil) Placement_placeable_index = #Placement_placeable_entities -- since it'll get advanced at least once in the loop
 
     local started_on_none = (Placement_get_place_ent_id() == Entities_None)
@@ -126,14 +126,26 @@ function Placement_rotate_with_inventory_check(skip_off)
         -- Check for empty inventory
         if started_on_none and ent_id == Entities_None then
             Placement_placeable_index = nil
-            return
+            if(not skip_sfx and started_on_none) sfx(SFX_id_activate_placement)
+            return nil
         end
 
         -- Does the player have one to place?
     until ent_id == Entities_None or Inventory_get(ent_id) > 0
 
     -- If we're skipping none, we can just rotate again since we never rotate None -> None, only None -> nil.
-    if(skip_off and ent_id == Entities_None) Placement_rotate_with_inventory_check()
+    if(skip_off and ent_id == Entities_None) ent_id = Placement_rotate_with_inventory_check(false, true)
+
+    -- SFX
+    if not skip_sfx then
+        if started_on_none and ent_id != Entities_None then
+            sfx(SFX_id_activate_placement)
+        elseif not started_on_none and ent_id == Entities_None then
+            sfx(SFX_id_deactivate_placement)
+        end
+    end
+
+    return ent_id
 end
 
 function Placement_set_place_ent(ent_id)
