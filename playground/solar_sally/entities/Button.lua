@@ -24,6 +24,7 @@ function Button_create_button(label, x, y, press_fn, release_fn, ...)
 end
 
 function Button.init()
+    Button_create_button("do nothing", -5, -1, nil)
     Button_create_button("sleep 24h", -5, 0, Button_pressAdvanceTimeDays, nil, 1)
     Button_create_button("go inside", -5, 1, Button_pressGoInside)
     Button_create_button("unlock basement for $"..tostr(Settings_key_cost), -5, 2, Button_pressUnlockBasement)

@@ -39,6 +39,8 @@
 --[[const]] Settings_axe_cost = 100
 --[[const]] Settings_fence_cost = 10
 
+--[[const]] Settings_footstep_sfx_loop_speed = 14
+
 -- Placement speeds
 --[[const]] Settings_panel_placement_speed = 50
 --[[const]] Settings_transformer_placement_speed = 100
@@ -50,4 +52,13 @@
 --[[const]] Settings_wire_removal_speed = 20
 --[[const]] Settings_fence_removal_speed = 100
 
---[[const]] Settings_footstep_sfx_loop_speed = 14
+-- Cheating placement speeds
+-- --[[const]] Settings_panel_placement_speed = 0
+-- --[[const]] Settings_transformer_placement_speed = 0
+-- --[[const]] Settings_wire_placement_speed = 0
+-- --[[const]] Settings_fence_placement_speed = 0
+-- 
+-- --[[const]] Settings_panel_removal_speed = 0
+-- --[[const]] Settings_transformer_removal_speed = 0
+-- --[[const]] Settings_wire_removal_speed = 0
+-- --[[const]] Settings_fence_removal_speed = 0
