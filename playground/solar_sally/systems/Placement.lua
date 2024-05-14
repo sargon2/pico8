@@ -351,6 +351,7 @@ function Placement_handle_character_movement(is_first_movement_frame, elapsed, x
     Placement_sel_y = flr(Placement_sel_y_p)
     if(old_sel_x != Placement_sel_x) animate_movement(function (val) Placement_sel_x_visual = val end, old_sel_x, Placement_sel_x, 5, easeinquadoutelastic)
     if(old_sel_y != Placement_sel_y) animate_movement(function (val) Placement_sel_y_visual = val end, old_sel_y, Placement_sel_y, 5, easeinquadoutelastic)
+    if(Placement_get_place_ent_id() != Entities_None and (old_sel_x != Placement_sel_x or old_sel_y != Placement_sel_y)) sfx(SFX_id_move_placement)
 
     return new_xv, new_yv
 end
