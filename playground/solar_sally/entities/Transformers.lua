@@ -10,6 +10,7 @@ function Transformers.init()
     Attr_mini_sprite[Entities_Transformers_left] = Sprite_id_place_transformer
     Attr_placement_speed[Entities_Transformers_left] = Settings_transformer_placement_speed
     Attr_removal_speed[Entities_Transformers_left] = Settings_transformer_removal_speed
+    Attr_removal_speed[Entities_Transformers_right] = Settings_transformer_removal_speed
 
     Attr_WalkingObstruction[Entities_Transformers_right] = true
     Attr_removable[Entities_Transformers_right] = true

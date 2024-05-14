@@ -7,7 +7,7 @@ LUA_FILES:=$(shell cat solar_sally.p8 | grep include | cut -c 10-)
 .SECONDEXPANSION: # needed for the wildcard stuff
 output/solar_sally.p8.png: solar_sally.p8 $(LUA_FILES)
 	mkdir -p output
-	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --minify --no-minify-lines --focus-tokens # So we can examine minified code
+	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --rename-map rename_map.txt --minify --no-minify-lines --focus-tokens # So we can examine minified code
 	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png --minify --no-minify-lines --focus-tokens
 	# $(SHRINKO8) solar_sally.p8 --lint --no-lint-fail
 	$(SHRINKO8) output/solar_sally.p8.png --count
