@@ -126,7 +126,11 @@ function Placement_rotate_with_inventory_check(skip_off, skip_sfx)
         -- Check for empty inventory
         if started_on_none and ent_id == Entities_None then
             Placement_placeable_index = nil
-            if(not skip_sfx and started_on_none) sfx(SFX_id_activate_placement)
+            if not skip_sfx and started_on_none then
+                sfx(SFX_id_activate_placement)
+            else
+                sfx(SFX_id_rotate_placement)
+            end
             return nil
         end
 
@@ -142,6 +146,8 @@ function Placement_rotate_with_inventory_check(skip_off, skip_sfx)
             sfx(SFX_id_activate_placement)
         elseif not started_on_none and ent_id == Entities_None then
             sfx(SFX_id_deactivate_placement)
+        else
+            sfx(SFX_id_rotate_placement)
         end
     end
 
@@ -213,7 +219,7 @@ function Placement_complete_place(ent_id, x, y)
 
     if Inventory_get(ent_id) == 0 then
         -- That was our last one, rotate off it, skipping None since rotating to None would be weird
-        Placement_rotate_with_inventory_check(true)
+        Placement_rotate_with_inventory_check(true, true)
     end
     Circuits_recalculate()
     shake_screen()
@@ -222,7 +228,7 @@ end
 function Placement_custom_action(ent_id, x, y)
     Attr_action_fn[ent_id](ent_id, x, y)
     -- The custom action may have modified our inventory
-    if(Placement_placeable_index == nil or Inventory_get(Placement_placeable_index) == 0) Placement_rotate_with_inventory_check()
+    if(Placement_placeable_index == nil or Inventory_get(Placement_placeable_index) == 0) Placement_rotate_with_inventory_check(false, true)
 end
 
 function Placement_determine_action_and_sprite(entity_at_sel)
