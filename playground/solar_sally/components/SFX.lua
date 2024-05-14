@@ -12,8 +12,3 @@ function start_sfx_loop(sfx_id, frame_count)
     end)
     return coroutine
 end
-
-function stop_sfx_loop(coroutine)
-    if(coroutine == nil) return
-    CoroutineRunner_Cancel(coroutine)
-end

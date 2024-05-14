@@ -24,5 +24,6 @@ function CoroutineRunner.update()
 end
 
 function CoroutineRunner_Cancel(c)
+    if(c == nil) return
     del(CoroutineRunner_Scripts, c)
 end

@@ -78,7 +78,7 @@ function Character_handle_player_movement(elapsed)
     if Character_is_moving then
         if(Character_footstep_sfx_loop == nil) Character_footstep_sfx_loop = start_sfx_loop(SFX_id_footsteps, Settings_footstep_sfx_loop_speed)
     else
-        stop_sfx_loop(Character_footstep_sfx_loop)
+        CoroutineRunner_Cancel(Character_footstep_sfx_loop)
         Character_footstep_sfx_loop = nil
     end
 
