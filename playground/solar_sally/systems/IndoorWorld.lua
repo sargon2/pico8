@@ -7,7 +7,7 @@ function IndoorWorld.init()
 end
 
 function IndoorWorld.draw()
-    map(0,0,16,16)
+    map(18,-2,16,16)
     local char_x, char_y = SmoothLocations_get_location(Entities_Character)
 
     Character_drawChar(char_x, char_y, Entities_Character, true)
