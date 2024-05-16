@@ -43,12 +43,12 @@
 --[[const]] Sprite_id_fence_mini = 43
 --[[const]] Sprite_id_inventory_key = 26
 
--- Sprite flag meanings:
--- 0: use purple as transparent
--- 1: use white as transparent
--- 2: has offset (I could just look it up in the offset table, but that's O(n) and getting the flag is O(1))
--- 3: Indoor walking obstruction
--- 4: Indoors has floor behind
+-- Sprite flag meanings
+--[[const]] Sprite_flag_transparent_purple = 0
+--[[const]] Sprite_flag_transparent_white = 1
+--[[const]] Sprite_flag_has_offset = 2 -- I could just look it up in the offset table, but that's O(n) and getting the flag is O(1)
+--[[const]] Sprite_flag_indoor_walking_obstruction = 3
+--[[const]] Sprite_flag_indoor_has_floor_behind = 4
 
 Sprites_offsets = {
     [Sprite_id_axe_swing_right_1] = {-2, 0},
@@ -92,13 +92,13 @@ function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
     if(not height) height = 1
     -- s = Sprites[s]
     local changed_transparency = false
-    if fget(s, 0) then
+    if fget(s, Sprite_flag_transparent_purple) then
         palt(0b0010000000000000) -- purple
         changed_transparency = true
-    elseif fget(s, 1) then
+    elseif fget(s, Sprite_flag_transparent_white) then
         palt(0b0000000100000000)
         changed_transparency = true
-    elseif fget(s, 2) then
+    elseif fget(s, Sprite_flag_has_offset) then
         xoffset, yoffset = unpack(Sprites_offsets[s])
         if(flip_x) xoffset = -xoffset
     end

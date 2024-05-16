@@ -70,6 +70,6 @@ function World__sort_by_y(smooth_ents)
     quicksort(smooth_ents, compare_by_y)
 end
 
-function World_is_obstructed(x, y)
+function World.is_obstructed(x, y)
     return Attributes_get_attr_by_location(flr(x+.6), flr(y+1), Attr_WalkingObstruction)
 end

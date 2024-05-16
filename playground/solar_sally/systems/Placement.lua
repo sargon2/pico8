@@ -243,7 +243,7 @@ function Placement_determine_action_and_sprite(entity_at_sel)
             -- Placing
 
             -- Are there any smooth entities in the way?
-            -- This is not World_is_obstructed because we already know there isn't a Locations entity obstructing
+            -- This is not World.is_obstructed because we already know there isn't a Locations entity obstructing
             if SmoothLocations_is_obstructed(Placement_sel_x, Placement_sel_y) then
                 return Actions_no_action, nil, Sprite_id_no_action
             end

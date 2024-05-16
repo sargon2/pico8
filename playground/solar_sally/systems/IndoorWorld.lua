@@ -12,3 +12,10 @@ function IndoorWorld.draw()
 
     Character_drawChar(char_x, char_y, Entities_Character, true)
 end
+
+function IndoorWorld.is_obstructed(x, y)
+    --[[const]] local house_x_offset = 16.5
+    --[[const]] local house_y_offset = -3.5
+    local celx, cely = flr(x+house_x_offset), flr(y+house_y_offset)
+    return fget(mget(celx, cely), Sprite_flag_indoor_walking_obstruction)
+end

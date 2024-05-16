@@ -87,10 +87,9 @@ function Character_handle_player_movement(elapsed)
         x, y = Placement_handle_character_movement(is_first_movement_frame, elapsed, x, y)
     end
 
-    SmoothLocations_move_by_if_not_obstructed(Entities_Character, x, y, Settings_character_speed*elapsed)
-
-    -- Animate walking
-    if x!=0 or y!=0 then
+    -- Perform & animate walking
+    if(Character_is_moving) then
+        SmoothLocations_move_by_if_not_obstructed(Entities_Character, x, y, Settings_character_speed*elapsed)
         Character_frame += Settings_character_anim_speed*elapsed
     else
         Character_frame = 0.99 -- Very close to the next frame to increase responsivenes
