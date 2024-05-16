@@ -43,6 +43,9 @@
 --[[const]] Sprite_id_fence_mini = 43
 --[[const]] Sprite_id_inventory_key = 26
 
+--[[const]] Sprite_id_floor_1 = 67
+--[[const]] Sprite_id_floor_2 = 68
+
 -- Sprite flag meanings
 --[[const]] Sprite_flag_transparent_purple = 0
 --[[const]] Sprite_flag_transparent_white = 1
