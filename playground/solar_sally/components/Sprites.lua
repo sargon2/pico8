@@ -47,6 +47,8 @@
 -- 0: use purple as transparent
 -- 1: use white as transparent
 -- 2: has offset (I could just look it up in the offset table, but that's O(n) and getting the flag is O(1))
+-- 3: Indoor walking obstruction
+-- 4: Indoors has floor behind
 
 Sprites_offsets = {
     [Sprite_id_axe_swing_right_1] = {-2, 0},
