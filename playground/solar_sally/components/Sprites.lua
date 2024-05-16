@@ -43,6 +43,11 @@
 --[[const]] Sprite_id_fence_mini = 43
 --[[const]] Sprite_id_inventory_key = 26
 
+-- Sprite flag meanings:
+-- 0: use purple as transparent
+-- 1: use white as transparent
+-- 2: has offset (I could just look it up in the offset table, but that's O(n) and getting the flag is O(1))
+
 Sprites_offsets = {
     [Sprite_id_axe_swing_right_1] = {-2, 0},
     [Sprite_id_axe_swing_right_2] = {2, 0},
@@ -86,15 +91,12 @@ function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
     -- s = Sprites[s]
     local changed_transparency = false
     if fget(s, 0) then
-        -- flag 0 means "use purple as transparent"
         palt(0b0010000000000000) -- purple
         changed_transparency = true
     elseif fget(s, 1) then
-        -- flag 1 means "use white as transparent"
         palt(0b0000000100000000)
         changed_transparency = true
     elseif fget(s, 2) then
-        -- flag 2 means "has offset"
         xoffset, yoffset = unpack(Sprites_offsets[s])
         if(flip_x) xoffset = -xoffset
     end
