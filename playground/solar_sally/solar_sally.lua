@@ -49,7 +49,6 @@ function _draw()
             end)
         end
     end
-    if(Settings_debug_window) db_window()
     PerfTimer_reportTimes()
 end
 

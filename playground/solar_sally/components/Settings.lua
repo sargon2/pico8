@@ -1,5 +1,4 @@
 --[[const]] Settings_debug_timing = false
---[[const]] Settings_debug_window = false -- Recommend switching to 30fps if you turn this on
 --[[const]] Settings_debug_print_loaded_systems = false
 
 --[[const]] Settings_60fps = true -- if false, 30fps

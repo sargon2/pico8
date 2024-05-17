@@ -3,7 +3,6 @@ version 42
 __lua__
 #include ../lua_extensions.lua
 #include ../vector_utils.lua
-#include ../podtree_debugger.lua
 #include ../easing.lua
 
 #include types/BooleanGrid.lua
