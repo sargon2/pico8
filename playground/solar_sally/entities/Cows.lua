@@ -1,6 +1,4 @@
-Cows = {
-    name = "Cows"
-}
+Cows = {}
 
 local Cows_cow_ent_ids = {}
 local Cows_vector_x = {} -- vector_x[ent_id] = x

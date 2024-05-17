@@ -1,6 +1,4 @@
-Placement = {
-    name = "Placement"
-}
+Placement = {}
 
 -- selected square
 local Placement_sel_x_p=0 -- "precise" (sub-integer)

@@ -1,6 +1,4 @@
-Trees = {
-    name = "Trees",
-}
+Trees = {}
 
 function Trees.init()
     Attr_WalkingObstruction[Entities_Trees] = true

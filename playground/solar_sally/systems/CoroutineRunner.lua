@@ -1,7 +1,5 @@
 
-CoroutineRunner = {
-    name = "CoroutineRunner",
-}
+CoroutineRunner = {}
 
 local CoroutineRunner_Scripts = {}
 

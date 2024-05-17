@@ -1,7 +1,5 @@
 
-PanelCalculator = {
-    name = "PanelCalculator"
-}
+PanelCalculator = {}
 
 local PanelCalculator_powered_panel_count = 0
 local PanelCalculator_frame_counter = 0

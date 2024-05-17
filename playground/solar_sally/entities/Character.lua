@@ -1,6 +1,4 @@
-Character = {
-    name = "Character"
-}
+Character = {}
 
 local Character_frame=1
 local Character_anim_frames={1,2}

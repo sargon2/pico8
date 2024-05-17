@@ -140,3 +140,11 @@ function set_with_ensure(table, ...)
         table = table[e]
     end
 end
+
+function get_var_name(sys) -- O(n) in number of variables
+    for k, v in pairs(_ENV) do
+        if v == sys then
+            return k
+        end
+    end
+end

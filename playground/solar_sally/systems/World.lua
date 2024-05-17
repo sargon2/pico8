@@ -1,6 +1,4 @@
-World = {
-    name = "World",
-}
+World = {}
 
 function _draw_map(char_x, char_y)
     -- The pico8 map only contains grass, and only in the top left 17x17 square.

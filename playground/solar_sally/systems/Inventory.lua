@@ -1,6 +1,4 @@
-Inventory = {
-    name = "Inventory"
-}
+Inventory = {}
 
 local Inventory_items = {} -- items[ent_id] = count
 local Inventory_formatters = {} -- formatters[ent_id] = fn(text)

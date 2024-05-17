@@ -1,6 +1,4 @@
-IndoorWorld = {
-    name = "IndoorWorld"
-}
+IndoorWorld = {}
 
 --[[const]] local IndoorWorld_house_x_offset = 18
 --[[const]] local IndoorWorld_house_y_offset = -3

@@ -44,7 +44,7 @@ function _draw()
 
     for system in all(solar_sally_systems) do
         if system.draw then
-            PerfTimer_time(system.name..".draw()", function ()
+            PerfTimer_time(get_var_name(system)..".draw()", function ()
                 system.draw()
             end)
         end
@@ -59,17 +59,14 @@ function do_update()
     if Settings_debug_print_loaded_systems then
         local p = ""
         for system in all(solar_sally_systems) do
-            if system.name == nil then
-                system.name = "UNNAMED"
-            end
-            p ..= system.name .. ", "
+            p ..= get_var_name(system) .. ", "
         end
         printh_all("Loaded systems", p)
     end
 
     for system in all(solar_sally_systems) do
         if system.update then
-            PerfTimer_time(system.name..".update()", function ()
+            PerfTimer_time(get_var_name(system)..".update()", function ()
                 system.update(elapsed)
             end)
         end

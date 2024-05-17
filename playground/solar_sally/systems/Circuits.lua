@@ -1,6 +1,4 @@
-Circuits = {
-    name = "Circuits",
-}
+Circuits = {}
 
 function Circuits_recalculate()
     -- Panels provide power so really anything hooked up to a panel & wire should be powered, but
