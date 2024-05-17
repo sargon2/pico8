@@ -104,7 +104,7 @@ function draw_window(x, y, width, height)
     _draw_spr(Sprite_id_window_br, x+width-1, y+height-1)
 end
 
---[[const]] local Inventory_locations = {
+local Inventory_locations = {
     [Entities_Money] = {1, 14.5},
     [Entities_Panels] = {1, 13.5},
     [Entities_Transformers_left] = {4.5, 13.5},
