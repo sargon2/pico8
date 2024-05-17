@@ -54,6 +54,7 @@
 --[[const]] Sprite_flag_indoor_has_floor_behind = 4
 --[[const]] Sprite_flag_layer_bit1 = 5 -- "is sometimes in front of character based on y value"
 --[[const]] Sprite_flag_layer_bit2 = 6 -- "is always in front of character"
+--[[const]] Sprite_flag_exits = 7 -- whether or not stepping on the tile goes outside
 
 Sprites_offsets = {
     [Sprite_id_axe_swing_right_1] = {-2, 0},
