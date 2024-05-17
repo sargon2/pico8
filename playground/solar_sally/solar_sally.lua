@@ -11,9 +11,10 @@ function unload_system(s)
     solar_sally_loaded_systems[s] = nil
 end
 
-function load_system(s, idx) -- Careful! Order matters
-    add(solar_sally_systems, s, idx)
+function load_system(s, idx)
     if(s.init) s.init()
+    if(not s.draw and not s.update) return -- If it doesn't have a draw or an update, there's no reason to keep it around
+    add(solar_sally_systems, s, idx)
     solar_sally_loaded_systems[s] = true
 end
 
@@ -35,7 +36,6 @@ function _init()
     load_system(Placement)
     load_system(Character)
     load_system(PanelCalculator)
-    load_system(fadetoblack)
     load_system(CoroutineRunner)
 end
 
@@ -55,6 +55,17 @@ end
 
 function do_update()
     local elapsed = FrameTimer_calculate_elapsed()
+
+    if Settings_debug_print_loaded_systems then
+        local p = ""
+        for system in all(solar_sally_systems) do
+            if system.name == nil then
+                system.name = "UNNAMED"
+            end
+            p ..= system.name .. ", "
+        end
+        printh_all("Loaded systems", p)
+    end
 
     for system in all(solar_sally_systems) do
         if system.update then

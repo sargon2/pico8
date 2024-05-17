@@ -1,7 +1,3 @@
-fadetoblack = {
-    name = "fadetoblack",
-}
-
 -- Functions suitable for use as coroutines
 function fadeAndDisableInputForCo(fn)
     CoroutineRunner_StartScript(function ()

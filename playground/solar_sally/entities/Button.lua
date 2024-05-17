@@ -67,7 +67,7 @@ function Button_pressGoInside()
         unload_system(Placement)
         unload_system(World)
 
-        load_system(IndoorWorld, 9)
+        load_system(IndoorWorld, 2)
     end)
 end
 
