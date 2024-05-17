@@ -20,10 +20,13 @@ end
 
 function IndoorWorld.draw()
     IndoorWorld_draw_floor_behinds()
-    map(18,-2,16,16)
+    map(18, -2, 16, 16)
     local char_x, char_y = SmoothLocations_get_location(Entities_Character)
 
     Character_drawChar(char_x, char_y, Entities_Character, true)
+
+    -- Redraw layer in front of the character
+    map(18,-2,16,16, nil, nil, 1 << Sprite_flag_layer_bit1)
 end
 
 function IndoorWorld.is_obstructed(x, y)

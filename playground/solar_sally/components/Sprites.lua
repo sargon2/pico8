@@ -52,6 +52,8 @@
 --[[const]] Sprite_flag_has_offset = 2 -- I could just look it up in the offset table, but that's O(n) and getting the flag is O(1)
 --[[const]] Sprite_flag_indoor_walking_obstruction = 3
 --[[const]] Sprite_flag_indoor_has_floor_behind = 4
+--[[const]] Sprite_flag_layer_bit1 = 5
+-- --[[const]] Sprite_flag_layer_bit2 = 6 -- needed or no?
 
 Sprites_offsets = {
     [Sprite_id_axe_swing_right_1] = {-2, 0},
