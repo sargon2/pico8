@@ -2,11 +2,11 @@ IndoorWorld = {
     name = "IndoorWorld"
 }
 
---[[const]] local IndoorWorld_house_x_offset = 16
---[[const]] local IndoorWorld_house_y_offset = -4
+--[[const]] local IndoorWorld_house_x_offset = 18
+--[[const]] local IndoorWorld_house_y_offset = -3
 
 function IndoorWorld.init()
-    SmoothLocations_set_or_update_location(Entities_Character, 8, 8)
+    SmoothLocations_set_or_update_location(Entities_Character, 7, 7)
 end
 
 function IndoorWorld_draw_floor_behinds()

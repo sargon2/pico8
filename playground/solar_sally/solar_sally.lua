@@ -11,8 +11,8 @@ function unload_system(s)
     solar_sally_loaded_systems[s] = nil
 end
 
-function load_system(s) -- Careful! Order matters
-    add(solar_sally_systems, s)
+function load_system(s, idx) -- Careful! Order matters
+    add(solar_sally_systems, s, idx)
     if(s.init) s.init()
     solar_sally_loaded_systems[s] = true
 end
