@@ -46,6 +46,9 @@ function SmoothLocations_is_obstructed(x, y)
 end
 
 function SmoothLocations_move_by_if_not_obstructed(ent_id, x, y, mdist)
+    if(x == 0 and y == 0) return
+    if(mdist == 0) return
+
     x, y = normalize(x, y, mdist)
     local new_x, new_y = SmoothLocations_get_location(ent_id)
 
@@ -57,10 +60,10 @@ function SmoothLocations_move_by_if_not_obstructed(ent_id, x, y, mdist)
     end
 
     -- We have to move x and y separately to allow sliding along an obstruction
-    if not obstruction_checker.is_obstructed(new_x + x, new_y) then
+    if x != 0 and not obstruction_checker.is_obstructed(new_x + x, new_y) then
         new_x += x
     end
-    if not obstruction_checker.is_obstructed(new_x, new_y + y) then
+    if y != 0 and not obstruction_checker.is_obstructed(new_x, new_y + y) then
         new_y += y
     end
 

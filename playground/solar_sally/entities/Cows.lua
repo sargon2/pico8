@@ -33,6 +33,7 @@ function Cows_draw_cow(x, y, ent_id)
 end
 
 function Cows.update(elapsed)
+    if(not system_is_loaded(World)) return -- Cows don't move when we're indoors
     local xmin, xmax, ymin, ymax = World_get_visible_ranges()
     local smooth_ents = SmoothLocations_get_all_visible(xmin, xmax, ymin, ymax)
 

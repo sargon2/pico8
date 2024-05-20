@@ -73,8 +73,8 @@
 -- Sprite flag meanings
 --[[const]] Sprite_flag_transparent_purple = 0
 --[[const]] Sprite_flag_transparent_white = 1
---[[const]] Sprite_flag_has_offset = 2 -- I could just look it up in the offset table, but that's O(n) and getting the flag is O(1)
---[[const]] Sprite_flag_indoor_walking_obstruction = 3
+--[[const]] Sprite_flag_indoor_walking_obstruction_left = 2
+--[[const]] Sprite_flag_indoor_walking_obstruction_right = 3
 --[[const]] Sprite_flag_indoor_has_floor_behind = 4
 --[[const]] Sprite_flag_layer_bit1 = 5 -- "is sometimes in front of character based on y value"
 --[[const]] Sprite_flag_layer_bit2 = 6 -- "is always in front of character"
@@ -108,9 +108,7 @@ function Sprites_draw_relative_to_screen(s,x,y,width,height,flip_x) -- convenien
 end
 
 function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
-    if not relative_to_screen then
-        x, y = Sprites_convert_map_to_screen(x, y)
-    end
+    if(not relative_to_screen) x, y = Sprites_convert_map_to_screen(x, y)
 
     -- Round location to the nearest pixel to prevent vibration when the player is moving
     x = round_to_nearest_pixel(x)
@@ -128,9 +126,12 @@ function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
     elseif fget(s, Sprite_flag_transparent_white) then
         palt(0b0000000100000000)
         changed_transparency = true
-    elseif fget(s, Sprite_flag_has_offset) then
-        xoffset, yoffset = unpack(Sprites_offsets[s])
-        if(flip_x) xoffset = -xoffset
+    else
+        local off = Sprites_offsets[s]
+        if off != nil then
+            xoffset, yoffset = unpack(off)
+            if(flip_x) xoffset = -xoffset
+        end
     end
     spr(
         s,
@@ -140,9 +141,7 @@ function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
         height,
         flip_x
     )
-    if changed_transparency then
-        palt()
-    end
+    if(changed_transparency) palt()
 end
 
 function Sprites_draw_line(x1, y1, x2, y2, color, relative_to_screen)

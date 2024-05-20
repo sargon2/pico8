@@ -59,41 +59,15 @@ function IndoorWorld.draw()
     map(IndoorWorld_house_x_offset, IndoorWorld_house_y_offset, 0, 0, nil, nil, 1 << Sprite_flag_layer_bit2)
 end
 
-function IndoorWorld__get_sprid(x, y)
-    local celx, cely = flr(x+IndoorWorld_house_x_offset+.5), flr(y+IndoorWorld_house_y_offset+.5)
-    return mget(celx, cely)
-end
-
 function IndoorWorld__get_flag(x, y, flag)
-    return fget(IndoorWorld__get_sprid(x, y), flag)
+    return fget(mget(flr(x+IndoorWorld_house_x_offset+.5), flr(y+IndoorWorld_house_y_offset+.5)), flag)
 end
-
--- TODO these should be sprite flags, but I'm almost out of flags...
-local Sprite_ids_half_walkingobstruction_left = {
-    [Sprite_id_halfwall_left_doorway] = true,
-    [Sprite_id_halfwall_left_firstfloor] = true,
-    [Sprite_id_topwall_left] = true,
-    [Sprite_id_ll_topwall_corner] = true,
-    [Sprite_id_ul_topwall_corner] = true,
-    [Sprite_id_halfwall_left_secondfloor] = true,
-}
-
-local Sprite_ids_half_walkingobstruction_right = {
-    [Sprite_id_halfwall_right_doorway] = true,
-    [Sprite_id_halfwall_right_firstfloor] = true,
-    [Sprite_id_topwall_right] = true,
-    [Sprite_id_lr_topwall_corner] = true,
-    [Sprite_id_ur_topwall_corner] = true,
-    [Sprite_id_halfwall_right_secondfloor] = true,
-}
 
 function IndoorWorld.is_obstructed(x, y)
-    local sprid = IndoorWorld__get_sprid(x, y)
-    if Sprite_ids_half_walkingobstruction_left[sprid] then
-        -- Is the coordinate on the left half of the sprite?
-        return x-flr(x) < .5
-    elseif Sprite_ids_half_walkingobstruction_right[sprid] then
-        return x-flr(x) > .5
-    end
-    return fget(sprid, Sprite_flag_indoor_walking_obstruction)
+    -- These < and >= are reversed because when we get the flag, we add .5 to x.
+    if(IndoorWorld__get_flag(x, y, Sprite_flag_indoor_walking_obstruction_left) and (x-flr(x) >= .5)) return true
+
+    if(IndoorWorld__get_flag(x, y, Sprite_flag_indoor_walking_obstruction_right) and (x-flr(x) <= .5)) return true
+
+    return false
 end
