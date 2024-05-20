@@ -43,8 +43,32 @@
 --[[const]] Sprite_id_fence_mini = 43
 --[[const]] Sprite_id_inventory_key = 26
 
+-- Indoors
+
 --[[const]] Sprite_id_floor_1 = 67
 --[[const]] Sprite_id_floor_2 = 68
+
+--[[const]] Sprite_id_ul_topwall_corner = 64
+--[[const]] Sprite_id_upper_topwall = 65
+--[[const]] Sprite_id_ur_topwall_corner = 66
+--[[const]] Sprite_id_topwall_left = 80
+--[[const]] Sprite_id_topwall_right = 82
+--[[const]] Sprite_id_ll_topwall_corner = 96
+--[[const]] Sprite_id_lr_topwall_corner = 98
+
+--[[const]] Sprite_id_halfwall_left_doorway = 81
+--[[const]] Sprite_id_halfwall_right_doorway = 97
+
+--[[const]] Sprite_id_halfwall_left_firstfloor = 112
+--[[const]] Sprite_id_halfwall_right_firstfloor = 114
+--[[const]] Sprite_id_wall_firstfloor = 113
+
+--[[const]] Sprite_id_lower_topwall = 83 -- TODO remove 84 from the cart
+--[[const]] Sprite_id_halfwall_left_secondfloor = 99
+--[[const]] Sprite_id_halfwall_right_secondfloor = 101
+--[[const]] Sprite_id_wall_secondfloor = 100
+
+--[[const]] Sprite_id_step_to_exit = 115
 
 -- Sprite flag meanings
 --[[const]] Sprite_flag_transparent_purple = 0
