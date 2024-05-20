@@ -56,14 +56,14 @@
 --[[const]] Sprite_id_ll_topwall_corner = 96
 --[[const]] Sprite_id_lr_topwall_corner = 98
 
---[[const]] Sprite_id_halfwall_left_doorway = 81
---[[const]] Sprite_id_halfwall_right_doorway = 97
+--[[const]] Sprite_id_halfwall_left_doorway = 97 -- has floor behind it
+--[[const]] Sprite_id_halfwall_right_doorway = 81 -- has floor behind it
 
 --[[const]] Sprite_id_halfwall_left_firstfloor = 112
 --[[const]] Sprite_id_halfwall_right_firstfloor = 114
 --[[const]] Sprite_id_wall_firstfloor = 113
 
---[[const]] Sprite_id_lower_topwall = 83 -- TODO remove 84 from the cart
+--[[const]] Sprite_id_lower_topwall = 83
 --[[const]] Sprite_id_halfwall_left_secondfloor = 99
 --[[const]] Sprite_id_halfwall_right_secondfloor = 101
 --[[const]] Sprite_id_wall_secondfloor = 100
