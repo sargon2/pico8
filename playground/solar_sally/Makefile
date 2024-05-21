@@ -1,24 +1,36 @@
 all: .tested
 
 SHRINKO8=python3 ../../shrinko8/shrinko8.py
+PICO8_FOLDER=../../../../pico8/pico-8
+PICO8=$(PICO8_FOLDER)/pico8
+PICO8_DAT=$(PICO8_FOLDER)/pico8.dat
 COUNTER=../../get_counts.sh
 LUA_FILES:=$(shell cat solar_sally.p8 | grep include | cut -c 10-)
+SHRINKO8_OPTIONS=--minify --no-minify-lines --focus-tokens # there are some other options for particular runs
 
 .SECONDEXPANSION: # needed for the wildcard stuff
-output/solar_sally.p8.png: solar_sally.p8 $(LUA_FILES)
+output/solar_sally.p8 output/solar_sally.p8.png &: solar_sally.p8 $(LUA_FILES)
 	mkdir -p output
-	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --rename-map rename_map.txt --minify --no-minify-lines --focus-tokens # So we can examine minified code
-	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png --minify --no-minify-lines --focus-tokens
-	# $(SHRINKO8) solar_sally.p8 --lint --no-lint-fail
-	$(SHRINKO8) output/solar_sally.p8.png --count
+	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --rename-map rename_map.txt $(SHRINKO8_OPTIONS) # So we can examine minified code
+	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png $(SHRINKO8_OPTIONS)
 
-.tested: output/solar_sally.p8.png
+.tested: output/solar_sally.p8.png tests/tests.txt
 	# cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -x root/playground/solar_sally/tests.p8
 	rm -f test_output.txt
 	cp tests/tests.txt output/tests.lua
-	../../../../pico8/pico-8/pico8 -x output/tests.lua | tee test_output.txt
+	$(PICO8) -x output/tests.lua | tee test_output.txt
 	cat test_output.txt | tail -1 | grep "Pass"
 	touch .tested
+
+.PHONY: web
+web: output/web/solar_sally.html output/web/solar_sally.js
+
+output/web/solar_sally.html output/web/solar_sally.js &: solar_sally.p8 output/solar_sally.p8.png
+	mkdir -p output/web/
+	# Output the pre-shrinko8 .js file and .html file
+	$(PICO8) -export output/web/solar_sally.html output/solar_sally.p8.png
+	# Output the shrinko8 .js file
+	$(SHRINKO8) solar_sally.p8 output/web/solar_sally.js --pico8-dat $(PICO8_DAT) $(SHRINKO8_OPTIONS)
 
 .PHONY: lint
 lint:
@@ -30,6 +42,7 @@ find-todos:
 
 .PHONY: counts
 counts: output/solar_sally.p8.png
+	$(SHRINKO8) output/solar_sally.p8.png --count
 	@$(COUNTER) $(LUA_FILES) solar_sally.p8 output/solar_sally.p8.png
 
 .PHONY: run-windows
