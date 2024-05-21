@@ -77,14 +77,27 @@ function IndoorWorld.draw()
 end
 
 function IndoorWorld__get_flag(x, y, flag)
-    return fget(mget(flr(x+IndoorWorld_house_x_offset+.5), flr(y+IndoorWorld_house_y_offset+.5)), flag)
+    return fget(IndoorWorld__get_sprite(x, y), flag)
+end
+
+function IndoorWorld__get_sprite(x, y)
+    return mget(flr(x+IndoorWorld_house_x_offset+.5), flr(y+IndoorWorld_house_y_offset+.5))
 end
 
 function IndoorWorld.is_obstructed(x, y)
-    -- These < and >= are reversed because when we get the flag, we add .5 to x.
-    if(IndoorWorld__get_flag(x, y, Sprite_flag_indoor_walking_obstruction_left) and (x-flr(x) >= .5)) return true
+    -- Get first sprite to check offsets
+    local sprite = IndoorWorld__get_sprite(x, y)
+    local offsets = Sprites_offsets[sprite]
+    if(offsets != nil) then
+        x -= offsets[1]/8
+        y -= offsets[2]/8
+        sprite = IndoorWorld__get_sprite(x, y) -- the sprite may have changed from the offset
+    end
 
-    if(IndoorWorld__get_flag(x, y, Sprite_flag_indoor_walking_obstruction_right) and (x-flr(x) <= .5)) return true
+    -- These < and >= are reversed because when we get the flag, we add .5 to x.
+    if(fget(sprite, Sprite_flag_indoor_walking_obstruction_left) and (x-flr(x) >= .5)) return true
+
+    if(fget(sprite, Sprite_flag_indoor_walking_obstruction_right) and (x-flr(x) <= .5)) return true
 
     return false
 end
