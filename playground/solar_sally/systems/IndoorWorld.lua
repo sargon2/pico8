@@ -24,6 +24,23 @@ function IndoorWorld_draw_floor_behinds()
     end
 end
 
+function IndoorWorld_mymap(celx, cely, sx, sy, celw, celh, layer)
+    -- Replacement for map() that supports my sprite flags.  It's a lot slower than map().
+    if(sx == nil) sx = 0
+    if(sy == nil) sy = 0
+    if(celw == nil) celw = 15
+    if(celh == nil) celh = 15
+    if(layer == nil) layer = 0
+    sx/=8
+    sy/=8
+    for x=0,celw do
+        for y=0,celh do
+            local sprid = mget(x+celx, y+cely)
+            if(sprid != 0 and (layer == 0 or (fget(sprid) & layer != 0))) Sprites_draw_spr(sprid, x+sx, y+sy, 1, 1, false, true)
+        end
+    end
+end
+
 function IndoorWorld.draw()
     -- Get the character's position
     local char_x, char_y = SmoothLocations_get_location(Entities_Character)
@@ -46,17 +63,17 @@ function IndoorWorld.draw()
     IndoorWorld_draw_floor_behinds()
 
     -- Draw the layer that's always behind the character
-    map(IndoorWorld_house_x_offset, IndoorWorld_house_y_offset)
+    IndoorWorld_mymap(IndoorWorld_house_x_offset, IndoorWorld_house_y_offset)
 
     -- Draw the character
     Character_drawChar(char_x, char_y, Entities_Character, true)
 
     -- Draw the layer that's sometimes in front of the character
     local draw_boundary = flr(char_y) + 1
-    map(IndoorWorld_house_x_offset, IndoorWorld_house_y_offset+draw_boundary, 0, draw_boundary*8, nil, 16-draw_boundary, 1 << Sprite_flag_layer_bit1)
+    IndoorWorld_mymap(IndoorWorld_house_x_offset, IndoorWorld_house_y_offset+draw_boundary, 0, draw_boundary*8, nil, 16-draw_boundary, 1 << Sprite_flag_layer_bit1)
 
     -- Draw the layer that's always in front of the character
-    map(IndoorWorld_house_x_offset, IndoorWorld_house_y_offset, 0, 0, nil, nil, 1 << Sprite_flag_layer_bit2)
+    IndoorWorld_mymap(IndoorWorld_house_x_offset, IndoorWorld_house_y_offset, 0, 0, nil, nil, 1 << Sprite_flag_layer_bit2)
 end
 
 function IndoorWorld__get_flag(x, y, flag)
