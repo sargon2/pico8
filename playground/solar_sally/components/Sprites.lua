@@ -70,6 +70,11 @@
 
 --[[const]] Sprite_id_step_to_exit = 115
 
+--[[const]] Sprite_id_bed_ul = 70
+--[[const]] Sprite_id_bed_ur = 71
+--[[const]] Sprite_id_bed_ll = 86
+--[[const]] Sprite_id_bed_lr = 87
+
 -- Sprite flag meanings
 --[[const]] Sprite_flag_transparent_purple = 0
 --[[const]] Sprite_flag_transparent_white = 1
@@ -83,6 +88,10 @@
 Sprites_offsets = {
     [Sprite_id_axe_swing_right_1] = {-2, 0},
     [Sprite_id_axe_swing_right_2] = {2, 0},
+    [Sprite_id_bed_ul] = {0, -3},
+    [Sprite_id_bed_ur] = {0, -3},
+    [Sprite_id_bed_ll] = {0, -3},
+    [Sprite_id_bed_lr] = {0, -3},
 }
 
 function Sprites_add(ent_id, sprite, width, height, yoffset)
@@ -126,12 +135,11 @@ function Sprites_draw_spr(s, x, y, width, height, flip_x, relative_to_screen)
     elseif fget(s, Sprite_flag_transparent_white) then
         palt(0b0000000100000000)
         changed_transparency = true
-    else
-        local off = Sprites_offsets[s]
-        if off != nil then
-            xoffset, yoffset = unpack(off)
-            if(flip_x) xoffset = -xoffset
-        end
+    end
+    local off = Sprites_offsets[s]
+    if off != nil then
+        xoffset, yoffset = unpack(off)
+        if(flip_x) xoffset = -xoffset
     end
     spr(
         s,
