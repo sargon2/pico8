@@ -7,6 +7,7 @@ PICO8_DAT=$(PICO8_FOLDER)/pico8.dat
 COUNTER=../../get_counts.sh
 LUA_FILES:=$(shell cat solar_sally.p8 | grep include | cut -c 10-)
 SHRINKO8_OPTIONS=--minify --no-minify-lines --focus-tokens # there are some other options for particular runs
+FIRELIGHT_FOLDER=~/bitbucket/firelight/live/pico8
 
 .SECONDEXPANSION: # needed for the wildcard stuff
 output/solar_sally.p8 output/solar_sally.p8.png &: solar_sally.p8 $(LUA_FILES)
@@ -31,6 +32,11 @@ output/web/solar_sally.html output/web/solar_sally.js &: solar_sally.p8 output/s
 	$(PICO8) -export output/web/solar_sally.html output/solar_sally.p8.png
 	# Output the shrinko8 .js file
 	$(SHRINKO8) solar_sally.p8 output/web/solar_sally.js --pico8-dat $(PICO8_DAT) $(SHRINKO8_OPTIONS)
+
+.PHONY: publish-to-firelight
+publish-to-firelight: web
+	cp -r output/web $(FIRELIGHT_FOLDER)/solar_sally
+	mv $(FIRELIGHT_FOLDER)/solar_sally/solar_sally.html $(FIRELIGHT_FOLDER)/solar_sally/index.html
 
 .PHONY: lint
 lint:
