@@ -165,7 +165,7 @@ function Sprites_convert_map_to_screen(x, y)
     return 8+x-char_x, 8+y-char_y
 end
 
-function Sprites_set_pixel(x,y,xoffset,yoffset,c, relative_to_screen)
+function Sprites_set_pixel(x, y, xoffset, yoffset, c, relative_to_screen)
     if not relative_to_screen then
         x, y = Sprites_convert_map_to_screen(x, y)
     end
@@ -176,7 +176,7 @@ function Sprites_set_pixel(x,y,xoffset,yoffset,c, relative_to_screen)
     )
 end
 
-function Sprites_set_pixel_relative_to_screen(x,y,xoffset,yoffset,c) -- convenience
+function Sprites_set_pixel_relative_to_screen(x, y, xoffset, yoffset, c) -- convenience
     Sprites_set_pixel(x, y, xoffset, yoffset, c, true)
 end
 

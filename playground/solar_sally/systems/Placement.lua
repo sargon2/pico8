@@ -86,10 +86,36 @@ function Placement_set_placement_obstruction_fn(ent_id, fn)
     Placement_obstructed_fns[ent_id] = fn
 end
 
+function Placement_draw_selection_box(x, y, width, height, relative_to_screen)
+    -- This function is an alternative to the 1x1 Sprite_id_selection_box for selecting larger things.
+    -- It takes about 0.64% of a 60fps frame budget to run.  Drawing 1 sprite takes about 0.23%.
+
+    -- color 10 is yellow
+    -- Upper left
+    Sprites_set_pixel(x, y, 0, 0, 10, relative_to_screen)
+    Sprites_set_pixel(x, y, 0, 1, 10, relative_to_screen)
+    Sprites_set_pixel(x, y, 1, 0, 10, relative_to_screen)
+
+    -- Upper right
+    Sprites_set_pixel(x+width-1, y, 7, 0, 10, relative_to_screen)
+    Sprites_set_pixel(x+width-1, y, 6, 0, 10, relative_to_screen)
+    Sprites_set_pixel(x+width-1, y, 7, 1, 10, relative_to_screen)
+
+    -- Lower left
+    Sprites_set_pixel(x, y+height-1, 0, 7, 10, relative_to_screen)
+    Sprites_set_pixel(x, y+height-1, 0, 6, 10, relative_to_screen)
+    Sprites_set_pixel(x, y+height-1, 1, 7, 10, relative_to_screen)
+
+    -- Lower right
+    Sprites_set_pixel(x+width-1, y+height-1, 7, 7, 10, relative_to_screen)
+    Sprites_set_pixel(x+width-1, y+height-1, 6, 7, 10, relative_to_screen)
+    Sprites_set_pixel(x+width-1, y+height-1, 7, 6, 10, relative_to_screen)
+end
+
 function Placement.draw()
     if(Placement_get_place_ent_id() == Entities_None) return
-    Sprites_draw_spr(Sprite_id_selection_box,Placement_sel_x_visual,Placement_sel_y_visual)
-    Sprites_draw_spr(Placement_sel_sprite,Placement_sel_x_visual,Placement_sel_y_visual-1)
+    Sprites_draw_spr(Sprite_id_selection_box, Placement_sel_x_visual, Placement_sel_y_visual)
+    Sprites_draw_spr(Placement_sel_sprite, Placement_sel_x_visual, Placement_sel_y_visual-1)
 
     -- Progress indicator
     if(Placement_progress != nil) then
