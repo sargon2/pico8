@@ -105,6 +105,18 @@ function IndoorWorld.update()
         (bed_y-boundary_top) < char_y and
         char_y < (bed_y+2+boundary_bottom)
     )
+
+    if my_btn(Button_take_action) then
+        if bed_selected then
+            fadeAndDisableInputForCo(function ()
+                advance_time_days(1)
+                -- Wait some frames
+                for _=1,50 do
+                    yield()
+                end
+            end)
+        end
+    end
 end
 
 function IndoorWorld__get_flag(x, y, flag)

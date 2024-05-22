@@ -82,3 +82,9 @@ else
         do_update()
     end
 end
+
+function advance_time_days(d)
+    PanelCalculator_add_panel_days(d)
+    Trees_advanceTimeDays(d)
+    Cows_advanceTimeDays(d)
+end
