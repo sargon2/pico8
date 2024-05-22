@@ -52,7 +52,7 @@ function Axe_begin_action(ent_id, x, y)
         if(not Settings_60fps) time /= 2
         for _=1,time do
             for frame in all({Sprite_id_axe_swing_right_1, Sprite_id_axe_swing_right_2}) do
-                if(Character_is_moving) then
+                if(Character_or_placement_moving) then
                     Axe_end_action() -- Cancel the operation if the player moves
                     return
                 end

@@ -220,7 +220,7 @@ function Placement_begin_timed_action(num_frames, complete_fn, ...)
     local fn_args = {...}
     Placement_placing_coroutine = CoroutineRunner_StartScript(function ()
         for frame_num=1,num_frames do
-            if(Character_is_moving) then
+            if(Character_or_placement_moving) then
                 Placement_cancel_timed_action() -- Cancel the operation if the player moves
                 return
             end

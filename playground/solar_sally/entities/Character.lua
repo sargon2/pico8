@@ -3,7 +3,7 @@ Character = {}
 local Character_frame=1
 local Character_anim_frames={1,2}
 Character_flip_x=false
-Character_is_moving = false
+Character_or_placement_moving = false
 local Character_footstep_sfx_loop = nil
 
 function Character.on_load()
@@ -69,16 +69,10 @@ function Character_handle_player_movement(elapsed)
 
     -- Calculate if it's the first movement frame or not
     local is_first_movement_frame = false
-    if is_moving and not Character_is_moving then
+    if is_moving and not Character_or_placement_moving then
         is_first_movement_frame = true
     end
-    Character_is_moving = is_moving
-    if Character_is_moving then
-        if(Character_footstep_sfx_loop == nil) Character_footstep_sfx_loop = start_sfx_loop(SFX_id_footsteps, Settings_footstep_sfx_loop_speed)
-    else
-        CoroutineRunner_Cancel(Character_footstep_sfx_loop)
-        Character_footstep_sfx_loop = nil
-    end
+    Character_or_placement_moving = is_moving
 
     -- Process player movement
     if system_is_running(Placement) then
@@ -86,10 +80,13 @@ function Character_handle_player_movement(elapsed)
     end
 
     -- Perform & animate walking
-    if(Character_is_moving) then
+    if x != 0 or y != 0 then -- if the character herself is moving, not just the selection box
+        if(Character_footstep_sfx_loop == nil) Character_footstep_sfx_loop = start_sfx_loop(SFX_id_footsteps, Settings_footstep_sfx_loop_speed)
         SmoothLocations_move_by_if_not_obstructed(Entities_Character, x, y, Settings_character_speed*elapsed)
         Character_frame += Settings_character_anim_speed*elapsed
     else
         Character_frame = 0.99 -- Very close to the next frame to increase responsivenes
+        CoroutineRunner_Cancel(Character_footstep_sfx_loop)
+        Character_footstep_sfx_loop = nil
     end
 end
