@@ -62,7 +62,7 @@ function Button_pressBuyAxe(cost)
 end
 
 function Button_pressGoInside()
-    fadeAndDisableInputForCo(function ()
+    startFadeAndDisableInputForCo(function ()
         unload_system(Placement)
         unload_system(World)
 
@@ -71,7 +71,7 @@ function Button_pressGoInside()
 end
 
 function Button_pressAdvanceTimeDays(d)
-    fadeAndDisableInputForCo(function ()
+    startFadeAndDisableInputForCo(function ()
         advance_time_days(d)
         -- Wait some frames
         for _=1,50 do
@@ -81,7 +81,7 @@ function Button_pressAdvanceTimeDays(d)
 end
 
 function Button_pressAdvanceTimeYears(y)
-    fadeAndDisableInputForCo(function ()
+    startFadeAndDisableInputForCo(function ()
         PanelCalculator_add_panel_years(y)
         Trees_advanceTimeYears(y)
         -- Wait some frames

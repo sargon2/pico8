@@ -1,9 +1,11 @@
 -- Functions suitable for use as coroutines
-function fadeAndDisableInputForCo(fn)
+function startFadeAndDisableInputForCo(fn)
     CoroutineRunner_StartScript(function ()
+        disableInput()
         fadetoblack_fade_co()
-        disableInputFor(fn)
+        fn()
         fadetoblack_fadein_co()
+        enableInput()
     end)
 end
 

@@ -18,8 +18,10 @@ function my_btnp(...)
     return btnp(...)
 end
 
-function disableInputFor(fn)
+function disableInput()
     Input_AllInputDisabled = true
-    fn()
+end
+
+function enableInput()
     Input_AllInputDisabled = false
 end

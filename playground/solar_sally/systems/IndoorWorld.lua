@@ -54,13 +54,11 @@ function IndoorWorld.draw()
     -- Check if we're exiting
     if not is_exiting and IndoorWorld__get_flag(char_x, char_y, Sprite_flag_exits) then
         is_exiting = true
-        CoroutineRunner_StartScript(function ()
-            fadeAndDisableInputForCo(function ()
-                unload_system(IndoorWorld)
-                load_system(Placement, 4)
-                load_system(World, 2)
-                SmoothLocations_set_or_update_location(Entities_Character, char_x_save, char_y_save)
-            end)
+        startFadeAndDisableInputForCo(function ()
+            unload_system(IndoorWorld)
+            load_system(Placement, 4)
+            load_system(World, 2)
+            SmoothLocations_set_or_update_location(Entities_Character, char_x_save, char_y_save)
         end)
         return
     end
@@ -111,7 +109,7 @@ function IndoorWorld.update()
 
     if my_btn(Button_take_action) then
         if bed_selected then
-            fadeAndDisableInputForCo(function ()
+            startFadeAndDisableInputForCo(function ()
                 advance_time_days(1)
                 yield_for_seconds(2.5)
             end)
