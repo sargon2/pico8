@@ -5,6 +5,12 @@ IndoorWorld = {}
 
 local is_exiting -- prevent reentrance on the exit coroutine
 local char_x_save, char_y_save -- save the character's location before they went inside
+local bed_selected = false
+
+-- Hardcode the location of the bed rather than searching for it for simplicity.
+-- Can't be constant because they use sprite offsets.
+local bed_x = 8 + Sprites_offsets[Sprite_id_bed_ul][1]/8
+local bed_y = 6 + Sprites_offsets[Sprite_id_bed_ul][2]/8
 
 function IndoorWorld.init()
     char_x_save, char_y_save = SmoothLocations_get_location(Entities_Character)
@@ -74,6 +80,31 @@ function IndoorWorld.draw()
 
     -- Draw the layer that's always in front of the character
     IndoorWorld_mymap(IndoorWorld_house_x_offset, IndoorWorld_house_y_offset, 0, 0, nil, nil, 1 << Sprite_flag_layer_bit2)
+
+    -- Draw the selection box around the bed if Sally's close to it
+    IndoorWorld__draw_bed_sel()
+end
+
+function IndoorWorld__draw_bed_sel()
+    if(bed_selected) Placement_draw_selection_box(bed_x, bed_y, 2, 2, true)
+end
+
+function IndoorWorld.update()
+    -- Is Sally close to the bed? If so, select it.
+    local char_x, char_y = SmoothLocations_get_location(Entities_Character)
+
+    -- Not sure why the zeroes here, but it seems to work.
+    --[[const]] local boundary_left = 1
+    --[[const]] local boundary_right = 0
+    --[[const]] local boundary_top = 1
+    --[[const]] local boundary_bottom = 0
+
+    bed_selected = (
+        (bed_x-boundary_left) < char_x and
+        char_x < (bed_x+2+boundary_right) and
+        (bed_y-boundary_top) < char_y and
+        char_y < (bed_y+2+boundary_bottom)
+    )
 end
 
 function IndoorWorld__get_flag(x, y, flag)
