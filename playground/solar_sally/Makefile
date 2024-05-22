@@ -34,8 +34,9 @@ output/web/solar_sally.html output/web/solar_sally.js &: solar_sally.p8 output/s
 	$(SHRINKO8) solar_sally.p8 output/web/solar_sally.js --pico8-dat $(PICO8_DAT) $(SHRINKO8_OPTIONS)
 
 .PHONY: publish-to-firelight
-publish-to-firelight: web
-	cp -r output/web $(FIRELIGHT_FOLDER)/solar_sally
+publish-to-firelight: .tested lint find-todos web
+	mkdir -p $(FIRELIGHT_FOLDER)/solar_sally
+	cp output/web/* $(FIRELIGHT_FOLDER)/solar_sally
 	mv $(FIRELIGHT_FOLDER)/solar_sally/solar_sally.html $(FIRELIGHT_FOLDER)/solar_sally/index.html
 
 .PHONY: lint
