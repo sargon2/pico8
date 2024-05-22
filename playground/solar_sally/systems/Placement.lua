@@ -35,7 +35,7 @@ function Placement.init()
 end
 
 function Placement.update(_elapsed)
-    if my_btnp(🅾️) then
+    if my_btnp(Button_select_action) then
         Placement_rotate_with_inventory_check()
     end
 
@@ -49,7 +49,7 @@ function Placement.update(_elapsed)
     Placement_sel_sprite = sprite
 
     -- Carry out the action
-    if my_btn(❎) then
+    if my_btn(Button_take_action) then
         if action == Actions_custom then
             Placement_custom_action(action_ent, Placement_sel_x, Placement_sel_y)
         elseif action == Actions_pick_up then

@@ -10,7 +10,7 @@ SHRINKO8_OPTIONS=--minify --no-minify-lines --focus-tokens # there are some othe
 FIRELIGHT_FOLDER=~/bitbucket/firelight/live/pico8
 
 .SECONDEXPANSION: # needed for the wildcard stuff
-output/solar_sally.p8 output/solar_sally.p8.png &: solar_sally.p8 $(LUA_FILES)
+output/solar_sally.p8 output/solar_sally.p8.png: solar_sally.p8 $(LUA_FILES)
 	mkdir -p output
 	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --rename-map rename_map.txt $(SHRINKO8_OPTIONS) # So we can examine minified code
 	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png $(SHRINKO8_OPTIONS)
@@ -26,7 +26,7 @@ output/solar_sally.p8 output/solar_sally.p8.png &: solar_sally.p8 $(LUA_FILES)
 .PHONY: web
 web: output/web/solar_sally.html output/web/solar_sally.js
 
-output/web/solar_sally.html output/web/solar_sally.js &: solar_sally.p8 output/solar_sally.p8.png
+output/web/solar_sally.html output/web/solar_sally.js: solar_sally.p8 output/solar_sally.p8.png
 	mkdir -p output/web/
 	# Output the pre-shrinko8 .js file and .html file
 	$(PICO8) -export output/web/solar_sally.html output/solar_sally.p8.png

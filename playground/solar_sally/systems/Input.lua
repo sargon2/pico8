@@ -1,3 +1,6 @@
+--[[const]] Button_select_action = 🅾️
+--[[const]] Button_take_action = ❎
+
 local Input_AllInputDisabled = false
 
 function my_btn(...)
