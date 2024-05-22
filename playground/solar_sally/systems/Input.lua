@@ -1,5 +1,8 @@
---[[const]] Button_select_action = 🅾️
---[[const]] Button_take_action = ❎
+-- On mobile, x is on the left and o is on the right.
+-- On a pc, x is x and o is z, so x is on the right and o is on the left.
+
+--[[const]] Button_select_action = ❎
+--[[const]] Button_take_action = 🅾️
 
 local Input_AllInputDisabled = false
 
