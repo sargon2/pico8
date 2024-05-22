@@ -86,7 +86,10 @@ function IndoorWorld.draw()
 end
 
 function IndoorWorld__draw_bed_sel()
-    if(bed_selected) Placement_draw_selection_box(bed_x, bed_y, 2, 2, true)
+    if bed_selected then
+        Placement_draw_selection_box(bed_x, bed_y, 2, 2, true)
+        Sprites_draw_spr(Sprite_id_sleep_icon, bed_x+.375, bed_y-1, 1, 1, false, true)
+    end
 end
 
 function IndoorWorld.update()
@@ -110,10 +113,7 @@ function IndoorWorld.update()
         if bed_selected then
             fadeAndDisableInputForCo(function ()
                 advance_time_days(1)
-                -- Wait some frames
-                for _=1,50 do
-                    yield()
-                end
+                yield_for_seconds(2.5)
             end)
         end
     end

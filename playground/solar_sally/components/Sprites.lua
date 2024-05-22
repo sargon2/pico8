@@ -75,6 +75,8 @@
 --[[const]] Sprite_id_bed_ll = 86
 --[[const]] Sprite_id_bed_lr = 87
 
+--[[const]] Sprite_id_sleep_icon = 39
+
 -- Sprite flag meanings
 --[[const]] Sprite_flag_transparent_purple = 0
 --[[const]] Sprite_flag_transparent_white = 1

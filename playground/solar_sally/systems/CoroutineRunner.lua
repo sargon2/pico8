@@ -28,3 +28,12 @@ function CoroutineRunner_Cancel(c)
     if(c == nil) return
     del(CoroutineRunner_Scripts, c)
 end
+
+function yield_for_seconds(s) -- supports partial seconds
+    local fps = 30
+    if(Settings_60fps) fps = 60
+    local total_frames = s * fps
+    for _=1,total_frames do
+        yield()
+    end
+end
