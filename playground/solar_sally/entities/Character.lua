@@ -6,7 +6,7 @@ Character_flip_x=false
 Character_is_moving = false
 local Character_footstep_sfx_loop = nil
 
-function Character.init()
+function Character.on_load()
     SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
     Attr_DrawFn[Entities_Character] = Character_drawChar
 end
@@ -81,7 +81,7 @@ function Character_handle_player_movement(elapsed)
     end
 
     -- Process player movement
-    if system_is_loaded(Placement) then
+    if system_is_running(Placement) then
         x, y = Placement_handle_character_movement(is_first_movement_frame, elapsed, x, y)
     end
 

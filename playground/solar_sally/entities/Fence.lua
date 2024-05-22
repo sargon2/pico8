@@ -1,6 +1,6 @@
 Fence = {}
 
-function Fence.init()
+function Fence.on_load()
     Attr_WalkingObstruction[Entities_Fence] = true
     Attr_removable[Entities_Fence] = true
     Attr_pluggable[Entities_Fence] = true

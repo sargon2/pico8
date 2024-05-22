@@ -23,7 +23,7 @@ function Button_create_button(label, x, y, press_fn, release_fn, ...)
     Locations_place_entity(ent_id, x, y)
 end
 
-function Button.init()
+function Button.on_load()
     Button_create_button("do nothing", -5, -1, nil)
     Button_create_button("go inside", -5, 1, Button_pressGoInside)
     Button_create_button("unlock basement for $"..tostr(Settings_key_cost), -5, 2, Button_pressUnlockBasement)
@@ -55,7 +55,7 @@ function Button_pressBuy(buy_ent, price, qty)
 end
 
 function Button_pressBuyAxe(cost)
-    if(system_is_loaded(Axe)) return
+    if(system_is_running(Axe)) return
     if(not Inventory_canAfford(cost)) return
     Inventory_addMoney(-cost)
     load_system(Axe)
@@ -63,10 +63,10 @@ end
 
 function Button_pressGoInside()
     startFadeAndDisableInputForCo(function ()
-        unload_system(Placement)
-        unload_system(World)
+        disable_system(Placement)
+        disable_system(World)
 
-        load_system(IndoorWorld, 2)
+        enable_system(IndoorWorld)
     end)
 end
 

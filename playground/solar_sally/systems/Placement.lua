@@ -27,7 +27,7 @@ local Placement_obstructed_fns = {}
 Placement_placing_coroutine = nil
 Placement_progress = nil -- 0 to 1
 
-function Placement.init()
+function Placement.on_load()
     -- Add placeable entities in the same order they'll show up to the user
     Placement_placeable_entities = {Entities_None, Entities_Panels, Entities_Wire, Entities_Transformers_left, Entities_Fence}
     Placement_placeable_index = nil -- To reset rotation in tests

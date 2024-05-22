@@ -6,7 +6,7 @@ local Cows_vector_y = {} -- vector_y[ent_id] = y
 local Cows_looking = {} -- looking[ent_id] = true, whether or not the cow is looking at the player
 local Cows_is_cow = {} -- is_cow[ent_id] = true -- to speed up updating
 
-function Cows.init()
+function Cows.on_load()
 
     for _=1,5000 do
         local ent_id = Entities_create_entity()
@@ -33,7 +33,7 @@ function Cows_draw_cow(x, y, ent_id)
 end
 
 function Cows.update(elapsed)
-    if(not system_is_loaded(World)) return -- Cows don't move when we're indoors
+    if(not system_is_running(World)) return -- Cows don't move when we're indoors
     local xmin, xmax, ymin, ymax = World_get_visible_ranges()
     local smooth_ents = SmoothLocations_get_all_visible(xmin, xmax, ymin, ymax)
 

@@ -17,13 +17,13 @@ function init_inventory(num_panels, num_transformers, num_wire, num_fence)
     Settings_start_wire = num_wire
     Settings_start_fence = num_fence
 
-    Inventory.init()
+    Inventory.on_load()
 end
 
 function placement_tests.test_empty_inventory_rotate()
     
     init_inventory()
-    Placement.init()
+    Placement.on_load()
 
     assert.equals(Placement_get_place_ent_id(), Entities_None)
     Placement_rotate_with_inventory_check()
@@ -37,7 +37,7 @@ end
 function placement_tests.test_rotate_empty_skip_off()
     
     init_inventory()
-    Placement.init()
+    Placement.on_load()
 
     assert.equals(Placement_get_place_ent_id(), Entities_None)
     Placement_rotate_with_inventory_check(true)
@@ -51,7 +51,7 @@ end
 function placement_tests.test_basic_rotate()
 
     init_inventory(1, 1, 1, 1)
-    Placement.init()
+    Placement.on_load()
 
     assert.equals(Placement_get_place_ent_id(), Entities_None)
     Placement_rotate_with_inventory_check()
@@ -71,7 +71,7 @@ end
 function placement_tests.test_rotate_skip_off()
 
     init_inventory(1, 1, 1, 1)
-    Placement.init()
+    Placement.on_load()
 
     assert.equals(Placement_get_place_ent_id(), Entities_None)
     Placement_rotate_with_inventory_check(true)

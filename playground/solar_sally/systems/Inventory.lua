@@ -23,7 +23,7 @@ function _money_format(m)
     return ret
 end
 
-function Inventory.init()
+function Inventory.on_load()
     -- Since we haven't implemented buying yet, just start with some core components.
     -- Order here is display order
     Sprites_add(Entities_Money, Sprite_id_money)

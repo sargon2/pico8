@@ -1,6 +1,6 @@
 GridWire = {}
 
-function GridWire.init()
+function GridWire.on_load()
     -- Attr_WalkingObstruction[Entities_GridWire] = true
     Attr_pluggable[Entities_GridWire] = true
     Sprites_add(Entities_GridWire, Sprite_id_grid_wire)

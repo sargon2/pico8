@@ -1,6 +1,6 @@
 Wire = {}
 
-function Wire.init()
+function Wire.on_load()
     Attr_removable[Entities_Wire] = true
     Attr_pluggable[Entities_Wire] = true
     Attr_mini_sprite[Entities_Wire] = Sprite_id_place_wire

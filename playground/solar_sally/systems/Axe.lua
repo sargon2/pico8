@@ -2,7 +2,7 @@ Axe = {}
 
 local Axe_Coroutine
 
-function Axe.init()
+function Axe.on_load()
     Attr_mini_sprite[Entities_Trees] = Sprite_id_place_axe
     Attr_mini_sprite[Entities_YoungTrees] = Sprite_id_place_axe
 
@@ -19,7 +19,7 @@ function Axe.init()
 end
 
 -- Not needed until there's a way to drop the axe
--- function Axe.destroy()
+-- function Axe.on_unload()
 --     Attr_mini_sprite[Entities_Trees] = nil
 --     Attr_mini_sprite[Entities_YoungTrees] = nil
 

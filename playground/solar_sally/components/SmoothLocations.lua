@@ -53,7 +53,7 @@ function SmoothLocations_move_by_if_not_obstructed(ent_id, x, y, mdist)
     local new_x, new_y = SmoothLocations_get_location(ent_id)
 
     local obstruction_checker
-    if system_is_loaded(World) then
+    if system_is_running(World) then
         obstruction_checker = World
     else
         obstruction_checker = IndoorWorld

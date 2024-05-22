@@ -1,6 +1,6 @@
 Trees = {}
 
-function Trees.init()
+function Trees.on_load()
     Attr_WalkingObstruction[Entities_Trees] = true
     Attr_WalkingObstruction[Entities_YoungTrees] = true
 

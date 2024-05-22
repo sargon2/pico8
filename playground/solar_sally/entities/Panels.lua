@@ -1,6 +1,6 @@
 Panels = {}
 
-function Panels.init()
+function Panels.on_load()
     Attr_WalkingObstruction[Entities_Panels] = true
     Attr_removable[Entities_Panels] = true
     Attr_is_circuit_component[Entities_Panels] = true

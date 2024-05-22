@@ -1,21 +1,38 @@
 solar_sally_systems = {} -- ordered, index-based list
-solar_sally_loaded_systems = {} -- cache for speed of system_is_loaded(); map of system to boolean
+solar_sally_running_systems = {} -- which systems are running
 
-function system_is_loaded(s)
-    return solar_sally_loaded_systems[s]
+        -- load, unload, enable, disable
+        -- on_load, on_unload, on_enable, on_disable
+
+function system_is_running(s)
+    return solar_sally_running_systems[s]
 end
 
 function unload_system(s)
-    if(s.destroy) s.destroy()
+    disable_system(s)
+    if(s.on_unload) s.on_unload()
     del(solar_sally_systems, s)
-    solar_sally_loaded_systems[s] = nil
 end
 
-function load_system(s, idx)
-    if(s.init) s.init()
-    if(not s.draw and not s.update) return -- If it doesn't have a draw or an update, there's no reason to keep it around
-    add(solar_sally_systems, s, idx)
-    solar_sally_loaded_systems[s] = true
+function load_system_disabled(s) -- returns whether or not system was remembered
+    if(s.on_load) s.on_load()
+    if(not s.draw and not s.update) return false -- If it doesn't have a draw or an update, there's no reason to keep it around
+    add(solar_sally_systems, s)
+    return true
+end
+
+function load_system(s)
+    if(load_system_disabled(s)) enable_system(s)
+end
+
+function enable_system(s)
+    if(s.on_enable) s.on_enable()
+    solar_sally_running_systems[s] = true
+end
+
+function disable_system(s)
+    if(s.on_disable) s.on_disable()
+    solar_sally_running_systems[s] = nil
 end
 
 function _init()
@@ -31,6 +48,7 @@ function _init()
     load_system(Fence)
     load_system(Button)
     load_system(World)
+    load_system_disabled(IndoorWorld)
     load_system(Cows)
     load_system(Inventory)
     load_system(Placement)
@@ -43,7 +61,7 @@ function _draw()
     cls()
 
     for system in all(solar_sally_systems) do
-        if system.draw then
+        if system.draw and solar_sally_running_systems[system] then
             PerfTimer_time(get_var_name(system)..".draw()", function ()
                 system.draw()
             end)
@@ -64,7 +82,7 @@ function do_update()
     end
 
     for system in all(solar_sally_systems) do
-        if system.update then
+        if system.update and solar_sally_running_systems[system] then
             PerfTimer_time(get_var_name(system)..".update()", function ()
                 system.update(elapsed)
             end)

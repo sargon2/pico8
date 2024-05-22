@@ -1,6 +1,6 @@
 Rocks = {}
 
-function Rocks.init()
+function Rocks.on_load()
     Attr_WalkingObstruction[Entities_Rocks] = true
     Sprites_add(Entities_Rocks, Sprite_id_rock)
 

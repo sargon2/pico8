@@ -2,7 +2,7 @@ Transformers = {}
 
 local Transformers_overloaded_transformers = nil
 
-function Transformers.init()
+function Transformers.on_load()
     Attr_WalkingObstruction[Entities_Transformers_left] = true
     Attr_removable[Entities_Transformers_left] = true
     Attr_is_circuit_component[Entities_Transformers_left] = true
