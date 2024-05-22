@@ -19,6 +19,8 @@ function animate_movement(setter, begin, ending, num_frames, easer)
             setter(lerp(begin, ending, easer(frame_num/num_frames)))
             yield()
         end
+        -- Make sure we end accurately if the easer doesn't
+        setter(ending)
     end)
 end
 
