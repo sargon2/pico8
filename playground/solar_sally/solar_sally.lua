@@ -14,15 +14,11 @@ function unload_system(s)
     del(solar_sally_systems, s)
 end
 
-function load_system_disabled(s) -- returns whether or not system was remembered
-    if(s.on_load) s.on_load()
-    if(not s.draw and not s.update) return false -- If it doesn't have a draw or an update, there's no reason to keep it around
-    add(solar_sally_systems, s)
-    return true
-end
-
 function load_system(s)
-    if(load_system_disabled(s)) enable_system(s)
+    if(s.on_load) s.on_load()
+    if(not s.draw and not s.update) return -- If it doesn't have a draw or an update, there's no reason to keep it around
+    add(solar_sally_systems, s)
+    enable_system(s)
 end
 
 function enable_system(s)
@@ -48,13 +44,14 @@ function _init()
     load_system(Fence)
     load_system(Button)
     load_system(World)
-    load_system_disabled(IndoorWorld)
+    load_system(IndoorWorld)
     load_system(Cows)
     load_system(Inventory)
     load_system(Placement)
     load_system(Character)
     load_system(PanelCalculator)
     load_system(CoroutineRunner)
+    load_system(Modes)
 end
 
 function _draw()

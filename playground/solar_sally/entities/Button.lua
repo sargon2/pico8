@@ -63,10 +63,7 @@ end
 
 function Button_pressGoInside()
     startFadeAndDisableInputForCo(function ()
-        disable_system(Placement)
-        disable_system(World)
-
-        enable_system(IndoorWorld)
+        Modes_switch_mode(Mode_SallysHouse)
     end)
 end
 
