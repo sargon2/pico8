@@ -92,26 +92,22 @@ function Placement_draw_selection_box(x, y, width, height, relative_to_screen)
     -- This function is an alternative to the 1x1 Sprite_id_selection_box for selecting larger things.
     -- It takes about 0.64% of a 60fps frame budget to run.  Drawing 1 sprite takes about 0.23%.
 
-    -- color 10 is yellow
-    -- Upper left
-    Sprites_set_pixel(x, y, 0, 0, 10, relative_to_screen)
-    Sprites_set_pixel(x, y, 0, 1, 10, relative_to_screen)
-    Sprites_set_pixel(x, y, 1, 0, 10, relative_to_screen)
+    -- These functions just reduce the token count.
+    local function draw_yellow(xp, yp, xoff, yoff)
+        Sprites_set_pixel(xp, yp, xoff, yoff, 10, relative_to_screen)
+    end
 
-    -- Upper right
-    Sprites_set_pixel(x+width-1, y, 7, 0, 10, relative_to_screen)
-    Sprites_set_pixel(x+width-1, y, 6, 0, 10, relative_to_screen)
-    Sprites_set_pixel(x+width-1, y, 7, 1, 10, relative_to_screen)
+    local function set3(xp, yp, x1, x2, y1, y2)
+        -- color 10 is yellow
+        draw_yellow(xp, yp, x1, y1)
+        draw_yellow(xp, yp, x1, y2)
+        draw_yellow(xp, yp, x2, y1)
+    end
 
-    -- Lower left
-    Sprites_set_pixel(x, y+height-1, 0, 7, 10, relative_to_screen)
-    Sprites_set_pixel(x, y+height-1, 0, 6, 10, relative_to_screen)
-    Sprites_set_pixel(x, y+height-1, 1, 7, 10, relative_to_screen)
-
-    -- Lower right
-    Sprites_set_pixel(x+width-1, y+height-1, 7, 7, 10, relative_to_screen)
-    Sprites_set_pixel(x+width-1, y+height-1, 6, 7, 10, relative_to_screen)
-    Sprites_set_pixel(x+width-1, y+height-1, 7, 6, 10, relative_to_screen)
+    set3(x, y, 0, 1, 0, 1) -- Upper left
+    set3(x+width-1, y, 7, 6, 0, 1) -- Upper right
+    set3(x, y+height-1, 0, 1, 7, 6) -- Lower left
+    set3(x+width-1, y+height-1, 7, 6, 7, 6) -- Lower right
 end
 
 function Placement.draw()
