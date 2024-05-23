@@ -51,9 +51,11 @@ function IndoorWorld.draw()
     -- Check if we're exiting
     if not is_exiting and IndoorWorld__get_flag(char_x, char_y, Sprite_flag_exits) then
         is_exiting = true
-        startFadeAndDisableInputForCo(function ()
+        CoroutineRunner_StartScript(function ()
+            fade_out()
             Modes_switch_mode(Mode_Overworld)
             SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
+            fade_in()
         end)
         return
     end
@@ -104,19 +106,11 @@ function IndoorWorld.update()
 
     if my_btn(Button_take_action) then
         if bed_selected then
-            -- startFadeAndDisableInputForCo(function ()
-            --     advance_time_days(1)
-            --     yield_for_seconds(2.5)
-            -- end)
             CoroutineRunner_StartScript(function ()
-                disableInput()
-                fadetoblack_fade_co()
-
+                fade_out()
                 advance_time_days(1)
                 yield_for_seconds(2.5)
-
-                fadetoblack_fadein_co()
-                enableInput()
+                fade_in()
             end)
         end
     end

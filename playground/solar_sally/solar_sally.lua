@@ -39,13 +39,13 @@ function _init()
 
     -- Transition to initial mode
     CoroutineRunner_StartScript(function ()
+        -- Pico-8 clears the screen when it starts, so we don't need to fade out
         disableInput()
 
         Modes__enable_mode(Mode_Overworld)
         SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
 
-        fadetoblack_fadein_co()
-        enableInput()
+        fade_in() -- enables input
     end)
 end
 

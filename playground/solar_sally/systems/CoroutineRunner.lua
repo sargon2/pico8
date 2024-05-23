@@ -37,3 +37,20 @@ function yield_for_seconds(s) -- supports partial seconds
         yield()
     end
 end
+
+function fade_out()
+    disableInput()
+    for f=1,24 do
+        fade(f)
+        yield()
+    end
+end
+
+function fade_in()
+    for f=24,1,-1 do
+        fade(f)
+        yield()
+    end
+    enableInput()
+end
+
