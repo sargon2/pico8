@@ -9,6 +9,14 @@ function CoroutineRunner_StartScript(s)
     return c
 end
 
+function CoroutineRunner_StartScriptWithFade(s)
+    CoroutineRunner_StartScript(function ()
+        fade_out()
+        s()
+        fade_in()
+    end)
+end
+
 function CoroutineRunner.update()
     local s = {}
     for f in all(CoroutineRunner_Scripts) do

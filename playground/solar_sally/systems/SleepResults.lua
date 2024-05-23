@@ -7,10 +7,8 @@ end
 
 function SleepResults.update()
     if my_btnp(Button_take_action) then
-        CoroutineRunner_StartScript(function()
-            fade_out()
+        CoroutineRunner_StartScriptWithFade(function()
             Modes_return_to_previous_mode()
-            fade_in()
         end)
     end
 end

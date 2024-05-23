@@ -62,36 +62,30 @@ function Button_pressBuyAxe(cost)
 end
 
 function Button_pressGoInside()
-    CoroutineRunner_StartScript(function ()
-        fade_out()
+    CoroutineRunner_StartScriptWithFade(function ()
         Modes_switch_mode(Mode_SallysHouse)
         SmoothLocations_set_or_update_location(Entities_Character, 7, 7)
-        fade_in()
     end)
 end
 
 function Button_pressAdvanceTimeDays(d)
-    CoroutineRunner_StartScript(function ()
-        fade_out()
+    CoroutineRunner_StartScriptWithFade(function ()
         advance_time_days(d)
         -- Wait some frames
         for _=1,50 do
             yield()
         end
-        fade_in()
     end)
 end
 
 function Button_pressAdvanceTimeYears(y)
-    CoroutineRunner_StartScript(function ()
-        fade_out()
+    CoroutineRunner_StartScriptWithFade(function ()
         PanelCalculator_add_panel_years(y)
         Trees_advanceTimeYears(y)
         -- Wait some frames
         for _=1,50 do
             yield()
         end
-        fade_in()
     end)
 end
 
