@@ -7,7 +7,6 @@ Character_or_placement_moving = false
 local Character_footstep_sfx_loop = nil
 
 function Character.on_load()
-    SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
     Attr_DrawFn[Entities_Character] = Character_drawChar
 end
 

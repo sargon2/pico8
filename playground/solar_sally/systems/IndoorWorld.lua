@@ -4,7 +4,6 @@ IndoorWorld = {}
 --[[const]] local IndoorWorld_house_y_offset = -3
 
 local is_exiting -- prevent reentrance on the exit coroutine
-local char_x_save, char_y_save -- save the character's location before they went inside
 local bed_selected = false
 
 -- Hardcode the location of the bed rather than searching for it for simplicity.
@@ -13,8 +12,6 @@ local bed_x = 8 + Sprites_offsets[Sprite_id_bed_ul][1]/8
 local bed_y = 6 + Sprites_offsets[Sprite_id_bed_ul][2]/8
 
 function IndoorWorld.on_enable()
-    char_x_save, char_y_save = SmoothLocations_get_location(Entities_Character)
-    SmoothLocations_set_or_update_location(Entities_Character, 7, 7)
     is_exiting = false
 end
 
@@ -56,7 +53,7 @@ function IndoorWorld.draw()
         is_exiting = true
         startFadeAndDisableInputForCo(function ()
             Modes_switch_mode(Mode_Overworld)
-            SmoothLocations_set_or_update_location(Entities_Character, char_x_save, char_y_save)
+            SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
         end)
         return
     end

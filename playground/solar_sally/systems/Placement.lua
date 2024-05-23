@@ -30,8 +30,10 @@ Placement_progress = nil -- 0 to 1
 function Placement.on_load()
     -- Add placeable entities in the same order they'll show up to the user
     Placement_placeable_entities = {Entities_None, Entities_Panels, Entities_Wire, Entities_Transformers_left, Entities_Fence}
-    Placement_placeable_index = nil -- To reset rotation in tests
-    Placement_rotate_with_inventory_check(false, true) -- Set the placement icon to "no action" or the first thing, if we have anything
+end
+
+function Placement.on_enable()
+    Placement_placeable_index = 1 -- Set to "none" on enable
 end
 
 function Placement.update(_elapsed)

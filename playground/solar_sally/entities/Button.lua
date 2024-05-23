@@ -64,6 +64,7 @@ end
 function Button_pressGoInside()
     startFadeAndDisableInputForCo(function ()
         Modes_switch_mode(Mode_SallysHouse)
+        SmoothLocations_set_or_update_location(Entities_Character, 7, 7)
     end)
 end
 

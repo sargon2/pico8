@@ -1,8 +1,6 @@
 solar_sally_systems = {} -- ordered, index-based list
+solar_sally_loaded_systems = {} -- which systems are loaded
 solar_sally_running_systems = {} -- which systems are running
-
-        -- load, unload, enable, disable
-        -- on_load, on_unload, on_enable, on_disable
 
 function system_is_running(s)
     return solar_sally_running_systems[s]
@@ -12,16 +10,19 @@ function unload_system(s)
     disable_system(s)
     if(s.on_unload) s.on_unload()
     del(solar_sally_systems, s)
+    solar_sally_loaded_systems[s] = nil
 end
 
 function load_system(s)
+    -- if(solar_sally_loaded_systems[s]) return -- Guard against double-loading; disabled to save tokens
     if(s.on_load) s.on_load()
     if(not s.draw and not s.update) return -- If it doesn't have a draw or an update, there's no reason to keep it around
     add(solar_sally_systems, s)
-    enable_system(s)
+    solar_sally_loaded_systems[s] = true
 end
 
 function enable_system(s)
+    if(not solar_sally_loaded_systems[s]) load_system(s)
     if(s.on_enable) s.on_enable()
     solar_sally_running_systems[s] = true
 end
@@ -34,24 +35,18 @@ end
 function _init()
     --srand(12345)
 
-    -- The order here is important (think dep injection dependency graph)
-    load_system(Rocks)
-    load_system(Trees)
-    load_system(Panels)
-    load_system(Wire)
-    load_system(GridWire)
-    load_system(Transformers)
-    load_system(Fence)
-    load_system(Button)
-    load_system(World)
-    load_system(IndoorWorld)
-    load_system(Cows)
-    load_system(Inventory)
-    load_system(Placement)
-    load_system(Character)
-    load_system(PanelCalculator)
-    load_system(CoroutineRunner)
-    load_system(Modes)
+    enable_system(CoroutineRunner) -- Bootstrap so we can change mode; Modes will enable other systems
+
+    -- Transition to initial mode
+    CoroutineRunner_StartScript(function ()
+        disableInput()
+
+        Modes__enable_mode(Mode_Overworld)
+        SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
+
+        fadetoblack_fadein_co()
+        enableInput()
+    end)
 end
 
 function _draw()
