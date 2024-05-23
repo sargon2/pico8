@@ -5,6 +5,8 @@
 -- o is 4 and x is 5.
 --[[const]] Button_select_action = 5
 --[[const]] Button_take_action = 4
+--[[const]] Button_display_take_action = "🅾️"
+--[[const]] Button_display_select_action = "❎"
 
 local Input_AllInputDisabled = false
 

@@ -36,6 +36,7 @@ function _init()
     --srand(12345)
 
     enable_system(CoroutineRunner) -- Bootstrap so we can change mode; Modes will enable other systems
+    enable_system(Modes)
 
     -- Transition to initial mode
     CoroutineRunner_StartScript(function ()

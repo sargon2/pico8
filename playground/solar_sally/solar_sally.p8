@@ -17,6 +17,7 @@ __lua__
 #include components/Attributes.lua
 #include components/Actions.lua
 
+#include systems/Modes.lua
 #include systems/Input.lua
 #include systems/PerfTimer.lua
 #include systems/FrameTimer.lua
@@ -29,6 +30,7 @@ __lua__
 #include systems/fadetoblack.lua
 #include systems/IndoorWorld.lua
 #include systems/Axe.lua
+#include systems/SleepResults.lua
 
 #include entities/Character.lua
 #include entities/Panels.lua
@@ -40,8 +42,6 @@ __lua__
 #include entities/GridWire.lua
 #include entities/Button.lua
 #include entities/Fence.lua
-
-#include systems/Modes.lua
 
 #include solar_sally.lua
 __gfx__
