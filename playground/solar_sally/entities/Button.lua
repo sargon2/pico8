@@ -58,7 +58,7 @@ function Button_pressBuyAxe(cost)
     if(system_is_running(Axe)) return
     if(not Inventory_canAfford(cost)) return
     Inventory_addMoney(-cost)
-    load_system(Axe)
+    enable_system(Axe)
 end
 
 function Button_pressGoInside()

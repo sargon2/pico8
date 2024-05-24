@@ -6,15 +6,14 @@ function system_is_running(s)
     return solar_sally_running_systems[s]
 end
 
--- function unload_system(s)
+-- function _unload_system(s)
 --     disable_system(s)
 --     if(s.on_unload) s.on_unload()
 --     del(solar_sally_systems, s)
 --     solar_sally_loaded_systems[s] = nil
 -- end
 
-function load_system(s)
-    -- if(solar_sally_loaded_systems[s]) return -- Guard against double-loading; disabled to save tokens
+function _load_system(s)
     if(s.on_load) s.on_load()
     solar_sally_loaded_systems[s] = true
     if(not s.draw and not s.update) return -- If it doesn't have a draw or an update, there's no reason to keep it around
@@ -22,9 +21,12 @@ function load_system(s)
 end
 
 function enable_system(s)
-    if(not solar_sally_loaded_systems[s]) load_system(s)
+    if(not solar_sally_loaded_systems[s]) _load_system(s)
     if(s.on_enable) s.on_enable()
     solar_sally_running_systems[s] = true
+    -- Move it to the end of the system order so the mode can control render order
+    del(solar_sally_systems, s)
+    add(solar_sally_systems, s)
 end
 
 function disable_system(s)

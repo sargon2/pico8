@@ -1,12 +1,11 @@
 Inventory = {}
 
 local Inventory_items = {} -- items[ent_id] = count
-local Inventory_formatters = {} -- formatters[ent_id] = fn(text)
 local Inventory_icons = {}
 
 Inventory_has_key = false
 
-function _money_format(m)
+function Inventory__money_format(m)
     -- Include everything up to the decimal, then stuff after the decimal until we fill to n digits
     local ret = "$"
     local after_decimal = false
@@ -27,7 +26,6 @@ function Inventory.on_load()
     -- Since we haven't implemented buying yet, just start with some core components.
     -- Order here is display order
     Sprites_add(Entities_Money, Sprite_id_money)
-    Inventory_addFormatter(Entities_Money, _money_format)
     Inventory_items[Entities_Money] = NewObj(twonum, Settings_start_money)
     if Settings_cheat_lotsofmoney then
         for _=1,10000 do
@@ -57,16 +55,11 @@ function Inventory_addIcon(icon)
 end
 
 function Inventory_canAfford(amount)
-    if(Inventory_get(Entities_Money):cmp(amount) > 0) return false -- can't afford
-    return true
+    return Inventory_get(Entities_Money):cmp(amount) <= 0
 end
 
 function Inventory_get(ent_id)
     return Inventory_items[ent_id]
-end
-
-function Inventory_addFormatter(ent_id, fn)
-    Inventory_formatters[ent_id] = fn
 end
 
 function Inventory_check_and_remove(ent_id)
@@ -129,8 +122,7 @@ function Inventory.draw()
         if(ent_id == Entities_Fence and count > 0) should_draw_fence = true
         if(ent_id != Entities_Fence or should_draw_fence) then
             Attr_DrawFn[ent_id](loc[1], loc[2], ent_id, true)
-            local fn = Inventory_formatters[ent_id]
-            if(fn) count = fn(count)
+            if(ent_id == Entities_Money) count = Inventory__money_format(count)
             Sprites_print_text(count, 4, loc[1]+1, loc[2], 2, 2, true)
         end
     end
