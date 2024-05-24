@@ -6,19 +6,19 @@ function system_is_running(s)
     return solar_sally_running_systems[s]
 end
 
-function unload_system(s)
-    disable_system(s)
-    if(s.on_unload) s.on_unload()
-    del(solar_sally_systems, s)
-    solar_sally_loaded_systems[s] = nil
-end
+-- function unload_system(s)
+--     disable_system(s)
+--     if(s.on_unload) s.on_unload()
+--     del(solar_sally_systems, s)
+--     solar_sally_loaded_systems[s] = nil
+-- end
 
 function load_system(s)
     -- if(solar_sally_loaded_systems[s]) return -- Guard against double-loading; disabled to save tokens
     if(s.on_load) s.on_load()
+    solar_sally_loaded_systems[s] = true
     if(not s.draw and not s.update) return -- If it doesn't have a draw or an update, there's no reason to keep it around
     add(solar_sally_systems, s)
-    solar_sally_loaded_systems[s] = true
 end
 
 function enable_system(s)
