@@ -46,7 +46,6 @@ function _init()
         disableInput()
 
         Modes__enable_mode(Mode_TitleScreen)
-        SmoothLocations_set_or_update_location(Entities_Character, 0, 0)
 
         fade_in() -- enables input
     end)
