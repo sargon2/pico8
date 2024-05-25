@@ -1,4 +1,4 @@
-*.png
+*.p8.png
 output/
 .tested
 test_output.txt
