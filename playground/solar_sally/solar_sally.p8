@@ -31,7 +31,6 @@ __lua__
 #include systems/IndoorWorld.lua
 #include systems/Axe.lua
 #include systems/SleepResults.lua
-#include systems/TitleScreen.lua
 #include systems/TitleScreenInterlude.lua
 
 #include entities/Character.lua

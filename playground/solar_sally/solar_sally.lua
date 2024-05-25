@@ -45,7 +45,8 @@ function _init()
         -- Pico-8 clears the screen when it starts, so we don't need to fade out
         disableInput()
 
-        Modes__enable_mode(Mode_TitleScreen)
+        -- The title screen is displayed by the title cart, so we start with the interlude screen
+        Modes__enable_mode(Mode_TitleScreenInterlude)
 
         fade_in() -- enables input
     end)
