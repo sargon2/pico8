@@ -29,7 +29,10 @@ web: output/web/solar_sally.html output/web/solar_sally.js
 output/web/solar_sally.html output/web/solar_sally.js: solar_sally.p8 output/solar_sally.p8.png
 	mkdir -p output/web/
 	# Output the pre-shrinko8 .js file and .html file
-	$(PICO8) -export output/web/solar_sally.html output/solar_sally.p8.png
+	# $(PICO8) -export output/web/solar_sally.html output/solar_sally.p8.png
+	# Pico8 seems to segfault a lot when doing this operation.  The .html file doesn't change much, so
+	# we can just copy in the old one rather than running it.
+	cp web/solar_sally.html output/web/solar_sally.html
 	# Output the shrinko8 .js file
 	$(SHRINKO8) solar_sally.p8 output/web/solar_sally.js --pico8-dat $(PICO8_DAT) $(SHRINKO8_OPTIONS)
 
