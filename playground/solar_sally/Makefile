@@ -76,6 +76,14 @@ run-windows: copy-to-windows
 run-windows-nonpng: copy-to-windows
 	cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -run root/playground/solar_sally/output/solar_sally.p8
 
+.PHONY: run-windows-title
+run-windows-title: output/title.p8 copy-to-windows
+	cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -run root/playground/solar_sally/output/title.p8
+
+.PHONY: run-windows-title-png
+run-windows-title-png: output/title.p8.png copy-to-windows
+	cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -run root/playground/solar_sally/output/title.p8.png
+
 .PHONY: pull-noncode-back
 pull-noncode-back:
 	# Copy everything except code from the output .p8 file to the input .p8 file.
