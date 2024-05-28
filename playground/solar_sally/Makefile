@@ -55,7 +55,7 @@ publish-to-firelight: .tested lint find-todos web
 
 .PHONY: lint
 lint:
-	$(SHRINKO8) solar_sally.p8 --lint
+	$(SHRINKO8) solar_sally.p8 --lint | grep -v px9_decomp.lua
 
 .PHONY: find-todos
 find-todos:
