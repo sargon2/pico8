@@ -4,6 +4,7 @@
 -- 3. paste it in here
 -- 4. transform to lower case
 -- 5. format code
+-- 6. add '1' parameter to end of pal() calls so fading works on the title screen
 
 local fadetable = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -27,9 +28,9 @@ local fadetable = {
 function fade(i)
     for c = 0, 15 do
         if flr(i + 1) >= 24 then
-            pal(c, 0)
+            pal(c, 0, 1)
         else
-            pal(c, fadetable[c + 1][flr(i + 1)])
+            pal(c, fadetable[c + 1][flr(i + 1)], 1)
         end
     end
 end

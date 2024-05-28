@@ -9,11 +9,10 @@ LUA_FILES:=$(shell cat solar_sally.p8 | grep include | cut -c 10-)
 SHRINKO8_OPTIONS=--minify --no-minify-lines --focus-tokens # there are some other options for particular runs
 FIRELIGHT_FOLDER=~/bitbucket/firelight/live/pico8
 
-.SECONDEXPANSION: # needed for the wildcard stuff
-output/solar_sally.p8 output/solar_sally.p8.png: solar_sally.p8 $(LUA_FILES)
+output/solar_sally.p8 output/solar_sally.p8.png: solar_sally_with_title.p8 $(LUA_FILES)
 	mkdir -p output
-	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --rename-map rename_map.txt $(SHRINKO8_OPTIONS) # So we can examine minified code
-	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png $(SHRINKO8_OPTIONS)
+	$(SHRINKO8) solar_sally_with_title.p8 output/solar_sally.p8 --rename-map rename_map.txt $(SHRINKO8_OPTIONS) # So we can examine minified code
+	$(SHRINKO8) solar_sally_with_title.p8 output/solar_sally.p8.png $(SHRINKO8_OPTIONS)
 
 .tested: output/solar_sally.p8.png tests/tests.txt
 	# cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -x root/playground/solar_sally/tests.p8
@@ -23,15 +22,15 @@ output/solar_sally.p8 output/solar_sally.p8.png: solar_sally.p8 $(LUA_FILES)
 	cat test_output.txt | tail -1 | grep "Pass"
 	touch .tested
 
-output/title.p8: $(shell find title -type f)
+solar_sally_with_title.p8: solar_sally.p8 $(shell find title -type f)
 	mkdir -p output
 	mkdir -p build_title
 	mkdir -p build_title/carts # for some reason pico8 linux wants to import from "carts/"
 	cp title/title.png build_title/carts
 	cp title/compressor.p8 build_title
-	cp title/title.p8 build_title
+	cp solar_sally.p8 build_title/title.p8
 	cd build_title && ../$(PICO8) -home . -x compressor.p8
-	cp build_title/title.p8 output/
+	cp build_title/title.p8 solar_sally_with_title.p8
 
 output/title.p8.png: output/title.p8
 	$(SHRINKO8) output/title.p8 output/title.p8.png $(SHRINKO8_OPTIONS)
@@ -112,4 +111,4 @@ clean:
 
 # Intended for use with watch-and-run. We do the build before running lint so we can debug pre-linted code
 .PHONY: workflow-copy-lint
-workflow-copy-lint: output/title.p8.png copy-to-windows .tested lint find-todos
+workflow-copy-lint: copy-to-windows .tested lint find-todos

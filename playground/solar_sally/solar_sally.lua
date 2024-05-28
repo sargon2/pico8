@@ -42,13 +42,9 @@ function _init()
 
     -- Transition to initial mode
     CoroutineRunner_StartScript(function ()
-        -- Pico-8 clears the screen when it starts, so we don't need to fade out
-        disableInput()
-
-        -- The title screen is displayed by the title cart, so we start with the interlude screen
-        Modes__enable_mode(Mode_TitleScreenInterlude)
-
-        fade_in() -- enables input
+        fade_out()
+        Modes_switch_mode(Mode_TitleScreen)
+        fade_in()
     end)
 end
 

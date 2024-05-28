@@ -7,7 +7,7 @@ function _init()
 	printh("calling px9_comp")
 	local clen = px9_comp(0, 0, 128, 128, 0x2000, sget)
 	printh("calling cstore")
-	cstore(0x0, 0x2000, clen, "title.p8")
+	cstore(0x1000, 0x2000, clen, "title.p8")
 	printh("done")
 end
 -->8

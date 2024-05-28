@@ -5,6 +5,7 @@ Modes = {}
 --[[const]] Mode_Overworld = 1
 --[[const]] Mode_SallysHouse = 2
 --[[const]] Mode_SleepResults = 3
+--[[const]] Mode_TitleScreen = 4
 --[[const]] Mode_TitleScreenInterlude = 5
 
 local Mode_systems = {} -- systems[mode] = {...}
@@ -17,6 +18,7 @@ function Modes.on_load()
     Mode_systems[Mode_Overworld] = {Rocks, Trees, Panels, Wire, GridWire, Transformers, Fence, Button, World, Cows, Inventory, Placement, Character, PanelCalculator}
     Mode_systems[Mode_SallysHouse] = {Panels, Wire, Transformers, IndoorWorld, Character, Inventory} -- panels/wire/transformers needed so we can render their inventory icons
     Mode_systems[Mode_SleepResults] = {SleepResults}
+    Mode_systems[Mode_TitleScreen] = {TitleScreen}
     Mode_systems[Mode_TitleScreenInterlude] = {TitleScreenInterlude}
 end
 

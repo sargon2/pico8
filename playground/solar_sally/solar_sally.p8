@@ -4,6 +4,7 @@ __lua__
 #include ../lua_extensions.lua
 #include ../vector_utils.lua
 #include ../easing.lua
+#include ../px9_decomp.lua
 
 #include types/BooleanGrid.lua
 #include types/twonum.lua
@@ -32,6 +33,7 @@ __lua__
 #include systems/Axe.lua
 #include systems/SleepResults.lua
 #include systems/TitleScreenInterlude.lua
+#include systems/TitleScreen.lua
 
 #include entities/Character.lua
 #include entities/Panels.lua
