@@ -15,10 +15,10 @@ end
 function TitleScreen.update()
     if my_btnp(Button_take_action) then
         CoroutineRunner_StartScript(function()
-            fade_out(1)
+            fade_out()
             Modes_switch_mode(Mode_TitleScreenInterlude)
             SmoothLocations_set_or_update_location(Entities_Character, 7, 7)
-            fade_in(1)
+            fade_in()
         end)
     end
 end
