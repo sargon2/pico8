@@ -12,7 +12,7 @@ Attr_flip_x = {}
 Attr_powered_grid = NewObj(BooleanGrid)
 Attr_action_speed = {}
 Attr_removal_speed = {}
-Attr_choppable = {}
+Attr_chop_time = {}
 
 Attr_DrawFn = {} -- fn(x, y, ent_id, relative_to_screen)
 

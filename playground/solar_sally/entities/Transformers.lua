@@ -12,6 +12,9 @@ function Transformers.on_load()
     Attr_removal_speed[Entities_Transformers_left] = Settings_transformer_removal_speed
     Attr_removal_speed[Entities_Transformers_right] = Settings_transformer_removal_speed
 
+    Attr_chop_time[Entities_Transformers_left] = Settings_axeswings_transformer
+    Attr_chop_time[Entities_Transformers_right] = Settings_axeswings_transformer
+
     Attr_WalkingObstruction[Entities_Transformers_right] = true
     Attr_removable[Entities_Transformers_right] = true
     Attr_is_circuit_component[Entities_Transformers_right] = true
@@ -19,13 +22,6 @@ function Transformers.on_load()
 
     Attr_DrawFn[Entities_Transformers_left] = Transformers_draw_transformer
     Attr_DrawFn[Entities_Transformers_right] = function () end -- right is drawn by the left fn
-
-    -- Placement_set_placement_fn(Entities_Transformers_left, Transformers_place)
-
-    -- Placement_set_removal_fn(Entities_Transformers_left, Transformers_remove_left)
-    -- Placement_set_removal_fn(Entities_Transformers_right, Transformers_remove_right)
-
-    -- Placement_set_placement_obstruction_fn(Entities_Transformers_left, Transformers_placement_obstructed)
 end
 
 function Transformers_clear_overloaded()
@@ -46,22 +42,6 @@ end
 
 function Transformers_is_overloaded(x, y)
     return Transformers_overloaded_transformers:is_set(x, y)
-end
-
-function Transformers_place(x, y)
-    Locations_place_entity(Entities_Transformers_left, x, y)
-    Locations_place_entity(Entities_Transformers_right, x+1, y)
-end
-
-function Transformers_remove_left(x, y)
-    Locations_remove_entity(x, y)
-    Locations_remove_entity(x+1, y)
-end
-
-function Transformers_remove_right(x, y)
-    Locations_remove_entity(x-1, y)
-    Locations_remove_entity(x, y)
-    return Entities_Transformers_left -- Let placement know what we're really removing
 end
 
 function Transformers_placement_obstructed(x, y)

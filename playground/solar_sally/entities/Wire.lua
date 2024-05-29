@@ -7,6 +7,7 @@ function Wire.on_load()
     Attr_DrawFn[Entities_Wire] = Wire_draw_wire_tile
     Attr_action_speed[Entities_Wire] = Settings_wire_placement_speed
     Attr_removal_speed[Entities_Wire] = Settings_wire_removal_speed
+    Attr_chop_time[Entities_Wire] = Settings_axeswings_wire
 end
 
 function Wire_draw_wire_tile(x, y, ent_id, relative_to_screen)

@@ -41,7 +41,8 @@ function Axe_begin_action(_act, x, y)
     if(ent_id == nil) return false
 
     -- Is the entity choppable?
-    if(not Attr_choppable[ent_id]) return false
+    local time = Attr_chop_time[ent_id]
+    if(time == nil) return false
 
     local char_x, char_y = SmoothLocations_get_location(Entities_Character)
     if x < char_x then
@@ -55,8 +56,6 @@ function Axe_begin_action(_act, x, y)
     end
 
     Axe_Coroutine = CoroutineRunner_StartScript(function ()
-        local time = Settings_axeswings_fullsizetree
-        if(ent_id == Entities_YoungTrees) time = Settings_axeswings_youngtree
         if(not Settings_60fps) time /= 2
         for _=1,time do
             for frame in all({Sprite_id_axe_swing_right_1, Sprite_id_axe_swing_right_2}) do
@@ -71,7 +70,7 @@ function Axe_begin_action(_act, x, y)
             end
         end
         Character_set_temp_frame(nil)
-        Locations_remove_entity(x, y)
+        complete_removal(ent_id, x, y) -- TODO rename this method
         Inventory_addMoney(Settings_tree_felling_payment)
     end)
     return true

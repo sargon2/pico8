@@ -24,6 +24,9 @@
 
 --[[const]] Settings_axeswings_fullsizetree = 10
 --[[const]] Settings_axeswings_youngtree = 5
+--[[const]] Settings_axeswings_panels = 1
+--[[const]] Settings_axeswings_transformer = 1
+--[[const]] Settings_axeswings_wire = 1
 --[[const]] Settings_axeswing_speed = 11
 --[[const]] Settings_axe_min_dist = 1.5
 --[[const]] Settings_tree_felling_payment = 10

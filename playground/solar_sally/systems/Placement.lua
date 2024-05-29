@@ -24,7 +24,7 @@ function start_placing(act_id, x, y)
 
     in_limbo = ent_id
 
-    Actions_start_timed_action(complete_placing_ent, ent_id, x, y)
+    Actions_start_timed_action(complete_placing_ent, Attr_action_speed[ent_id], ent_id, x, y)
 
     return true
 end
@@ -41,7 +41,7 @@ end
 
 -- Cancel placing
 function cancel_placing()
-    Inventory_add(in_limbo)
+    if(in_limbo) Inventory_add(in_limbo)
     in_limbo = nil
 end
 
@@ -55,7 +55,7 @@ function start_removing(_act, x, y)
         return false
     end
 
-    Actions_start_timed_action(complete_removal, ent_id, x, y)
+    Actions_start_timed_action(complete_removal, Attr_removal_speed[ent_id], ent_id, x, y)
     return true
 end
 

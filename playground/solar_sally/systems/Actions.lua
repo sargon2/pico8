@@ -40,8 +40,7 @@ function Actions.on_enable()
     selected_action = Actions_no_action -- Default to turned off
 end
 
-function Actions_start_timed_action(completion_fn, ent_id, x, y)
-    local num_frames = Attr_action_speed[ent_id]
+function Actions_start_timed_action(completion_fn, num_frames, ent_id, x, y)
     if(not Settings_60fps) num_frames /= 2
 
     action_coroutine = CoroutineRunner_StartScript(function ()
