@@ -23,7 +23,7 @@ local selected_action = Actions_no_action
 
 function Actions.on_load()
     -- Indexed by action id
-    Attr_action_cancel_fn = { noop, cancel_placing, cancel_placing, cancel_placing, cancel_removal, Axe_end_action, Button_stop_action }
+    Attr_action_cancel_fn = { noop, cancel_placing, cancel_placing, cancel_placing, noop, Axe_end_action, Button_stop_action }
     Attr_action_start_fn = { noop, start_placing, start_placing, start_placing, start_removing, Axe_begin_action, Button_start_action }
     Attr_action_mini_sprite = {
         Sprite_id_no_action,
@@ -59,6 +59,7 @@ function Actions_start_timed_action(completion_fn, ent_id, x, y)
 end
 
 function Actions_cancel() -- Cancel any action in progress
+    CoroutineRunner_Cancel(action_coroutine)
     if action_executing then
         Attr_action_cancel_fn[selected_action](selected_action)
         action_progress = nil

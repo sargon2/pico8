@@ -43,7 +43,6 @@ end
 function cancel_placing()
     Inventory_add(in_limbo)
     in_limbo = nil
-    CoroutineRunner_Cancel(action_coroutine)
 end
 
 
@@ -57,6 +56,7 @@ function start_removing(_act, x, y)
     end
 
     Actions_start_timed_action(complete_removal, ent_id, x, y)
+    return true
 end
 
 -- Complete removal
@@ -74,9 +74,3 @@ function complete_removal(ent_id, x, y)
 
     Circuits_recalculate()
 end
-
--- Cancel removal
-function cancel_removal()
-    CoroutineRunner_Cancel(action_coroutine)
-end
-
