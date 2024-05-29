@@ -13,10 +13,10 @@ function easeinquadoutelastic(t)
     end
 end
 
-function animate_movement(setter, begin, ending, num_frames, easer)
+function animate_movement(setter, begin, ending, num_frames)
     CoroutineRunner_StartScript(function ()
         for frame_num=1, num_frames do
-            setter(lerp(begin, ending, easer(frame_num/num_frames)))
+            setter(lerp(begin, ending, easeinquadoutelastic(frame_num/num_frames)))
             yield()
         end
         -- Make sure we end accurately if the easer doesn't

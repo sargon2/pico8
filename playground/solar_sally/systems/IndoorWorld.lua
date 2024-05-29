@@ -80,7 +80,7 @@ end
 
 function IndoorWorld__draw_bed_sel()
     if bed_selected then
-        Placement_draw_selection_box(bed_x, bed_y, 2, 2, true)
+        Actions_draw_selection_box(bed_x, bed_y, 2, 2, true)
         Sprites_draw_spr(Sprite_id_sleep_icon, bed_x+.375, bed_y-1, 1, 1, false, true)
     end
 end

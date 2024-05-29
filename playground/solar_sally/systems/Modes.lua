@@ -15,7 +15,7 @@ local PreviousMode = nil
 
 function Modes.on_load()
     -- The order here is the order in which systems will be loaded.
-    Mode_systems[Mode_Overworld] = {Rocks, Trees, Panels, Wire, GridWire, Transformers, Fence, Button, World, Cows, Inventory, Placement, Character, PanelCalculator}
+    Mode_systems[Mode_Overworld] = {Rocks, Trees, Panels, Wire, GridWire, Transformers, Fence, Button, World, Cows, Inventory, Actions, Character, PanelCalculator}
     Mode_systems[Mode_SallysHouse] = {Panels, Wire, Transformers, IndoorWorld, Character, Inventory} -- panels/wire/transformers needed so we can render their inventory icons
     Mode_systems[Mode_SleepResults] = {SleepResults}
     Mode_systems[Mode_TitleScreen] = {TitleScreen}

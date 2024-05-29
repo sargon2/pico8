@@ -148,3 +148,14 @@ function get_var_name(sys) -- O(n) in number of variables
         end
     end
 end
+
+function limit_to(val, min, max)
+    if val < min then
+        return -1, min
+    elseif val > max then
+        return 1, max
+    end
+    return 0, val
+end
+
+function noop() end

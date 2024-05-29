@@ -8,7 +8,7 @@ function Transformers.on_load()
     Attr_is_circuit_component[Entities_Transformers_left] = true
     Attr_pluggable[Entities_Transformers_left] = true
     Attr_mini_sprite[Entities_Transformers_left] = Sprite_id_place_transformer
-    Attr_placement_speed[Entities_Transformers_left] = Settings_transformer_placement_speed
+    Attr_action_speed[Entities_Transformers_left] = Settings_transformer_placement_speed
     Attr_removal_speed[Entities_Transformers_left] = Settings_transformer_removal_speed
     Attr_removal_speed[Entities_Transformers_right] = Settings_transformer_removal_speed
 
@@ -20,12 +20,12 @@ function Transformers.on_load()
     Attr_DrawFn[Entities_Transformers_left] = Transformers_draw_transformer
     Attr_DrawFn[Entities_Transformers_right] = function () end -- right is drawn by the left fn
 
-    Placement_set_placement_fn(Entities_Transformers_left, Transformers_place)
+    -- Placement_set_placement_fn(Entities_Transformers_left, Transformers_place)
 
-    Placement_set_removal_fn(Entities_Transformers_left, Transformers_remove_left)
-    Placement_set_removal_fn(Entities_Transformers_right, Transformers_remove_right)
+    -- Placement_set_removal_fn(Entities_Transformers_left, Transformers_remove_left)
+    -- Placement_set_removal_fn(Entities_Transformers_right, Transformers_remove_right)
 
-    Placement_set_placement_obstruction_fn(Entities_Transformers_left, Transformers_placement_obstructed)
+    -- Placement_set_placement_obstruction_fn(Entities_Transformers_left, Transformers_placement_obstructed)
 end
 
 function Transformers_clear_overloaded()

@@ -7,7 +7,7 @@ function Fence.on_load()
     Attr_fence_linkable[Entities_Fence] = true
     Attr_mini_sprite[Entities_Fence] = Sprite_id_fence_mini
     Attr_DrawFn[Entities_Fence] = Fence_draw_fence
-    Attr_placement_speed[Entities_Fence] = Settings_fence_placement_speed
+    Attr_action_speed[Entities_Fence] = Settings_fence_placement_speed
     Attr_removal_speed[Entities_Fence] = Settings_fence_removal_speed
 end
 

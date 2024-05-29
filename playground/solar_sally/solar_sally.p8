@@ -16,13 +16,13 @@ __lua__
 #include components/Locations.lua
 #include components/SmoothLocations.lua
 #include components/Attributes.lua
-#include components/Actions.lua
 
 #include systems/Modes.lua
 #include systems/Input.lua
 #include systems/PerfTimer.lua
 #include systems/FrameTimer.lua
 #include systems/CoroutineRunner.lua
+#include systems/Actions.lua
 #include systems/Placement.lua
 #include systems/World.lua
 #include systems/PanelCalculator.lua

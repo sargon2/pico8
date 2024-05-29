@@ -1,8 +1,8 @@
 --[[const]] SFX_id_footsteps = 0
---[[const]] SFX_id_activate_placement = 1
---[[const]] SFX_id_deactivate_placement = 2
---[[const]] SFX_id_rotate_placement = 3
---[[const]] SFX_id_move_placement = 4
+--[[const]] SFX_id_activate_actions = 1
+--[[const]] SFX_id_deactivate_actions = 2
+--[[const]] SFX_id_rotate_action = 3
+--[[const]] SFX_id_move_action = 4
 
 function start_sfx_loop(sfx_id, frame_count)
     if(not Settings_60fps) frame_count /= 2

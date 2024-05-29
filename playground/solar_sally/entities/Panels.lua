@@ -7,7 +7,7 @@ function Panels.on_load()
     Attr_pluggable[Entities_Panels] = true
     Attr_mini_sprite[Entities_Panels] = Sprite_id_place_panel
     Attr_DrawFn[Entities_Panels] = Panels__draw
-    Attr_placement_speed[Entities_Panels] = Settings_panel_placement_speed
+    Attr_action_speed[Entities_Panels] = Settings_panel_placement_speed
     Attr_removal_speed[Entities_Panels] = Settings_panel_removal_speed
 end
 

@@ -5,7 +5,7 @@ PICO8_FOLDER=../../../../pico8/pico-8
 PICO8=$(PICO8_FOLDER)/pico8
 PICO8_DAT=$(PICO8_FOLDER)/pico8.dat
 COUNTER=../../get_counts.sh
-LUA_FILES:=$(shell cat solar_sally.p8 | grep include | cut -c 10-)
+LUA_FILES:=$(shell cat solar_sally.p8 | grep "^\#include" | cut -c 10-)
 SHRINKO8_OPTIONS=--minify --no-minify-lines --focus-tokens # there are some other options for particular runs
 FIRELIGHT_FOLDER=~/bitbucket/firelight/live/pico8
 

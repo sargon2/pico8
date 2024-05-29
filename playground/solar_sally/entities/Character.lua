@@ -3,7 +3,7 @@ Character = {}
 local Character_frame=1
 local Character_anim_frames={1,2}
 Character_flip_x=false
-Character_or_placement_moving = false
+Character_or_action_moving = false
 local Character_footstep_sfx_loop = nil
 
 function Character.on_load()
@@ -68,14 +68,14 @@ function Character_handle_player_movement(elapsed)
 
     -- Calculate if it's the first movement frame or not
     local is_first_movement_frame = false
-    if is_moving and not Character_or_placement_moving then
+    if is_moving and not Character_or_action_moving then
         is_first_movement_frame = true
     end
-    Character_or_placement_moving = is_moving
+    Character_or_action_moving = is_moving
 
     -- Process player movement
-    if system_is_running(Placement) then
-        x, y = Placement_handle_character_movement(is_first_movement_frame, elapsed, x, y)
+    if system_is_running(Actions) then
+        x, y = Actions_handle_character_movement(is_first_movement_frame, elapsed, x, y)
     end
 
     -- Perform & animate walking

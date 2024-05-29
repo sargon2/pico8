@@ -3,6 +3,8 @@ Button = {}
 local Button_is_being_pressed = nil
 local Button_labels = {}
 
+local current_ent_id = nil
+
 function Button_create_button(label, x, y, press_fn, release_fn, ...)
     local args = {...}
     local ent_id = Entities_create_entity()
@@ -21,6 +23,17 @@ function Button_create_button(label, x, y, press_fn, release_fn, ...)
     end
 
     Locations_place_entity(ent_id, x, y)
+end
+
+function Button_start_action(_act, x, y)
+    current_ent_id = Locations_entity_at(x, y)
+    if(not Attr_action_fn[current_ent_id]) return false -- Is it a button?
+    Attr_action_fn[current_ent_id]()
+    return true
+end
+
+function Button_stop_action()
+    Attr_action_release_fn[current_ent_id]()
 end
 
 function Button.on_load()

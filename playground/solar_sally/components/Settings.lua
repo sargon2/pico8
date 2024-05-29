@@ -3,7 +3,7 @@
 
 --[[const]] Settings_60fps = true -- if false, 30fps
 
---[[const]] Settings_cheat_lotsofmoney = false
+--[[const]] Settings_cheat_lotsofmoney = true
 
 --[[const]] Settings_max_panels_per_transformer = 48
 

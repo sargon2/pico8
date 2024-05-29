@@ -3,6 +3,8 @@ Trees = {}
 function Trees.on_load()
     Attr_WalkingObstruction[Entities_Trees] = true
     Attr_WalkingObstruction[Entities_YoungTrees] = true
+    Attr_choppable[Entities_Trees] = true
+    Attr_choppable[Entities_YoungTrees] = true
 
     Sprites_add(Entities_Trees, Sprite_id_tree_top, 1, 2, -1)
     Sprites_add(Entities_YoungTrees, Sprite_id_young_tree, 1, 1)

@@ -8,20 +8,11 @@
 #include ../types/twonum.lua
 #include ../types/BooleanGrid.lua
 
--- Needed for Placement
-#include ../components/Entities.lua
-#include ../components/Sprites.lua
-#include ../components/Attributes.lua
-#include ../systems/Inventory.lua
-
-#include ../systems/Placement.lua
-
 #include ../tests/testing_framework.lua
 #include ../tests/asserts.lua
 #include ../tests/test_framework.lua
 #include ../tests/test_lua_extensions.lua
 #include ../tests/test_PanelCalculator.lua
 #include ../tests/test_twonum.lua
-#include ../tests/test_placement.lua
 
 reportResults() -- Defined by test_framework, must be after all test executions

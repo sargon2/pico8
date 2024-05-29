@@ -3,11 +3,8 @@ Axe = {}
 local Axe_Coroutine
 
 function Axe.on_load()
-    Attr_mini_sprite[Entities_Trees] = Sprite_id_place_axe
-    Attr_mini_sprite[Entities_YoungTrees] = Sprite_id_place_axe
-
-    Attr_action_mindist[Entities_Trees] = Settings_axe_min_dist
-    Attr_action_mindist[Entities_YoungTrees] = Settings_axe_min_dist
+    Attr_mini_sprite[Entities_Trees] = Sprite_id_mini_axe
+    Attr_mini_sprite[Entities_YoungTrees] = Sprite_id_mini_axe
 
     Attr_action_fn[Entities_Trees] = Axe_begin_action
     Attr_action_fn[Entities_YoungTrees] = Axe_begin_action
@@ -38,21 +35,32 @@ function Axe_end_action()
     CoroutineRunner_Cancel(Axe_Coroutine)
 end
 
-function Axe_begin_action(ent_id, x, y)
+function Axe_begin_action(_act, x, y)
     -- Face the tree
-    local char_x, _ = SmoothLocations_get_location(Entities_Character)
+    local ent_id = Locations_entity_at(x, y)
+    if(ent_id == nil) return false
+
+    -- Is the entity choppable?
+    if(not Attr_choppable[ent_id]) return false
+
+    local char_x, char_y = SmoothLocations_get_location(Entities_Character)
     if x < char_x then
         Character_flip_x = true
     else
         Character_flip_x = false
     end
+    -- check if the target is in range
+    if dist(char_x, char_y, x, y) > Settings_axe_min_dist then
+        return false
+    end
+
     Axe_Coroutine = CoroutineRunner_StartScript(function ()
         local time = Settings_axeswings_fullsizetree
         if(ent_id == Entities_YoungTrees) time = Settings_axeswings_youngtree
         if(not Settings_60fps) time /= 2
         for _=1,time do
             for frame in all({Sprite_id_axe_swing_right_1, Sprite_id_axe_swing_right_2}) do
-                if(Character_or_placement_moving) then
+                if(Character_or_action_moving) then
                     Axe_end_action() -- Cancel the operation if the player moves
                     return
                 end
@@ -66,5 +74,6 @@ function Axe_begin_action(ent_id, x, y)
         Locations_remove_entity(x, y)
         Inventory_addMoney(Settings_tree_felling_payment)
     end)
+    return true
 end
 
