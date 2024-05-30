@@ -25,7 +25,7 @@ output/solar_sally.p8 output/solar_sally.p8.png: build_title/title.p8 $(LUA_FILE
 	touch .tested
 
 # Non-shrunk solar sally cart, with title image copied in
-build_title/title.p8: solar_sally.p8 $(shell find title -type f)
+build_title/title.p8: solar_sally.p8 title/title.png title/compressor.p8
 	mkdir -p output
 	mkdir -p build_title
 	mkdir -p build_title/carts # for some reason pico8 linux wants to import from "carts/"
@@ -37,7 +37,7 @@ build_title/title.p8: solar_sally.p8 $(shell find title -type f)
 .PHONY: web
 web: output/web/solar_sally.html output/web/solar_sally.js
 
-output/web/solar_sally.html output/web/solar_sally.js: solar_sally.p8 output/solar_sally.p8.png
+output/web/solar_sally.html output/web/solar_sally.js: output/solar_sally.p8
 	mkdir -p output/web/
 	# Output the pre-shrinko8 .js file and .html file
 	# $(PICO8) -export output/web/solar_sally.html output/solar_sally.p8.png
@@ -45,7 +45,7 @@ output/web/solar_sally.html output/web/solar_sally.js: solar_sally.p8 output/sol
 	# we can just copy in the old one rather than running it.
 	cp web/solar_sally.html output/web/solar_sally.html
 	# Output the shrinko8 .js file
-	$(SHRINKO8) solar_sally.p8 output/web/solar_sally.js --pico8-dat $(PICO8_DAT) $(SHRINKO8_OPTIONS)
+	$(SHRINKO8) output/solar_sally.p8 output/web/solar_sally.js --pico8-dat $(PICO8_DAT) $(SHRINKO8_OPTIONS)
 
 .PHONY: publish-to-firelight
 publish-to-firelight: .tested lint find-todos web
