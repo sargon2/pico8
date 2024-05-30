@@ -70,8 +70,8 @@ function Axe_begin_action(_act, x, y)
             end
         end
         Character_set_temp_frame(nil)
-        complete_removal(ent_id, x, y) -- TODO rename this method
-        Inventory_addMoney(Settings_tree_felling_payment)
+        complete_removal(ent_id, x, y, true)
+        if(ent_id == Entities_Trees) Inventory_addMoney(Settings_tree_felling_payment)
     end)
     return true
 end

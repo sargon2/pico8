@@ -60,15 +60,12 @@ function start_removing(_act, x, y)
 end
 
 -- Complete removal
-function complete_removal(ent_id, x, y)
+function complete_removal(ent_id, x, y, skip_add)
     Locations_remove_entity(x, y)
-    if ent_id == Entities_Transformers_left then
-        Locations_remove_entity(x+1, y)
-        Inventory_add(Entities_Transformers_left)
-    elseif ent_id == Entities_Transformers_right then
-        Locations_remove_entity(x-1, y)
-        Inventory_add(Entities_Transformers_left)
-    else
+    if ent_id == Entities_Transformers_left or ent_id == Entities_Transformers_right then
+        Locations_remove_entity(x + (ent_id == Entities_Transformers_left and 1 or -1), y)
+        if not skip_add then Inventory_add(Entities_Transformers_left) end
+    elseif not skip_add then
         Inventory_add(ent_id)
     end
 

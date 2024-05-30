@@ -6,6 +6,7 @@ function _init()
 	import "title.png"
 	printh("calling px9_comp")
 	local clen = px9_comp(0, 0, 128, 128, 0x2000, sget)
+	printh("len is "..tostr(clen))
 	printh("calling cstore")
 	cstore(0x1000, 0x2000, clen, "title.p8")
 	printh("done")
