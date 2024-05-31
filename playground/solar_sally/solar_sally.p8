@@ -5,7 +5,7 @@ __lua__
 #include ../vector_utils.lua
 #include ../easing.lua
 
-#include build_title/title.lua
+#include build_compressed/compressed.lua
 
 #include types/BooleanGrid.lua
 #include types/twonum.lua

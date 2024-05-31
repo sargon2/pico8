@@ -3,4 +3,4 @@ output/
 .tested
 test_output.txt
 rename_map.txt
-build_title/
+build_compressed/

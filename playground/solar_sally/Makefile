@@ -9,10 +9,10 @@ LUA_FILES:=$(shell cat solar_sally.p8 | grep "^\#include" | cut -c 10-)
 SHRINKO8_OPTIONS=--minify --no-minify-lines --focus-tokens # there are some other options for particular runs
 FIRELIGHT_FOLDER=~/bitbucket/firelight/live/pico8
 
-output/solar_sally.p8 output/solar_sally.p8.png: build_title/title.lua build_title/desktop/compressor_0.png $(LUA_FILES)
+output/solar_sally.p8 output/solar_sally.p8.png: build_compressed/compressed.lua build_compressed/desktop/compressor_0.png $(LUA_FILES)
 	mkdir -p output
 	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --rename-map rename_map.txt $(SHRINKO8_OPTIONS) # So we can examine minified code
-	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png --label build_title/desktop/compressor_0.png $(SHRINKO8_OPTIONS)
+	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png --label build_compressed/desktop/compressor_0.png $(SHRINKO8_OPTIONS)
 
 .tested: output/solar_sally.p8.png tests/tests.txt
 	# cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -x root/playground/solar_sally/tests.p8
@@ -23,13 +23,14 @@ output/solar_sally.p8 output/solar_sally.p8.png: build_title/title.lua build_tit
 	touch .tested
 
 # Compressed title image string
-build_title/title.lua build_title/desktop/compressor_0.png: title/title.png title/compressor.p8
-	mkdir -p build_title
-	mkdir -p build_title/carts # for some reason pico8 linux wants to import from "carts/"
-	cp title/title.png build_title/carts
-	cp title/compressor.p8 build_title
-	cd build_title && ../$(PICO8) -screenshot_scale 1 -home . -desktop desktop -x compressor.p8 | tee output.log | grep title_image > title.lua
-	cat build_title/output.log | grep -v title_image
+build_compressed/compressed.lua build_compressed/desktop/compressor_0.png: title/title.png title/compressor.p8
+	mkdir -p build_compressed
+	mkdir -p build_compressed/carts # for some reason pico8 linux wants to import from "carts/"
+	cp title/title.png build_compressed/carts
+	cp title/compressor.p8 build_compressed
+	echo -n "-- " > build_compressed/compressed.lua # Make the "RUNNING" line a comment
+	cd build_compressed && ../$(PICO8) -screenshot_scale 1 -home . -desktop desktop -x compressor.p8 | tee -a compressed.lua | grep -F --line-buffered -v -- "--[[const]]"
+
 
 .PHONY: web
 web: output/web/solar_sally.html output/web/solar_sally.js
