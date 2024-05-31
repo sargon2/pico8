@@ -4,7 +4,8 @@ __lua__
 #include ../lua_extensions.lua
 #include ../vector_utils.lua
 #include ../easing.lua
-#include ../px9_decomp.lua
+
+#include build_title/title.lua
 
 #include types/BooleanGrid.lua
 #include types/twonum.lua

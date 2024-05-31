@@ -9,12 +9,10 @@ LUA_FILES:=$(shell cat solar_sally.p8 | grep "^\#include" | cut -c 10-)
 SHRINKO8_OPTIONS=--minify --no-minify-lines --focus-tokens # there are some other options for particular runs
 FIRELIGHT_FOLDER=~/bitbucket/firelight/live/pico8
 
-output/solar_sally.p8 output/solar_sally.p8.png: build_title/title.p8 $(LUA_FILES)
+output/solar_sally.p8 output/solar_sally.p8.png: build_title/title.lua $(LUA_FILES)
 	mkdir -p output
-	cp build_title/title.p8 solar_sally_with_title.p8 # It needs to be in this folder for relative imports to work
-	$(SHRINKO8) solar_sally_with_title.p8 output/solar_sally.p8 --rename-map rename_map.txt $(SHRINKO8_OPTIONS) # So we can examine minified code
-	$(SHRINKO8) solar_sally_with_title.p8 output/solar_sally.p8.png $(SHRINKO8_OPTIONS)
-	rm -f solar_sally_with_title.p8
+	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8 --rename-map rename_map.txt $(SHRINKO8_OPTIONS) # So we can examine minified code
+	$(SHRINKO8) solar_sally.p8 output/solar_sally.p8.png $(SHRINKO8_OPTIONS)
 
 .tested: output/solar_sally.p8.png tests/tests.txt
 	# cd /mnt/c/Users/dbese/Dropbox/pico8 && cmd.exe /c run-pico8.bat -x root/playground/solar_sally/tests.p8
@@ -24,15 +22,14 @@ output/solar_sally.p8 output/solar_sally.p8.png: build_title/title.p8 $(LUA_FILE
 	cat test_output.txt | tail -1 | grep "Pass"
 	touch .tested
 
-# Non-shrunk solar sally cart, with title image copied in
-build_title/title.p8: solar_sally.p8 title/title.png title/compressor.p8
-	mkdir -p output
+# Compressed title image string
+build_title/title.lua: title/title.png title/compressor.p8
 	mkdir -p build_title
 	mkdir -p build_title/carts # for some reason pico8 linux wants to import from "carts/"
 	cp title/title.png build_title/carts
 	cp title/compressor.p8 build_title
-	cp solar_sally.p8 build_title/title.p8
-	cd build_title && ../$(PICO8) -home . -x compressor.p8
+	cd build_title && ../$(PICO8) -home . -x compressor.p8 | tee output.log | grep title_image > title.lua
+	cat build_title/output.log | grep -v title_image
 
 .PHONY: web
 web: output/web/solar_sally.html output/web/solar_sally.js
@@ -55,7 +52,7 @@ publish-to-firelight: .tested lint find-todos web
 
 .PHONY: lint
 lint:
-	$(SHRINKO8) solar_sally.p8 --lint | grep -v px9_decomp.lua
+	$(SHRINKO8) solar_sally.p8 --lint
 
 .PHONY: find-todos
 find-todos:

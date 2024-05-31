@@ -2,7 +2,7 @@ TitleScreen = {}
 
 function TitleScreen.on_enable()
     -- Decompress to the screen
-	px9_decomp(0, 0, 0x1000, pget, pset)
+    rle1(title_image, 0, 0)
     -- Copy the screen to working memory
     memcpy(0x8000, 0x6000, 0x2000)
 end
@@ -35,5 +35,26 @@ function TitleScreen.update()
             SmoothLocations_set_or_update_location(Entities_Character, 7, 7)
             fade_in()
         end)
+    end
+end
+
+-- https://www.lexaloffle.com/bbs/?tid=38829
+
+--1.basic version (74 tokens)
+--specify string name and 
+--screen x&y coords for top
+--left corner of image. tr is
+--the transparency color (this
+--saves cpu and allows drawing
+--over other graphics like a
+--sprite, no transparency if
+--left blank).
+
+function rle1(s,x0,y,tr)
+    local x,mw=x0,x0+ord(s,2)-96
+    for i=5,#s,2do
+        local col,len=ord(s,i)-96,ord(s,i+1)-96
+        if(col!=tr) line(x,y,x+len-1,y,col)
+        x+=len if(x>mw) x=x0 y+=1
     end
 end
