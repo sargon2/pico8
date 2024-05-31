@@ -13,6 +13,10 @@ function _init()
 
 	printh("title_image=\""..new_s.."\"")
 
+	printh("Saving label image screenshot")
+	memcpy(0x6000, 0, 0x2000)
+	extcmd("screen")
+
 	printh("done")
 end
 
