@@ -4,10 +4,11 @@ Actions = {}
 --[[const]] Actions_place_panel = 2
 --[[const]] Actions_place_wire = 3
 --[[const]] Actions_place_transformer = 4
---[[const]] Actions_pick_up = 5
---[[const]] Actions_axe = 6
---[[const]] Actions_press_button = 7
---[[const]] num_actions = 7
+--[[const]] Actions_place_fence = 5
+--[[const]] Actions_pick_up = 6
+--[[const]] Actions_axe = 7
+--[[const]] Actions_press_button = 8
+--[[const]] num_actions = 8
 
 local action_coroutine
 
@@ -23,13 +24,14 @@ local selected_action = Actions_no_action
 
 function Actions.on_load()
     -- Indexed by action id
-    Attr_action_cancel_fn = { noop, cancel_placing, cancel_placing, cancel_placing, noop, Axe_end_action, Button_stop_action }
-    Attr_action_start_fn = { noop, start_placing, start_placing, start_placing, start_removing, Axe_begin_action, Button_start_action }
+    Attr_action_cancel_fn = { noop, cancel_placing, cancel_placing, cancel_placing, cancel_placing, noop, Axe_end_action, Button_stop_action }
+    Attr_action_start_fn = { noop, start_placing, start_placing, start_placing, start_placing, start_removing, Axe_begin_action, Button_start_action }
     Attr_action_mini_sprite = {
         Sprite_id_no_action,
         Sprite_id_place_panel,
         Sprite_id_place_wire,
         Sprite_id_place_transformer,
+        Sprite_id_fence_mini,
         Sprite_id_pick_up,
         Sprite_id_mini_axe,
         Sprite_id_button_mini
@@ -73,7 +75,11 @@ function Actions_rotate()
     selected_action += 1
 
     if not system_is_running(Axe) and selected_action == Actions_axe then -- Skip axe if the player doesn't have it yet
-        Actions_rotate()
+        return Actions_rotate()
+    end
+
+    if not Inventory_has_fence() and selected_action == Actions_place_fence then
+        return Actions_rotate()
     end
 
     if started_on_none then

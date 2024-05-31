@@ -110,6 +110,10 @@ local Inventory_locations = {
 
 local should_draw_fence = false
 
+function Inventory_has_fence()
+    return should_draw_fence
+end
+
 function Inventory.draw()
     --[[const]] local window_left = 0
     --[[const]] local window_top = 13

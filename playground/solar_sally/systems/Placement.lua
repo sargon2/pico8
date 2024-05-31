@@ -13,7 +13,8 @@ function start_placing(act_id, x, y)
     local ent_id_from_action_id = {
         [Actions_place_panel] = Entities_Panels,
         [Actions_place_wire] = Entities_Wire,
-        [Actions_place_transformer] = Entities_Transformers_left
+        [Actions_place_transformer] = Entities_Transformers_left,
+        [Actions_place_fence] = Entities_Fence,
     }
     local ent_id = ent_id_from_action_id[act_id]
 
