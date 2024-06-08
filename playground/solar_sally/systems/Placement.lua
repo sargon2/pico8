@@ -9,6 +9,10 @@ function start_placing(act_id, x, y)
         return false
     end
 
+    if act_id == Actions_place_transformer and Locations_entity_at(x+1, y) then
+        return false
+    end
+
     -- Get the placement id from the action id
     local ent_id_from_action_id = {
         [Actions_place_panel] = Entities_Panels,
