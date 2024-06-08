@@ -33,10 +33,12 @@ function World.draw()
     local curr_pos = 1
     for y = ymin, ymax do
         local row = Locations_get_row(y)
-        for x = xmin, xmax do
-            local ent_id = row[x] -- Locations_entity_at(x, y)
-            if ent_id then
-                Attr_DrawFn[ent_id](x, y, ent_id)
+        if row != nil then
+            for x = xmin, xmax do
+                local ent_id = row[x] -- Locations_entity_at(x, y)
+                if ent_id then
+                    Attr_DrawFn[ent_id](x, y, ent_id)
+                end
             end
         end
         -- Character is a smooth ent so we always assume there's at least one
