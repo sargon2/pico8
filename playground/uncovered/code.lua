@@ -56,6 +56,7 @@ function _draw()
 end
 
 function _update60()
+    -- TODO disallow moving diagonally
     local start_x, start_y = player_x, player_y
     if btnp(⬅️) and player_x > 0 then
         player_x -= 1
@@ -71,11 +72,12 @@ function _update60()
     end
 
     if grid[player_x][player_y] == 0 then
-        srand(overall_seed + (player_x * grid_size_y + player_y))
+        local seed = overall_seed + (player_x * grid_size_y + player_y)
+        srand(seed)
         local result = try(player_x, player_y, false)
         if result == nil then
             -- Reset seed to reproduce pattern
-            srand(overall_seed + (player_x * grid_size_y + player_y))
+            srand(seed)
             try(player_x, player_y, true)
         else
             -- Failed!
@@ -86,7 +88,7 @@ function _update60()
 end
 
 function try(x, y, execute) -- returns nil if success, {x, y} if failure
-    if grid[x][y] == 1 then
+    if not execute and grid[x][y] == 1 then
         return {x, y}
     end
 
