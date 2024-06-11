@@ -6,9 +6,9 @@ overall_seed = nil
 last_failed_x = nil
 last_failed_y = nil
 
---[[const]] grid_size_x = 10
---[[const]] grid_size_y = 10
---[[const]] grid_scale = 6
+--[[const]] grid_size_x = 30
+--[[const]] grid_size_y = 30
+--[[const]] grid_scale = 3
 --[[const]] grid_top = 10
 --[[const]] grid_left = 20
 
@@ -21,6 +21,7 @@ function _init()
             grid[i][j] = 0
         end
     end
+    grid[player_x][player_y] = 1
 end
 
 function grid_rectfill(x, y, color)
@@ -74,11 +75,11 @@ function _update60()
     if grid[player_x][player_y] == 0 then
         local seed = overall_seed + (player_x * grid_size_y + player_y)
         srand(seed)
-        local result = try(player_x, player_y, false)
+        local result = try(player_x, player_y, start_x, start_y, false)
         if result == nil then
             -- Reset seed to reproduce pattern
             srand(seed)
-            try(player_x, player_y, true)
+            try(player_x, player_y, start_x, start_y, true)
         else
             -- Failed!
             last_failed_x, last_failed_y = unpack(result)
@@ -87,29 +88,33 @@ function _update60()
     end
 end
 
-function try(x, y, execute) -- returns nil if success, {x, y} if failure
+function try(x, y, sx, sy, execute) -- returns nil if success, {x, y} if failure
+    if x == sx and y == sy then
+        -- Don't select the square the player started on since it looks weird when that happens
+        return nil
+    end
     if not execute and grid[x][y] == 1 then
         return {x, y}
     end
 
     local r
     if x > 0 and rnd() < .25 then
-        r = try(x-1, y, execute)
+        r = try(x-1, y, sx, sy, execute)
         if(r != nil) return r
     end
 
     if x < grid_size_x-1 and rnd() < .25 then
-        r = try(x+1, y, execute)
+        r = try(x+1, y, sx, sy, execute)
         if(r != nil) return r
     end
 
     if y > 0 and rnd() < .25 then
-        r = try(x, y-1, execute)
+        r = try(x, y-1, sx, sy, execute)
         if(r != nil) return r
     end
 
     if y < grid_size_y-1 and rnd() < .25 then
-        r = try(x, y+1, execute)
+        r = try(x, y+1, sx, sy, execute)
         if(r != nil) return r
     end
 
