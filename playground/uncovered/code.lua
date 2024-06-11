@@ -61,14 +61,11 @@ function _update60()
     local start_x, start_y = player_x, player_y
     if btnp(⬅️) and player_x > 0 then
         player_x -= 1
-    end
-    if btnp(➡️) and player_x < grid_size_x-1 then
+    elseif btnp(➡️) and player_x < grid_size_x-1 then
         player_x += 1
-    end
-    if btnp(⬆️) and player_y > 0 then
+    elseif btnp(⬆️) and player_y > 0 then
         player_y -= 1
-    end
-    if btnp(⬇️) and player_y < grid_size_y-1 then
+    elseif btnp(⬇️) and player_y < grid_size_y-1 then
         player_y += 1
     end
 
