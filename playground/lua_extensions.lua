@@ -1,13 +1,21 @@
 -- Things that should be built into Lua but aren't.
 
+function indent(s)
+    ret = ""
+    for line in all(split(s, "\n")) do
+        ret ..= "    " .. line .. "\n"
+    end
+    return ret
+end
+
 function dump(o)
     if type(o) == 'table' then
-        local s = '{ '
+        local s = '{\n'
         for k,v in pairs(o) do
             if type(k) ~= 'number' then k = '"'..k..'"' end
-            s = s .. '['..k..'] = ' .. dump(v) .. ','
+            s = s .. indent('['..k..'] = ' .. dump(v) .. ',')
         end
-        return s .. '} '
+        return s .. '}'
     else
         return tostr(o)
     end
