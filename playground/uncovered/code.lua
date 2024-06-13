@@ -14,6 +14,7 @@ last_failed_y = nil
 
 local solution = {} -- soln[x][y] = {{x1, y1}, {x2, y2}, ...}
 local path = {} -- {{x1, y1}, {x2, y2}, ...}
+local unfolded = {} -- {{{unfold1_x1, unfold1_y1}, {unfold1_x2, unfold1_y2}, ...}, {{unfold2_x1, unfold2_y1}, {unfold2_x2, unfold2_y2}, ...}, ...}
 
 function wait_for_btn_down(b) -- works even between frames
     -- Wait for btn up
@@ -123,6 +124,11 @@ function _update60()
             if last_loc[1] == player_x and last_loc[2] == player_y then
                 printh("REVERSING")
                 path = slice_tbl(path, 1, #path-2)
+                for coord in all(unfolded[#unfolded]) do
+                    local undo_x, undo_y = unpack(coord)
+                    grid[undo_x][undo_y] = 0
+                end
+                unfolded = slice_tbl(unfolded, 1, #unfolded-2)
             end
         end
     end
@@ -131,14 +137,16 @@ function _update60()
         if has_solution(player_x, player_y) then
             unfold_solution(player_x, player_y)
             add(path, {player_x, player_y})
+            add(unfolded, solution[player_x][player_y])
         else
             local seed = overall_seed + (player_x * grid_size_y + player_y)
             srand(seed)
-            local result = try(player_x, player_y, false)
+            local result = try(player_x, player_y)
             if result == nil then
                 -- Reset seed to reproduce pattern
                 srand(seed)
-                try(player_x, player_y, true)
+                local changed = try_execute(player_x, player_y)
+                add(unfolded, changed)
                 add(path, {player_x, player_y})
             else
                 -- Failed!
@@ -149,6 +157,7 @@ function _update60()
     else
         if player_x != start_x or player_y != start_y then
             add(path, {player_x, player_y})
+            add(unfolded, {})
         end
     end
 end
@@ -246,35 +255,62 @@ function unfold_solution(x, y)
     end
 end
 
-function try(x, y, execute) -- returns nil if success, {x, y} if failure -- TODO name
+function try_execute(x, y) -- executes; returns list of coords turned on -- TODO name -- TODO duplicated with try
+    --[[const]] local rand_grow_chance = 0.25
+
+    local ret = {}
+
+    if x > 0 and rnd() < rand_grow_chance then
+        add_all(ret, try(x-1, y))
+    end
+
+    if x < grid_size_x-1 and rnd() < rand_grow_chance then
+        add_all(ret, try(x+1, y))
+    end
+
+    if y > 0 and rnd() < rand_grow_chance then
+        add_all(ret, try(x, y-1))
+    end
+
+    if y < grid_size_y-1 and rnd() < rand_grow_chance then
+        add_all(ret, try(x, y+1))
+    end
+
+    if grid[x][y] == 0 then
+        grid[x][y] = 1
+        add(ret, {x, y})
+    end
+    return ret
+end
+
+function try(x, y) -- returns nil if success, {x, y} if failure -- TODO name
 
     --[[const]] local rand_grow_chance = 0.25
 
-    if not execute and grid[x][y] != 0 then
+    if grid[x][y] != 0 then
         return {x, y}
     end
 
     local r
     if x > 0 and rnd() < rand_grow_chance then
-        r = try(x-1, y, execute)
+        r = try(x-1, y)
         if(r != nil) return r
     end
 
     if x < grid_size_x-1 and rnd() < rand_grow_chance then
-        r = try(x+1, y, execute)
+        r = try(x+1, y)
         if(r != nil) return r
     end
 
     if y > 0 and rnd() < rand_grow_chance then
-        r = try(x, y-1, execute)
+        r = try(x, y-1)
         if(r != nil) return r
     end
 
     if y < grid_size_y-1 and rnd() < rand_grow_chance then
-        r = try(x, y+1, execute)
+        r = try(x, y+1)
         if(r != nil) return r
     end
 
-    if(execute) grid[x][y] = 1
     return nil
 end

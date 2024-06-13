@@ -175,3 +175,9 @@ function slice_tbl(t, starti, endi)
     end
     return ret
 end
+
+function add_all(dest, src)
+    for i in all(src) do
+        add(dest, i)
+    end
+end
