@@ -23,8 +23,6 @@ function wait_for_btn_down(b) -- works even between frames
 end
 
 function render_solution(soln)
-    printh("Rendering solution")
-    printh_all(soln)
     for x, ys in pairs(soln) do
         for y, items in pairs(ys) do
             for item in all(items) do
@@ -32,11 +30,9 @@ function render_solution(soln)
                 grid_rectfill(ix, iy, 7)
             end
             grid_rectfill(x, y, 8)
-            printh("Waiting")
             wait_for_btn_down(❎)
         end
     end
-    printh("Done rendering solution")
 end
 
 function make_zero_grid()
@@ -68,7 +64,6 @@ function _init()
     end
 
     grid = make_zero_grid()
-    -- grid[player_x][player_y] = 1
 end
 
 function grid_rectfill(x, y, color)
@@ -108,7 +103,6 @@ function _draw()
 end
 
 function _update60()
-    -- TODO disallow moving diagonally
     local start_x, start_y = player_x, player_y
     if btnp(⬅️) and player_x > 0 then
         player_x -= 1
@@ -126,11 +120,11 @@ function _update60()
         else
             local seed = overall_seed + (player_x * grid_size_y + player_y)
             srand(seed)
-            local result = try(player_x, player_y, start_x, start_y, false)
+            local result = try(player_x, player_y, false)
             if result == nil then
                 -- Reset seed to reproduce pattern
                 srand(seed)
-                try(player_x, player_y, start_x, start_y, true)
+                try(player_x, player_y, true)
             else
                 -- Failed!
                 last_failed_x, last_failed_y = unpack(result)
@@ -233,14 +227,10 @@ function unfold_solution(x, y)
     end
 end
 
-function try(x, y, sx, sy, execute) -- returns nil if success, {x, y} if failure -- TODO name
+function try(x, y, execute) -- returns nil if success, {x, y} if failure -- TODO name
 
     --[[const]] local rand_grow_chance = 0.25
 
-    if x == sx and y == sy then
-        -- Don't select the square the player started on since it looks weird when that happens
-        return nil
-    end
     if not execute and grid[x][y] == 1 then
         return {x, y}
     end
