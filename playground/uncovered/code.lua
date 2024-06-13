@@ -13,7 +13,7 @@ last_failed_y = nil
 
 --[[const]] grid_size_x = 10
 --[[const]] grid_size_y = 10
---[[const]] grid_scale = 6
+--[[const]] grid_scale = 8
 --[[const]] grid_top = 10
 --[[const]] grid_left = 20
 
@@ -134,22 +134,30 @@ function _update60()
         local last_loc = path[#path-1]
         if last_loc != nil then
             if last_loc[1] == player_x and last_loc[2] == player_y then
-                printh("REVERSING")
-                path = slice_tbl(path, 1, #path-2)
+                last_failed_x, last_failed_y = nil, nil
+                path = slice_tbl(path, 1, #path-1)
                 for coord in all(unfolded[#unfolded]) do
                     local undo_x, undo_y = unpack(coord)
                     grid[undo_x][undo_y] = 0
                 end
-                unfolded = slice_tbl(unfolded, 1, #unfolded-2)
+                unfolded = slice_tbl(unfolded, 1, #unfolded-1)
+                return -- avoid adding to path/unfolded when undoing
             end
         end
     end
 
     if grid[player_x][player_y] == 0 then
         if has_solution(player_x, player_y) then
-            unfold_solution(player_x, player_y)
-            add(path, {player_x, player_y})
-            add(unfolded, solution[player_x][player_y])
+            local result = try_unfold_solution(player_x, player_y)
+            if result == nil then
+                local changed = unfold_solution(player_x, player_y)
+                add(path, {player_x, player_y})
+                add(unfolded, changed)
+            else
+                -- Failed!
+                last_failed_x, last_failed_y = unpack(result)
+                player_x, player_y = start_x, start_y -- Undo the movement
+            end
         else
             local seed = overall_seed + (player_x * grid_size_y + player_y)
             srand(seed)
@@ -258,13 +266,25 @@ function has_solution(x, y)
     return true
 end
 
+function try_unfold_solution(x, y) -- returns nil if clear, coord if collision -- TODO dup'd with unfold_solution
+    local ret = {}
+    local soln = solution[x][y]
+    for item in all(soln) do
+        local soln_x, soln_y = unpack(item)
+        if(grid[soln_x][soln_y] != 0) return {soln_x, soln_y}
+    end
+    return nil
+end
+
 function unfold_solution(x, y)
-    grid[x][y] = 2
+    local ret = {}
     local soln = solution[x][y]
     for item in all(soln) do
         local soln_x, soln_y = unpack(item)
         grid[soln_x][soln_y] = 2
+        add(ret, {soln_x, soln_y})
     end
+    return ret
 end
 
 function try_execute(x, y) -- executes; returns list of coords turned on -- TODO name -- TODO duplicated with try
