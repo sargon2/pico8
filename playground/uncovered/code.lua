@@ -55,7 +55,7 @@ function _init()
     overall_seed = rnd()
     solution = build_solution()
 
-    local show_solution = true
+    local show_solution = false
     if show_solution then
         cls()
         draw_board()
@@ -89,6 +89,8 @@ function _draw()
         for y=0,grid_size_y-1 do
             if grid[x][y] == 1 then
                 grid_rectfill(x, y, 7)
+            elseif grid[x][y] == 2 then
+                grid_rectfill(x, y, 9)
             end
         end
     end
@@ -219,11 +221,11 @@ function has_solution(x, y)
 end
 
 function unfold_solution(x, y)
-    grid[x][y] = 1
+    grid[x][y] = 2
     local soln = solution[x][y]
     for item in all(soln) do
         local soln_x, soln_y = unpack(item)
-        grid[soln_x][soln_y] = 1
+        grid[soln_x][soln_y] = 2
     end
 end
 
@@ -231,28 +233,28 @@ function try(x, y, execute) -- returns nil if success, {x, y} if failure -- TODO
 
     --[[const]] local rand_grow_chance = 0.25
 
-    if not execute and grid[x][y] == 1 then
+    if not execute and grid[x][y] != 0 then
         return {x, y}
     end
 
     local r
     if x > 0 and rnd() < rand_grow_chance then
-        r = try(x-1, y, sx, sy, execute)
+        r = try(x-1, y, execute)
         if(r != nil) return r
     end
 
     if x < grid_size_x-1 and rnd() < rand_grow_chance then
-        r = try(x+1, y, sx, sy, execute)
+        r = try(x+1, y, execute)
         if(r != nil) return r
     end
 
     if y > 0 and rnd() < rand_grow_chance then
-        r = try(x, y-1, sx, sy, execute)
+        r = try(x, y-1, execute)
         if(r != nil) return r
     end
 
     if y < grid_size_y-1 and rnd() < rand_grow_chance then
-        r = try(x, y+1, sx, sy, execute)
+        r = try(x, y+1, execute)
         if(r != nil) return r
     end
 
