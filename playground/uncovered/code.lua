@@ -1,5 +1,10 @@
 
 grid = {}
+-- grid value meanings:
+-- 0 unvisited/black
+-- 1 random unfolded
+-- 2 solution unfolded
+
 player_x = 0
 player_y = 0
 overall_seed = nil
@@ -96,6 +101,13 @@ function _draw()
             end
         end
     end
+
+    -- Draw visited squares
+    for coord in all(path) do
+        local vx, vy = unpack(coord)
+        grid_rectfill(vx, vy, 15)
+    end
+
 
     -- Draw the player
     grid_rectfill(player_x, player_y, 8)
