@@ -167,3 +167,11 @@ function limit_to(val, min, max)
 end
 
 function noop() end
+
+function slice_tbl(t, starti, endi)
+    ret = {}
+    for i=starti,endi do
+        add(ret, t[i])
+    end
+    return ret
+end

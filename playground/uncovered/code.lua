@@ -13,6 +13,7 @@ last_failed_y = nil
 --[[const]] grid_left = 20
 
 local solution = {} -- soln[x][y] = {{x1, y1}, {x2, y2}, ...}
+local path = {} -- {{x1, y1}, {x2, y2}, ...}
 
 function wait_for_btn_down(b) -- works even between frames
     -- Wait for btn up
@@ -116,9 +117,20 @@ function _update60()
         player_y += 1
     end
 
+    if player_x != start_x or player_y != start_y then
+        local last_loc = path[#path-1]
+        if last_loc != nil then
+            if last_loc[1] == player_x and last_loc[2] == player_y then
+                printh("REVERSING")
+                path = slice_tbl(path, 1, #path-2)
+            end
+        end
+    end
+
     if grid[player_x][player_y] == 0 then
         if has_solution(player_x, player_y) then
             unfold_solution(player_x, player_y)
+            add(path, {player_x, player_y})
         else
             local seed = overall_seed + (player_x * grid_size_y + player_y)
             srand(seed)
@@ -127,11 +139,16 @@ function _update60()
                 -- Reset seed to reproduce pattern
                 srand(seed)
                 try(player_x, player_y, true)
+                add(path, {player_x, player_y})
             else
                 -- Failed!
                 last_failed_x, last_failed_y = unpack(result)
                 player_x, player_y = start_x, start_y -- Undo the movement
             end
+        end
+    else
+        if player_x != start_x or player_y != start_y then
+            add(path, {player_x, player_y})
         end
     end
 end
