@@ -1,7 +1,7 @@
 all: .tested
 
 SHRINKO8=python3 ../../shrinko8/shrinko8.py
-PICO8_FOLDER=../../../../pico8/pico-8
+PICO8_FOLDER=$(HOME)/pico8/pico-8
 PICO8=$(PICO8_FOLDER)/pico8
 PICO8_DAT=$(PICO8_FOLDER)/pico8.dat
 COUNTER=../../get_counts.sh
@@ -29,7 +29,7 @@ build_compressed/compressed.lua build_compressed/desktop/compressor_0.png: title
 	cp title/title.png build_compressed/carts
 	cp title/compressor.p8 build_compressed
 	echo -n "-- " > build_compressed/compressed.lua # Make the "RUNNING" line a comment
-	cd build_compressed && ../$(PICO8) -screenshot_scale 1 -home . -desktop desktop -x compressor.p8 | tee -a compressed.lua | grep -F --line-buffered -v -- "--[[const]]"
+	cd build_compressed && $(PICO8) -screenshot_scale 1 -home . -desktop desktop -x compressor.p8 | tee -a compressed.lua | grep -F --line-buffered -v -- "--[[const]]"
 
 
 .PHONY: web
