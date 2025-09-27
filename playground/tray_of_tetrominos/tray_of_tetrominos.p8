@@ -81,15 +81,15 @@ end
 
 function _init()
  -- set the initial delay before repeating. 255 means never repeat.
- poke(0x5f5c, 8)
+poke(0x5f5c, 8)
  -- set the repeating delay.
  poke(0x5f5d, 1)
  init_grid()
 end
 
-function move(x, y)
+function move(x, y, r)
  -- check bounds
- for c in all(shapes[piece][rot+1]) do
+ for c in all(shapes[piece][r+1]) do
   if x+c[1] < 1 then
    return
   end
@@ -106,23 +106,24 @@ function move(x, y)
  
  posx = x
  posy = y
+ rot = r
 end
 
 function _update()
 	if btnp(⬇️) then
-		move(posx, posy+1)
+		move(posx, posy+1, rot)
 	end
 	if btnp(⬆️) then
-	 move(posx, posy-1)
+	 move(posx, posy-1, rot)
 	end
 	if btnp(⬅️) then
-		move(posx-1, posy)
+		move(posx-1, posy, rot)
 	end
 	if btnp(➡️) then
-	 move(posx+1, posy)
+	 move(posx+1, posy, rot)
 	end
 	if btnp(❎) then
-		rot = (rot + 1) % 4
+		move(posx, posy, (rot + 1) % 4)
 	end
 	if btnp(🅾️) then
 		drop()
