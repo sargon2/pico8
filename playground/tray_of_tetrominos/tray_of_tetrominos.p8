@@ -15,6 +15,7 @@ __lua__
 -- lots of sfx
 -- hidden palette for more accurate colors
 -- lots of gfx effects
+-- better randomization?
 
 -- grid size
 grid_w = 10
@@ -27,8 +28,8 @@ grid_size = 6
 piece = flr(rnd(7)+1)
 
 -- active piece position
-posx = 3
-posy = 3
+posx = 5
+posy = 10
 
 -- active piece rotation
 rot = 0
@@ -179,6 +180,8 @@ function drop()
  -- choose the next piece
  piece = flr(rnd(7)+1)
  rot = 0
+ posx = 5
+ posy = 10
 end
 __gfx__
 000000005cccc50051111500599995005aaaa5005bbbb50052222500588885000000000000000000000000000000000000000000000000000000000000000000
