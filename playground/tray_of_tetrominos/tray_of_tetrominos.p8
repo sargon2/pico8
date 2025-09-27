@@ -8,6 +8,7 @@ __lua__
 -- todo:
 -- clear lines/cols when full
 -- game over screen when it's impossible to continue
+-- show button guide while playing
 -- scoring
 -- high scores list
 -- title screen
