@@ -1,6 +1,10 @@
 pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
+-- tray of tetrominos
+-- you're done playing tetris and want to put all the pieces away.
+-- but, they have to fit in their storage tray!
+
 -- grid size
 grid_w = 10
 grid_h = 20
@@ -73,6 +77,10 @@ function init_grid()
 end
 
 function _init()
+ -- set the initial delay before repeating. 255 means never repeat.
+ poke(0x5f5c, 8)
+ -- set the repeating delay.
+ poke(0x5f5d, 1)
  init_grid()
 end
 
@@ -119,9 +127,20 @@ function _draw()
 end
 
 function drop()
+ -- check if it fits
+ for c in all(shapes[piece][rot+1]) do
+  if grid[posx+c[1]][posy+c[2]] != 0 then
+   -- todo juice
+   return
+  end
+ end
+
+ -- do the drop
  for c in all(shapes[piece][rot+1]) do
   grid[posx+c[1]][posy+c[2]] = piece
  end
+ 
+ -- choose the next piece
  piece = flr(rnd(7)+1)
 end
 __gfx__
