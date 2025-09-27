@@ -6,17 +6,15 @@ __lua__
 -- but, they have to fit in their storage tray!
 
 -- todo:
--- clear lines/cols when full
+-- upcoming pieces view
 -- game over screen when it's impossible to continue
 -- show button guide while playing
--- scoring
--- high scores list
+-- you win screen/music/sfx
 -- title screen
 -- music
 -- lots of sfx
 -- hidden palette for more accurate colors
 -- lots of gfx effects
--- better randomization?
 
 -- grid size
 grid_w = 10
@@ -26,7 +24,7 @@ grid_h = 20
 grid_size = 6
 
 -- active piece number
-piece = flr(rnd(7)+1)
+local piece
 
 -- active piece position
 posx = 5
@@ -37,6 +35,8 @@ rot = 0
 
 -- each cell holds 0 (empty) or sprite index
 grid = {}
+
+pieces = {}
 
 shapes = {
  { -- i
@@ -92,12 +92,30 @@ function init_grid()
  end
 end
 
+function init_pieces()
+ ordered_pieces={}
+ for j=1,7 do
+  for i = 1,7 do
+   add(ordered_pieces, i)
+  end
+ end
+ add(ordered_pieces, 1) -- add an extra i piece to make it an even 50
+ 
+ -- randomize order of pieces
+ while #ordered_pieces > 0 do
+  local p = deli(ordered_pieces, flr(rnd(#ordered_pieces+1)))
+  add(pieces, p)
+ end
+ piece = deli(pieces)
+end
+
 function _init()
  -- set the initial delay before repeating. 255 means never repeat.
 poke(0x5f5c, 8)
  -- set the repeating delay.
  poke(0x5f5d, 1)
  init_grid()
+ init_pieces()
 end
 
 function move(x, y, r)
@@ -179,7 +197,7 @@ function drop()
  end
  
  -- choose the next piece
- piece = flr(rnd(7)+1)
+ piece = deli(pieces)
  rot = 0
  posx = 5
  posy = 10
