@@ -5,6 +5,17 @@ __lua__
 -- you're done playing tetris and want to put all the pieces away.
 -- but, they have to fit in their storage tray!
 
+-- todo:
+-- clear lines/cols when full
+-- game over screen when it's impossible to continue
+-- scoring
+-- high scores list
+-- title screen
+-- music
+-- lots of sfx
+-- hidden palette for more accurate colors
+-- lots of gfx effects
+
 -- grid size
 grid_w = 10
 grid_h = 20
