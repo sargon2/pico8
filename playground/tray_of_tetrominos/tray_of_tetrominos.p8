@@ -6,6 +6,7 @@ __lua__
 -- but, they have to fit in their storage tray!
 
 -- todo:
+-- highlight active piece
 -- upcoming pieces view
 -- game over screen when it's impossible to continue
 -- show button guide while playing
@@ -163,6 +164,7 @@ end
 
 function _draw()
  cls()
+ print("placed:"..tostr(50-#pieces-1), 72, 48, 7)
   
  -- board
  for x=1,grid_w do
