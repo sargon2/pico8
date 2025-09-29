@@ -2,7 +2,7 @@ pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
 -- tray of tetrominos
--- you're done playing tetris and want to put all the pieces away.
+-- you're done playing with the tetrominos and want to put all the pieces away.
 -- but, they have to fit in their storage tray!
 
 -- todo:
@@ -16,6 +16,7 @@ __lua__
 -- lots of sfx
 -- hidden palette for more accurate colors
 -- lots of gfx effects
+-- menu option to rotate music tracks
 
 -- grid size
 grid_w = 10
